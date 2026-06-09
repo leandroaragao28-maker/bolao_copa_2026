@@ -5,9 +5,9 @@ const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbyZEHNn7NmtJk1IMUfiKSVbpMcTie2ZrIG2cygqj6I_MhBWdZjtR8gJibIRL4AMn-FsRg/exec',
   BOLAO_NOME: 'Bolão da Copa 2026',
   VALOR_INSCRICAO: 50.00,
-  PIX_CHAVE: '76889726391',   // ← sua chave Pix
-  PIX_NOME: 'Kylvio_Alan',          // ← nome do beneficiário
-  PIX_CIDADE: 'Tabuleiro do Norte',
+  PIX_CHAVE: '76889726391',      // ← CPF sem pontos e traço: ex: 12345678901
+  PIX_NOME: 'Kylvio_Alan',    // ← nome do beneficiário (sem acentos, max 25 chars)
+  PIX_CIDADE: 'Tabuleiro do Norte',          // ← cidade (sem acentos, max 15 chars)
 };
 
 // ── Bandeiras por sigla ─────────────────────────────────────
@@ -64,11 +64,16 @@ function toast(msg, tipo = 'info') {
 }
 
 // ── Gerar payload Pix Copia-e-Cola (EMV estático) ──────────
+// Compatível com chave CPF, CNPJ, e-mail, telefone e chave aleatória
 function gerarPixCopiaECola(chave, nome, cidade, valor, txid) {
+  // Remove formatação de CPF/CNPJ (pontos, traços, barras)
+  chave = chave.replace(/[.\-\/]/g, '').trim();
+
   function campo(id, val) {
     const len = String(val.length).padStart(2, '0');
     return id + len + val;
   }
+
   function crc16(str) {
     let crc = 0xFFFF;
     for (let i = 0; i < str.length; i++) {
@@ -79,22 +84,31 @@ function gerarPixCopiaECola(chave, nome, cidade, valor, txid) {
     }
     return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
   }
-  const gui = campo('00', 'BR.GOV.BCB.PIX');
-  const pixKey = campo('01', chave);
+
+  // ID 26 — Merchant Account Information (padrão BCB/PIX)
+  const gui             = campo('00', 'BR.GOV.BCB.PIX');
+  const pixKey          = campo('01', chave);
   const merchantAccInfo = campo('26', gui + pixKey);
-  const valorStr = valor.toFixed(2);
-  const txidVal = campo('05', txid.slice(0, 25));
-  const addInfo = campo('50', campo('00', 'BR.COM.GITHUB') + txidVal);
+
+  // ID 62 — Additional Data Field (txid: apenas alfanumérico, max 25 chars)
+  const txidLimpo = txid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
+  const addData   = campo('62', campo('05', txidLimpo));
+
+  // Nome e cidade sem acentos (exigência BCB para compatibilidade)
+  const nomeLimpo   = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 25);
+  const cidadeLimpa = cidade.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 15);
+
   let payload =
-    campo('00', '01') +
-    merchantAccInfo +
-    campo('52', '0000') +
-    campo('53', '986') +
-    campo('54', valorStr) +
-    campo('58', 'BR') +
-    campo('59', nome.slice(0, 25)) +
-    campo('60', cidade.slice(0, 15)) +
-    addInfo +
-    '6304';
+    campo('00', '01')          +   // Payload format indicator
+    merchantAccInfo            +   // Chave Pix
+    campo('52', '0000')        +   // Merchant category code
+    campo('53', '986')         +   // Moeda BRL
+    campo('54', valor.toFixed(2)) + // Valor
+    campo('58', 'BR')          +   // País
+    campo('59', nomeLimpo)     +   // Nome do recebedor
+    campo('60', cidadeLimpa)   +   // Cidade
+    addData                    +   // TxID
+    '6304';                        // CRC placeholder
+
   return payload + crc16(payload);
 }
