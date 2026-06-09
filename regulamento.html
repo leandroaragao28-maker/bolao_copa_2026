@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
+  <title>Regulamento — Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Índice flutuante ─────────────────────────────────── */
+    .indice {
+      background: var(--azul-fundo);
+      border: 2px solid var(--azul-palido);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .indice-titulo {
+      font-size: .8rem;
+      font-weight: 800;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .6rem;
+    }
+    .indice a {
+      display: block;
+      font-size: .85rem;
+      color: var(--azul-claro);
+      text-decoration: none;
+      padding: .2rem 0;
+      font-weight: 600;
+    }
+    .indice a:hover { color: var(--azul); text-decoration: underline; }
+    .indice a::before { content: '→ '; opacity: .5; }
+
+    /* ── Seções ───────────────────────────────────────────── */
+    .secao {
+      background: var(--branco);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(26,35,126,.08);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .secao-header {
+      background: var(--azul);
+      color: #fff;
+      padding: .9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .secao-header .sec-num {
+      background: rgba(255,255,255,.2);
+      border-radius: 6px;
+      width: 1.8rem;
+      height: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .secao-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      flex: 1;
+    }
+    .secao-header .chevron {
+      font-size: .8rem;
+      opacity: .7;
+      transition: transform .25s;
+    }
+    .secao-header.aberta .chevron { transform: rotate(180deg); }
+    .secao-body {
+      padding: 1.2rem;
+      display: none;
+    }
+    .secao-body.aberta { display: block; }
+
+    /* ── Parágrafos e listas ──────────────────────────────── */
+    .reg-p {
+      font-size: .9rem;
+      line-height: 1.65;
+      color: var(--cinza-texto);
+      margin-bottom: .8rem;
+    }
+    .reg-p:last-child { margin-bottom: 0; }
+    .reg-lista {
+      list-style: none;
+      margin: .5rem 0 .8rem;
+    }
+    .reg-lista li {
+      font-size: .88rem;
+      line-height: 1.55;
+      padding: .35rem 0 .35rem 1.4rem;
+      position: relative;
+      color: var(--cinza-texto);
+      border-bottom: 1px solid var(--cinza-fundo);
+    }
+    .reg-lista li:last-child { border-bottom: none; }
+    .reg-lista li::before {
+      content: attr(data-icon);
+      position: absolute;
+      left: 0;
+      top: .35rem;
+    }
+
+    /* ── Tabela de pontuação ──────────────────────────────── */
+    .tabela-pts {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      margin: .8rem 0;
+    }
+    .tabela-pts th {
+      background: var(--azul);
+      color: #fff;
+      padding: .55rem .8rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: .78rem;
+    }
+    .tabela-pts td {
+      padding: .55rem .8rem;
+      border-bottom: 1px solid var(--cinza-fundo);
+      vertical-align: middle;
+    }
+    .tabela-pts tr:last-child td { border-bottom: none; }
+    .tabela-pts tr:nth-child(even) td { background: var(--cinza-fundo); }
+    .pts-num {
+      font-size: 1.1rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    /* ── Exemplos de pontuação ────────────────────────────── */
+    .exemplos-grid {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      margin: .8rem 0;
+    }
+    .exemplo-card {
+      border-radius: var(--radius-sm);
+      border: 2px solid;
+      overflow: hidden;
+    }
+    .exemplo-card .ex-header {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: .5rem;
+      padding: .6rem .9rem;
+      font-size: .82rem;
+    }
+    .exemplo-card .ex-time { display: flex; align-items: center; gap: .35rem; font-weight: 700; }
+    .exemplo-card .ex-time-dir { justify-content: flex-end; }
+    .exemplo-card .ex-placar { text-align: center; }
+    .exemplo-card .ex-placar-num {
+      font-size: 1.1rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .exemplo-card .ex-placar-label {
+      font-size: .6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      opacity: .7;
+    }
+    .exemplo-card .ex-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .4rem .9rem;
+      border-top: 1px solid currentColor;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+    /* Cores por tipo */
+    .ex-cheio    { border-color: #2E7D32; }
+    .ex-cheio    .ex-header { background: #F1F8E9; }
+    .ex-cheio    .ex-footer { background: #DCEDC8; color: #1B5E20; border-color: #A5D6A7; }
+    .ex-venc     { border-color: #1565C0; }
+    .ex-venc     .ex-header { background: #E3F2FD; }
+    .ex-venc     .ex-footer { background: #BBDEFB; color: #0D47A1; border-color: #90CAF9; }
+    .ex-empate   { border-color: #6A1B9A; }
+    .ex-empate   .ex-header { background: #F3E5F5; }
+    .ex-empate   .ex-footer { background: #E1BEE7; color: #4A148C; border-color: #CE93D8; }
+    .ex-perd     { border-color: #E65100; }
+    .ex-perd     .ex-header { background: #FFF3E0; }
+    .ex-perd     .ex-footer { background: #FFE0B2; color: #BF360C; border-color: #FFCC80; }
+    .ex-zero     { border-color: #B71C1C; }
+    .ex-zero     .ex-header { background: #FFEBEE; }
+    .ex-zero     .ex-footer { background: #FFCDD2; color: #B71C1C; border-color: #EF9A9A; }
+
+    /* ── Desempate ────────────────────────────────────────── */
+    .desempate-item {
+      display: flex;
+      gap: .8rem;
+      align-items: flex-start;
+      padding: .7rem 0;
+      border-bottom: 1px solid var(--cinza-fundo);
+    }
+    .desempate-item:last-child { border-bottom: none; }
+    .desempate-num {
+      background: var(--azul);
+      color: #fff;
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      min-width: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: .9rem;
+    }
+    .desempate-txt { font-size: .88rem; line-height: 1.5; }
+    .desempate-txt strong { color: var(--azul); display: block; margin-bottom: .15rem; }
+
+    /* ── Premiação visual ─────────────────────────────────── */
+    .prem-visual {
+      display: flex;
+      gap: .6rem;
+      align-items: flex-end;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    .prem-barra {
+      flex: 1;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+      padding: .8rem .4rem .6rem;
+      color: #fff;
+      font-weight: 800;
+    }
+    .prem-barra .pb-emoji { font-size: 1.6rem; display: block; margin-bottom: .3rem; }
+    .prem-barra .pb-pct   { font-size: 1.4rem; font-weight: 900; }
+    .prem-barra .pb-label { font-size: .68rem; opacity: .85; margin-top: .1rem; }
+    .prem-barra.p1 { background: var(--ouro-escuro); min-height: 120px; }
+    .prem-barra.p2 { background: #757575; min-height: 90px; }
+    .prem-barra.p3 { background: #8D5524; min-height: 70px; }
+
+    /* ── Aviso importante ─────────────────────────────────── */
+    .aviso-importante {
+      background: #FFF8E1;
+      border: 2px solid var(--ouro);
+      border-radius: var(--radius-sm);
+      padding: .9rem 1rem;
+      font-size: .85rem;
+      color: #4E342E;
+      margin: .8rem 0;
+      display: flex;
+      gap: .7rem;
+    }
+    .aviso-importante .ai-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    /* ── Linha do tempo participação ──────────────────────── */
+    .timeline {
+      position: relative;
+      padding-left: 2.2rem;
+      margin: .5rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: .85rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--azul-palido);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-dot {
+      position: absolute;
+      left: -1.7rem;
+      top: .15rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      background: var(--azul);
+      border: 2px solid var(--branco);
+      box-shadow: 0 0 0 2px var(--azul-palido);
+    }
+    .tl-titulo { font-size: .88rem; font-weight: 800; color: var(--azul); margin-bottom: .2rem; }
+    .tl-desc   { font-size: .82rem; color: var(--cinza-sub); line-height: 1.5; }
+
+    /* Exemplo inline de placar */
+    .ex-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: var(--azul-fundo);
+      border-radius: 6px;
+      padding: .15rem .5rem;
+      font-size: .82rem;
+      font-weight: 800;
+      color: var(--azul);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">📋</span>
+  <div class="header-texto">
+    <h1>Regulamento</h1>
+  </div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="palpites.html">Palpites</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- Cabeçalho da página -->
+  <div style="background:linear-gradient(135deg,var(--azul) 0%,var(--azul-claro) 100%);border-radius:var(--radius);padding:1.4rem 1.2rem;color:#fff;margin-bottom:1rem;">
+    <div style="font-size:.7rem;font-weight:800;letter-spacing:.1em;opacity:.7;text-transform:uppercase;margin-bottom:.3rem;">Copa do Mundo 2026</div>
+    <div style="font-size:1.5rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.3rem;">Regulamento Oficial</div>
+    <div style="font-size:.82rem;opacity:.8;">Leia com atenção antes de participar</div>
+  </div>
+
+  <!-- Índice -->
+  <div class="indice">
+    <div class="indice-titulo">📌 Conteúdo</div>
+    <a href="#sec1">1. Como participar</a>
+    <a href="#sec2">2. Preenchimento dos palpites</a>
+    <a href="#sec3">3. Sistema de pontuação</a>
+    <a href="#sec4">4. Exemplos práticos</a>
+    <a href="#sec5">5. Validade dos pontos</a>
+    <a href="#sec6">6. Critérios de desempate</a>
+    <a href="#sec7">7. Premiação</a>
+    <a href="#sec8">8. Disposições gerais</a>
+  </div>
+
+  <!-- ── SEÇÃO 1 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec1">
+    <div class="secao-header aberta" onclick="toggleSecao(this)">
+      <div class="sec-num">1</div>
+      <h2>Como participar</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body aberta">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-titulo">Inscrição</div>
+          <div class="tl-desc">Acesse a tela de inscrição e preencha nome completo, e-mail e WhatsApp. Você receberá um código de participante único (ex.: <strong>BP123456</strong>). Guarde este código — é ele que dá acesso a todas as telas.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-titulo">Pagamento da taxa</div>
+          <div class="tl-desc">A taxa de inscrição é de <strong>R$ 50,00</strong>, paga via Pix. O QR Code e o código copia-e-cola são gerados automaticamente na tela de inscrição. Cada código de participante é único para identificação do pagamento.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-titulo">Aprovação pelo administrador</div>
+          <div class="tl-desc">Após identificar o pagamento, o administrador aprova manualmente o participante. Você será avisado pelo WhatsApp. Seus palpites já podem ser preenchidos antes da aprovação, mas a pontuação só é contabilizada depois dela.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-titulo">Palpites e acompanhamento</div>
+          <div class="tl-desc">Preencha o placar previsto dos 72 jogos da fase de grupos. Acompanhe sua pontuação jogo a jogo na tela "Minha Pontuação" e a classificação geral no Ranking.</div>
+        </div>
+      </div>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">⚠️</span>
+        <span>É permitida apenas <strong>uma inscrição por participante</strong>. Inscrições duplicadas detectadas pelo mesmo e-mail serão desconsideradas.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 2 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec2">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">2</div>
+      <h2>Preenchimento dos palpites</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <ul class="reg-lista">
+        <li data-icon="⚽">O bolão abrange os <strong>72 jogos da fase de grupos</strong> da Copa do Mundo 2026, distribuídos em 12 grupos (A a L) com 4 seleções cada.</li>
+        <li data-icon="📝">O participante deve informar o <strong>placar exato</strong> que prevê para cada jogo — número de gols do time 1 e número de gols do time 2.</li>
+        <li data-icon="✏️">Os palpites podem ser <strong>preenchidos e editados a qualquer momento</strong> antes do início de cada jogo. Após o apito inicial, o campo do jogo fica travado automaticamente.</li>
+        <li data-icon="💾">O sistema salva apenas os palpites dos jogos ainda não iniciados. Ao clicar em "Salvar", apenas jogos em aberto são gravados.</li>
+        <li data-icon="🔒">Jogos já iniciados ou encerrados aparecem com o ícone 🔒 e os campos desabilitados. O palpite salvo até aquele momento é o válido.</li>
+        <li data-icon="⚠️">Jogos sem palpite registrado até o início não geram nenhuma pontuação — nem zero, nem desconto. Simplesmente não pontuam.</li>
+      </ul>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">💡</span>
+        <span>Recomendamos preencher todos os 72 palpites de uma vez, preferencialmente antes do início da Copa, para garantir que nenhum jogo fique sem palpite.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 3 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec3">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">3</div>
+      <h2>Sistema de pontuação</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <p class="reg-p">A pontuação é calculada <strong>exclusivamente com base nos placares individuais</strong> dos times — quantos gols cada seleção marcou. O critério não é "acertar quem venceu", mas sim acertar o número de gols de cada time.</p>
+
+      <table class="tabela-pts">
+        <thead>
+          <tr>
+            <th>Situação</th>
+            <th style="text-align:center;">Pontos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Placar exato</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Acertou o número de gols dos dois times</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:#1B5E20;">15</span></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Acertou o placar do vencedor</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Acertou os gols do time que venceu; errou os do perdedor</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:#1565C0;">10</span></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Empate — acertou gols de um time</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">O resultado real foi empate e o participante acertou o placar de ao menos um dos times</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:#6A1B9A;">7,5</span></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Acertou o placar do perdedor</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Acertou os gols do time que perdeu; errou os do vencedor</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:#E65100;">5</span></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Nenhum placar acertado</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Errou os gols dos dois times</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:#B71C1C;">0</span></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Sem palpite</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Jogo não preenchido antes do início</span>
+            </td>
+            <td style="text-align:center;"><span class="pts-num" style="color:var(--cinza-sub);">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">📌</span>
+        <div>
+          <strong>Regra especial para empates:</strong> nos jogos em que o resultado real é empate, não existe "vencedor" nem "perdedor". Por isso, acertar o placar de qualquer um dos times vale <strong>7,5 pontos</strong> — mesmo que o palpite não tenha sido um empate. Acertar os dois placares (empate exato) vale os <strong>15 pontos</strong> completos.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 4 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec4">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">4</div>
+      <h2>Exemplos práticos</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+
+      <p class="reg-p" style="margin-bottom:1rem;">Nos exemplos abaixo, o resultado real do jogo aparece em cima e o palpite do participante aparece embaixo.</p>
+
+      <div class="exemplos-grid">
+
+        <!-- 15 pts -->
+        <div class="exemplo-card ex-cheio">
+          <div class="ex-header">
+            <div class="ex-time">🇧🇷 Brasil</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">2 × 1</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">2 × 1</div>
+            </div>
+            <div class="ex-time ex-time-dir">Marrocos 🇲🇦</div>
+          </div>
+          <div class="ex-footer">
+            <span>🎯 Placar exato — acertou os dois gols</span>
+            <span style="font-size:1.1rem;font-weight:900;">15 pts</span>
+          </div>
+        </div>
+
+        <!-- 10 pts -->
+        <div class="exemplo-card ex-venc">
+          <div class="ex-header">
+            <div class="ex-time">🇫🇷 França</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">3 × 1</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">3 × 0</div>
+            </div>
+            <div class="ex-time ex-time-dir">Senegal 🇸🇳</div>
+          </div>
+          <div class="ex-footer">
+            <span>✅ Acertou gols da França (vencedora) — errou o Senegal</span>
+            <span style="font-size:1.1rem;font-weight:900;">10 pts</span>
+          </div>
+        </div>
+
+        <!-- 7,5 pts — palpitou empate exato diferente -->
+        <div class="exemplo-card ex-empate">
+          <div class="ex-header">
+            <div class="ex-time">🇦🇷 Argentina</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">1 × 1</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">2 × 2</div>
+            </div>
+            <div class="ex-time ex-time-dir">Austrália 🇦🇺</div>
+          </div>
+          <div class="ex-footer">
+            <span>🤝 Real foi empate, palpite foi empate — placar diferente</span>
+            <span style="font-size:1.1rem;font-weight:900;">7,5 pts</span>
+          </div>
+        </div>
+
+        <!-- 7,5 pts — empate real, acertou um placar sem palpitar empate -->
+        <div class="exemplo-card ex-empate">
+          <div class="ex-header">
+            <div class="ex-time">🇵🇹 Portugal</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">1 × 1</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">2 × 1</div>
+            </div>
+            <div class="ex-time ex-time-dir">Uruguai 🇺🇾</div>
+          </div>
+          <div class="ex-footer">
+            <span>🤝 Real foi empate — acertou gols do Uruguai (1)</span>
+            <span style="font-size:1.1rem;font-weight:900;">7,5 pts</span>
+          </div>
+        </div>
+
+        <!-- 5 pts -->
+        <div class="exemplo-card ex-perd">
+          <div class="ex-header">
+            <div class="ex-time">🇩🇪 Alemanha</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">2 × 0</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">1 × 0</div>
+            </div>
+            <div class="ex-time ex-time-dir">Equador 🇪🇨</div>
+          </div>
+          <div class="ex-footer">
+            <span>📉 Acertou gols do Equador (perdedor, 0) — errou a Alemanha</span>
+            <span style="font-size:1.1rem;font-weight:900;">5 pts</span>
+          </div>
+        </div>
+
+        <!-- 0 pts -->
+        <div class="exemplo-card ex-zero">
+          <div class="ex-header">
+            <div class="ex-time">🇪🇸 Espanha</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">3 × 2</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">1 × 0</div>
+            </div>
+            <div class="ex-time ex-time-dir">Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+          </div>
+          <div class="ex-footer">
+            <span>❌ Nenhum placar acertado</span>
+            <span style="font-size:1.1rem;font-weight:900;">0 pts</span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="reg-p" style="margin-top:.5rem;font-size:.82rem;color:var(--cinza-sub);">
+        💡 Pontuação máxima possível: 72 jogos × 15 pts = <strong>1.080 pontos</strong>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 5 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec5">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">5</div>
+      <h2>Validade dos pontos e pagamento</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <ul class="reg-lista">
+        <li data-icon="💳">A pontuação de um participante <strong>só é contabilizada no ranking</strong> após a confirmação do pagamento da taxa de inscrição pelo administrador.</li>
+        <li data-icon="📝">Os palpites podem ser preenchidos e salvos <strong>antes mesmo da aprovação</strong> do pagamento. Isso garante que o participante não perca o prazo dos primeiros jogos enquanto aguarda a confirmação.</li>
+        <li data-icon="🔄">Assim que o administrador aprovar o pagamento, os palpites já salvos passam a ser considerados automaticamente no ranking, sem necessidade de nenhuma ação do participante.</li>
+        <li data-icon="🚫">Participantes com pagamento pendente ficam ocultos do ranking público. Seus palpites estão registrados, mas a pontuação não é exibida.</li>
+        <li data-icon="⏰">O prazo para pagamento não é fixo, mas recomenda-se confirmar antes do início do primeiro jogo para garantir que todos os palpites sejam computados desde o começo.</li>
+      </ul>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">⚠️</span>
+        <div>
+          Palpites salvos antes da aprovação do pagamento <strong>são válidos</strong> e serão considerados normalmente após a confirmação. O participante não perde pontos de jogos já ocorridos — desde que o palpite tenha sido registrado antes do início daquele jogo.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 6 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec6">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">6</div>
+      <h2>Critérios de desempate</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <p class="reg-p">Em caso de empate na pontuação total entre dois ou mais participantes, a classificação é definida pelos seguintes critérios, aplicados nesta ordem:</p>
+
+      <div style="margin:.5rem 0;">
+        <div class="desempate-item">
+          <div class="desempate-num">1</div>
+          <div class="desempate-txt">
+            <strong>Maior número de placares exatos (15 pts)</strong>
+            Quem acertou mais vezes o placar completo — gols do time 1 e do time 2 — fica à frente.
+          </div>
+        </div>
+        <div class="desempate-item">
+          <div class="desempate-num">2</div>
+          <div class="desempate-txt">
+            <strong>Maior número de acertos de vencedor (10 pts)</strong>
+            Quem acertou mais vezes o placar do time vencedor fica à frente.
+          </div>
+        </div>
+        <div class="desempate-item">
+          <div class="desempate-num">3</div>
+          <div class="desempate-txt">
+            <strong>Maior número de acertos em empates (7,5 pts)</strong>
+            Quem acertou o placar de algum time em mais jogos empatados fica à frente.
+          </div>
+        </div>
+        <div class="desempate-item">
+          <div class="desempate-num">4</div>
+          <div class="desempate-txt">
+            <strong>Maior número de acertos do perdedor (5 pts)</strong>
+            Quem acertou mais vezes o placar do time perdedor fica à frente.
+          </div>
+        </div>
+        <div class="desempate-item">
+          <div class="desempate-num">5</div>
+          <div class="desempate-txt">
+            <strong>Maior número de palpites preenchidos</strong>
+            Quem registrou palpites em mais jogos fica à frente. Garante que quem participou mais ativamente não seja prejudicado.
+          </div>
+        </div>
+        <div class="desempate-item">
+          <div class="desempate-num">6</div>
+          <div class="desempate-txt">
+            <strong>Data e hora da inscrição</strong>
+            Critério final: quem se inscreveu primeiro fica à frente. Data registrada automaticamente pelo sistema no momento da inscrição.
+          </div>
+        </div>
+      </div>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">📌</span>
+        <span>Se após todos os critérios acima o empate persistir, o prêmio correspondente às posições empatadas será <strong>dividido igualmente</strong> entre os participantes.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 7 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec7">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">7</div>
+      <h2>Premiação</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <p class="reg-p">O valor total arrecadado é distribuído conforme abaixo. Quanto mais participantes, maior o prêmio.</p>
+
+      <div class="prem-visual">
+        <div class="prem-barra p2">
+          <span class="pb-emoji">🥈</span>
+          <div class="pb-pct">30%</div>
+          <div class="pb-label">2º lugar</div>
+        </div>
+        <div class="prem-barra p1">
+          <span class="pb-emoji">🥇</span>
+          <div class="pb-pct">60%</div>
+          <div class="pb-label">1º lugar</div>
+        </div>
+        <div class="prem-barra p3">
+          <span class="pb-emoji">🛠</span>
+          <div class="pb-pct">10%</div>
+          <div class="pb-label">Organização</div>
+        </div>
+      </div>
+
+      <table class="tabela-pts">
+        <thead>
+          <tr>
+            <th>Participantes</th>
+            <th>Arrecadado</th>
+            <th>🥇 1º (60%)</th>
+            <th>🥈 2º (30%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>10</td><td>R$ 500</td><td>R$ 300</td><td>R$ 150</td></tr>
+          <tr><td>20</td><td>R$ 1.000</td><td>R$ 600</td><td>R$ 300</td></tr>
+          <tr><td>30</td><td>R$ 1.500</td><td>R$ 900</td><td>R$ 450</td></tr>
+          <tr><td>50</td><td>R$ 2.500</td><td>R$ 1.500</td><td>R$ 750</td></tr>
+        </tbody>
+      </table>
+
+      <ul class="reg-lista" style="margin-top:.8rem;">
+        <li data-icon="📅">O vencedor é o participante com maior pontuação ao fim da fase de grupos (após apuração do 72º jogo).</li>
+        <li data-icon="💰">O pagamento do prêmio será realizado em até <strong>7 dias úteis</strong> após o encerramento da fase de grupos e apuração final.</li>
+        <li data-icon="🏦">O pagamento será feito via Pix para a chave cadastrada pelo participante no momento da inscrição.</li>
+        <li data-icon="🧾">O valor da organização (10%) cobre os custos operacionais do bolão.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 8 ─────────────────────────────────────────── -->
+  <div class="secao" id="sec8">
+    <div class="secao-header" onclick="toggleSecao(this)">
+      <div class="sec-num">8</div>
+      <h2>Disposições gerais</h2>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="secao-body">
+      <ul class="reg-lista">
+        <li data-icon="📡">Os resultados reais dos jogos são lançados pelo administrador do bolão após cada partida. O sistema calcula e atualiza as pontuações automaticamente.</li>
+        <li data-icon="🏟️">Em caso de jogo suspenso ou cancelado pela FIFA e não realizado dentro do calendário oficial, o jogo será desconsiderado e não pontuará para nenhum participante.</li>
+        <li data-icon="⏱️">Apenas o resultado ao final do tempo regulamentar (90 minutos) é considerado. Prorrogação, disputa de pênaltis ou gol de ouro na fase de grupos não existem — todo jogo termina no placar dos 90 minutos.</li>
+        <li data-icon="🔐">Cada participante é responsável por guardar seu código de acesso. Em caso de perda, a recuperação é feita pelo e-mail cadastrado na tela inicial.</li>
+        <li data-icon="📵">É vedada a cessão ou venda do código de participante a terceiros. Cada inscrição é pessoal e intransferível.</li>
+        <li data-icon="⚖️">O administrador do bolão é a autoridade máxima para resolução de dúvidas, contestações e casos omissos neste regulamento. Sua decisão é final.</li>
+        <li data-icon="📲">Alterações neste regulamento, quando necessárias, serão comunicadas pelo WhatsApp a todos os participantes com antecedência mínima de 24 horas.</li>
+      </ul>
+
+      <div class="aviso-importante">
+        <span class="ai-icon">✅</span>
+        <span>Ao realizar a inscrição e o pagamento, o participante declara ter lido e <strong>concordar integralmente</strong> com este regulamento.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões de ação -->
+  <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.5rem;">
+    <a href="inscricao.html" class="btn btn-primary" style="flex:1;justify-content:center;">⚽ Quero participar</a>
+    <a href="index.html" class="btn btn-secondary" style="flex:1;justify-content:center;">← Início</a>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span class="bnav-icon">🏠</span>Início
+  </a>
+  <a href="ranking.html">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+  <a href="minha-pontuacao.html">
+    <span class="bnav-icon">📊</span>Pontuação
+  </a>
+</nav>
+
+<script>
+function toggleSecao(header) {
+  header.classList.toggle('aberta');
+  const body = header.nextElementSibling;
+  body.classList.toggle('aberta');
+}
+
+// Abrir seção via âncora
+window.onload = () => {
+  const hash = window.location.hash;
+  if (hash) {
+    const secao = document.querySelector(hash);
+    if (secao) {
+      const header = secao.querySelector('.secao-header');
+      const body   = secao.querySelector('.secao-body');
+      if (header && !header.classList.contains('aberta')) {
+        header.classList.add('aberta');
+        body.classList.add('aberta');
+      }
+      setTimeout(() => secao.scrollIntoView({ behavior: 'smooth' }), 100);
+    }
+  }
+};
+</script>
+</body>
+</html>
