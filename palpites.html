@@ -7,6 +7,101 @@
   <title>Palpites — Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
+  <style>
+    /* Botão salvar flutuante */
+    .fab-salvar {
+      position: fixed;
+      bottom: calc(4.5rem + env(safe-area-inset-bottom));
+      right: 1rem;
+      background: var(--azul);
+      color: #fff;
+      border: none;
+      border-radius: 28px;
+      padding: .75rem 1.3rem;
+      font-size: .9rem;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(26,35,126,.4);
+      cursor: pointer;
+      z-index: 150;
+      display: none;
+      align-items: center;
+      gap: .4rem;
+      transition: all .2s;
+    }
+    .fab-salvar.visivel { display: flex; }
+    .fab-salvar:active { transform: scale(.96); }
+    .fab-salvar .fab-count {
+      background: var(--ouro);
+      color: var(--azul);
+      border-radius: 10px;
+      font-size: .72rem;
+      font-weight: 900;
+      padding: .1rem .4rem;
+      min-width: 1.4rem;
+      text-align: center;
+    }
+
+    /* Jogo card adaptado */
+    .jogo-card { position: relative; }
+    .jogo-card.travado {
+      opacity: .6;
+      pointer-events: none;
+      background: #F5F5F5;
+    }
+    .jogo-card.travado::after {
+      content: '🔒';
+      position: absolute;
+      top: .4rem;
+      right: .5rem;
+      font-size: .9rem;
+    }
+    .jogo-card.tem-palpite { border-color: var(--azul-palido); background: var(--azul-fundo); }
+    .jogo-card.tem-palpite.travado { border-color: #B0BEC5; background: #ECEFF1; }
+
+    /* Palpite salvo exibido */
+    .palpite-salvo {
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--azul);
+      text-align: center;
+      margin-top: .2rem;
+      letter-spacing: .03em;
+    }
+    .palpite-salvo.travado-txt { color: var(--cinza-sub); }
+
+    /* Atalho pagamento */
+    .banner-pagamento {
+      background: #FFF3E0;
+      border: 2px solid #FFB74D;
+      border-radius: var(--radius-sm);
+      padding: .8rem 1rem;
+      font-size: .83rem;
+      color: #4E342E;
+      margin-bottom: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+    }
+    .banner-pagamento a {
+      flex-shrink: 0;
+      background: #FF9800;
+      color: #fff;
+      border-radius: 8px;
+      padding: .4rem .8rem;
+      font-size: .78rem;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* Inputs travados */
+    input[disabled] {
+      background: #ECEFF1 !important;
+      color: var(--cinza-sub) !important;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
 
@@ -16,11 +111,16 @@
     <h1>Meus Palpites</h1>
   </div>
   <nav>
-    <a href="index.html">Inscrição</a>
+    <a href="index.html">Início</a>
     <a href="ranking.html">Ranking</a>
     <a href="palpites.html" class="ativo">Palpites</a>
   </nav>
 </header>
+
+<!-- FAB salvar flutuante -->
+<button class="fab-salvar" id="fabSalvar" onclick="salvarTudo()">
+  💾 Salvar <span class="fab-count" id="fabCount">0</span>
+</button>
 
 <div class="container">
 
@@ -36,52 +136,45 @@
     </div>
     <button class="btn btn-primary btn-block" onclick="verificarAcesso()">Entrar</button>
     <p style="text-align:center;margin-top:.8rem;font-size:.82rem;color:var(--cinza-sub);">
-      Não tem código? <a href="index.html" style="color:var(--azul);font-weight:700;">Fazer inscrição</a>
+      Não tem código? <a href="inscricao.html" style="color:var(--azul);font-weight:700;">Fazer inscrição</a>
     </p>
   </div>
 
   <!-- Info participante -->
   <div id="infoParticipante" style="display:none;">
-    <div style="display:flex;align-items:center;gap:.8rem;background:var(--branco);border-radius:var(--radius-sm);padding:.8rem 1rem;box-shadow:var(--sombra);margin-bottom:1rem;">
+    <div style="display:flex;align-items:center;gap:.8rem;background:var(--branco);border-radius:var(--radius-sm);padding:.8rem 1rem;box-shadow:var(--sombra);margin-bottom:.8rem;">
       <div style="flex:1;min-width:0;">
-        <div style="font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="lblNome">-</div>
-        <div style="font-size:.75rem;color:var(--cinza-sub);font-family:monospace;" id="lblId">-</div>
+        <div style="font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="lblNome"></div>
+        <div style="font-size:.73rem;color:var(--cinza-sub);font-family:monospace;" id="lblId"></div>
       </div>
       <div id="statusBadge" style="flex-shrink:0;"></div>
       <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
     </div>
   </div>
 
-  <!-- Aviso pagamento pendente (não bloqueia) -->
-  <div id="avisoAguardando" style="display:none;" class="banner-aviso">
-    ⏳ <strong>Pagamento pendente.</strong> Você pode preencher e salvar seus palpites normalmente, mas sua pontuação só será contabilizada no ranking após a confirmação do pagamento de <strong>R$ 50,00</strong>.
+  <!-- Atalho pagamento pendente -->
+  <div id="bannerPagamento" style="display:none;" class="banner-pagamento">
+    <span>⏳ <strong>Pagamento pendente.</strong> Seus palpites serão contabilizados após confirmação.</span>
+    <a href="" id="linkPagamento">💳 Pagar</a>
   </div>
 
   <!-- Área de palpites -->
   <div id="areaPalpites" style="display:none;">
 
-    <div class="banner-aviso" id="bannerDica">
-      ⚽ Preencha todos os jogos e toque em <strong>Salvar</strong>. Você pode editar até o início da Copa.
-    </div>
-
-    <!-- Contador flutuante -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;gap:.5rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;gap:.5rem;flex-wrap:wrap;">
       <span id="contadorPalpites" style="font-size:.8rem;color:var(--cinza-sub);font-weight:700;"></span>
-      <button class="btn btn-primary btn-sm" onclick="salvarTudo()">💾 Salvar palpites</button>
+      <span id="travasInfo" style="font-size:.75rem;color:var(--cinza-sub);"></span>
     </div>
 
     <div id="listaJogos"></div>
 
-    <button class="btn btn-primary btn-block" onclick="salvarTudo()" style="margin-top:.5rem;">
-      💾 Salvar todos os palpites
-    </button>
   </div>
 
 </div>
 
 <nav class="bottom-nav">
   <a href="index.html">
-    <span class="bnav-icon">📝</span>Inscrição
+    <span class="bnav-icon">🏠</span>Início
   </a>
   <a href="ranking.html">
     <span class="bnav-icon">🏆</span>Ranking
@@ -96,38 +189,70 @@
 
 <script>
 let participanteId = '';
+let participanteStatus = '';
 let jogos = [];
-const palpites = {};
+const palpites = {};         // palpites editados nesta sessão (não salvos ainda)
+const palpitesSalvos = {};   // palpites que já estão no servidor
 
+// ── Verificar horário de início do jogo ──────────────────────
+function jogoJaComecou(jogo) {
+  // Converte data + hora do jogo para timestamp
+  const horaNum = jogo.hora.replace('h','').replace(':','.');
+  const [h, m] = jogo.hora.replace('h',':00').replace('h30',':30').split(':');
+  const dt = new Date(jogo.data + 'T' + String(h).padStart(2,'0') + ':' + (m||'00') + ':00-03:00');
+  return Date.now() >= dt.getTime();
+}
+
+// ── Acesso ───────────────────────────────────────────────────
 async function verificarAcesso() {
   const id = document.getElementById('inputId').value.trim().toUpperCase();
   if (!id) { toast('Digite seu código.', 'erro'); return; }
   const res = await api({ action: 'verificarID', id });
   if (!res.ok) { toast(res.msg, 'erro'); return; }
   participanteId = res.id;
+  participanteStatus = res.status;
   localStorage.setItem('bolao_id', participanteId);
+
   document.getElementById('telaLogin').style.display = 'none';
   document.getElementById('infoParticipante').style.display = '';
   document.getElementById('lblNome').textContent = res.nome;
   document.getElementById('lblId').textContent = res.id;
-  const ok = res.status === 'APROVADO';
+
+  const aprovado = res.status === 'APROVADO';
   document.getElementById('statusBadge').innerHTML =
-    `<span class="badge badge-${res.status.toLowerCase()}">${ok ? '✅ Aprovado' : '⏳ Pendente'}</span>`;
-  if (!ok) document.getElementById('avisoAguardando').style.display = '';
+    `<span class="badge badge-${res.status.toLowerCase()}">${aprovado ? '✅ Aprovado' : '⏳ Pendente'}</span>`;
+
+  if (!aprovado) {
+    const banner = document.getElementById('bannerPagamento');
+    banner.style.display = 'flex';
+    document.getElementById('linkPagamento').href = 'inscricao.html?pagar=' + res.id;
+  }
+
   carregarJogos();
 }
 
-function sair() {
-  localStorage.removeItem('bolao_id');
-  location.reload();
-}
+function sair() { localStorage.removeItem('bolao_id'); location.reload(); }
 
+// ── Carregar jogos e palpites salvos ─────────────────────────
 async function carregarJogos() {
   document.getElementById('areaPalpites').style.display = '';
-  const res = await api({ action: 'getJogos' });
-  if (!res.ok) { toast('Erro ao carregar jogos.', 'erro'); return; }
-  jogos = res.jogos;
 
+  const [resJogos, resPalp] = await Promise.all([
+    api({ action: 'getJogos' }),
+    api({ action: 'getMeusPalpites', id: participanteId })
+  ]);
+
+  if (!resJogos.ok) { toast('Erro ao carregar jogos.', 'erro'); return; }
+  jogos = resJogos.jogos;
+
+  // Carregar palpites já salvos
+  if (resPalp.ok && resPalp.palpites) {
+    resPalp.palpites.forEach(p => {
+      palpitesSalvos[p.jogoId] = { gols1: p.gols1, gols2: p.gols2 };
+    });
+  }
+
+  let travados = 0;
   const grupos = {};
   jogos.forEach(j => { if (!grupos[j.grupo]) grupos[j.grupo] = []; grupos[j.grupo].push(j); });
 
@@ -137,13 +262,25 @@ async function carregarJogos() {
   Object.keys(grupos).sort().forEach(grp => {
     container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
     grupos[grp].forEach(jogo => {
+      const travado = jogoJaComecou(jogo);
+      if (travado) travados++;
+
       const f1 = BANDEIRAS[jogo.time1] || '🏳';
       const f2 = BANDEIRAS[jogo.time2] || '🏳';
       const n1 = NOMES[jogo.time1] || jogo.time1;
       const n2 = NOMES[jogo.time2] || jogo.time2;
+      const salvo = palpitesSalvos[jogo.id];
+
+      // Pré-preencher inputs com palpite salvo
+      if (salvo) palpites[jogo.id] = { jogoId: jogo.id, gols1: salvo.gols1, gols2: salvo.gols2 };
+
       const card = document.createElement('div');
-      card.className = 'jogo-card';
+      card.className = 'jogo-card' + (travado ? ' travado' : '') + (salvo ? ' tem-palpite' : '');
       card.id = 'card_' + jogo.id;
+
+      const v1 = salvo ? salvo.gols1 : '';
+      const v2 = salvo ? salvo.gols2 : '';
+
       card.innerHTML = `
         <div class="time">
           <span class="bandeira">${f1}</span>
@@ -152,12 +289,19 @@ async function carregarJogos() {
         <div style="text-align:center;">
           <div class="jogo-meta">${fmt(jogo.data)} ${jogo.hora}</div>
           <div class="placar-inputs" style="flex-direction:row;margin-top:.3rem;">
-            <input type="number" min="0" max="30" id="g1_${jogo.id}" placeholder="?" inputmode="numeric"
-                   oninput="reg(${jogo.id})">
+            <input type="number" min="0" max="30" id="g1_${jogo.id}"
+                   value="${v1}" placeholder="?"
+                   inputmode="numeric"
+                   ${travado ? 'disabled' : `oninput="reg(${jogo.id})"`}>
             <span class="placar-sep">×</span>
-            <input type="number" min="0" max="30" id="g2_${jogo.id}" placeholder="?" inputmode="numeric"
-                   oninput="reg(${jogo.id})">
+            <input type="number" min="0" max="30" id="g2_${jogo.id}"
+                   value="${v2}" placeholder="?"
+                   inputmode="numeric"
+                   ${travado ? 'disabled' : `oninput="reg(${jogo.id})"`}>
           </div>
+          ${salvo ? `<div class="palpite-salvo${travado ? ' travado-txt' : ''}">
+            ✓ salvo: ${salvo.gols1} × ${salvo.gols2}
+          </div>` : ''}
         </div>
         <div class="time time-direita">
           <span>${n2}</span>
@@ -166,12 +310,16 @@ async function carregarJogos() {
       container.appendChild(card);
     });
   });
+
+  if (travados > 0) {
+    document.getElementById('travasInfo').textContent = `🔒 ${travados} jogo(s) encerrado(s) para edição`;
+  }
+
   atualizarContador();
 }
 
 function fmt(iso) {
-  const d = new Date(iso + 'T12:00:00');
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
 function reg(id) {
@@ -189,16 +337,59 @@ function reg(id) {
 }
 
 function atualizarContador() {
-  const t = jogos.length, p = Object.keys(palpites).length;
-  document.getElementById('contadorPalpites').textContent = `${p} de ${t} jogos preenchidos`;
+  const total = jogos.length;
+  const preenchidos = Object.keys(palpites).length;
+  const novos = Object.keys(palpites).filter(id => {
+    const s = palpitesSalvos[id];
+    const p = palpites[id];
+    return !s || s.gols1 !== p.gols1 || s.gols2 !== p.gols2;
+  }).length;
+
+  document.getElementById('contadorPalpites').textContent =
+    `${preenchidos} de ${total} jogos preenchidos`;
+
+  const fab = document.getElementById('fabSalvar');
+  document.getElementById('fabCount').textContent = novos;
+  if (novos > 0) fab.classList.add('visivel');
+  else fab.classList.remove('visivel');
 }
 
 async function salvarTudo() {
-  const lista = Object.values(palpites);
-  if (!lista.length) { toast('Preencha ao menos um palpite.', 'aviso'); return; }
+  // Filtra apenas palpites editáveis (jogos não travados)
+  const lista = Object.values(palpites).filter(p => {
+    const jogo = jogos.find(j => j.id == p.jogoId);
+    return jogo && !jogoJaComecou(jogo);
+  });
+
+  if (!lista.length) { toast('Nenhum palpite novo para salvar.', 'aviso'); return; }
+
+  const fab = document.getElementById('fabSalvar');
+  fab.textContent = 'Salvando...';
+  fab.disabled = true;
+
   const res = await api({ action: 'salvarPalpites', id: participanteId, palpites: lista });
-  if (res.ok) toast(`${lista.length} palpite(s) salvos!`, 'ok');
-  else toast(res.msg || 'Erro ao salvar.', 'erro');
+
+  fab.disabled = false;
+  atualizarContador();
+
+  if (res.ok) {
+    // Atualizar palpitesSalvos e exibir confirmação em cada card
+    lista.forEach(p => {
+      palpitesSalvos[p.jogoId] = { gols1: p.gols1, gols2: p.gols2 };
+      const card = document.getElementById('card_' + p.jogoId);
+      if (!card) return;
+      const salvDiv = card.querySelector('.palpite-salvo');
+      const txt = `✓ salvo: ${p.gols1} × ${p.gols2}`;
+      if (salvDiv) salvDiv.textContent = txt;
+      else {
+        const centro = card.querySelector('[style*="text-align:center"]');
+        if (centro) centro.insertAdjacentHTML('beforeend', `<div class="palpite-salvo">${txt}</div>`);
+      }
+    });
+    toast(`${lista.length} palpite(s) salvos!`, 'ok');
+  } else {
+    toast(res.msg || 'Erro ao salvar.', 'erro');
+  }
 }
 
 window.onload = async () => {

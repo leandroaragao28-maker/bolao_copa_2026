@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
+  <title>Inscrição — Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    .pix-qr-img { border-radius: 10px; display: block; margin: 0 auto; max-width: 220px; width: 100%; }
+    .pix-qr-loader { color: var(--cinza-sub); font-size: .85rem; padding: 2rem 0; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">⚽</span>
+  <div class="header-texto">
+    <h1>Inscrição</h1>
+  </div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="palpites.html">Palpites</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- Steps -->
+  <div class="steps" id="steps">
+    <div class="step ativo">1 · Cadastro</div>
+    <div class="step">2 · Pagamento</div>
+    <div class="step">3 · Aprovação</div>
+    <div class="step">4 · Palpites</div>
+  </div>
+
+  <!-- STEP 1: Formulário novo participante -->
+  <div id="step1" class="card">
+    <p class="card-titulo">Nova inscrição</p>
+    <div class="banner-info">
+      🏆 Preencha os 72 jogos da fase de grupos · <strong>Premiação: 60% / 30% / 10%</strong> do total arrecadado
+    </div>
+    <div class="form-group">
+      <label>Nome completo</label>
+      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" inputmode="text">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" inputmode="email">
+    </div>
+    <div class="form-group">
+      <label>WhatsApp</label>
+      <input type="tel" id="whatsapp" placeholder="(00) 99999-9999" autocomplete="tel" inputmode="tel">
+    </div>
+    <button class="btn btn-primary btn-block" id="btnInscrever" onclick="inscrever()">
+      ⚽ Fazer inscrição
+    </button>
+    <div style="text-align:center;margin-top:.9rem;">
+      <span style="font-size:.82rem;color:var(--cinza-sub);">Já tem código?</span>
+      <button onclick="mostrarPagamentoDireto()" style="background:none;border:none;color:var(--azul);font-weight:700;font-size:.82rem;cursor:pointer;margin-left:.3rem;">Ver meu pagamento</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Pagamento Pix -->
+  <div id="step2" class="card" style="display:none;">
+    <p class="card-titulo">💳 Pagamento via Pix</p>
+
+    <div style="margin-bottom:.8rem;font-size:.88rem;">
+      Olá <strong id="nomeConfirm"></strong>! Seu código de participante:
+    </div>
+    <div class="codigo-display" id="idGrande"></div>
+    <p style="font-size:.73rem;color:var(--cinza-sub);text-align:center;margin-bottom:1rem;">
+      📌 Guarde este código — você precisará dele para acessar seus palpites
+    </p>
+
+    <div class="qr-box">
+      <p style="font-size:.82rem;color:var(--cinza-sub);margin-bottom:.8rem;">
+        Pague <strong>R$ 50,00</strong> via Pix para confirmar sua inscrição
+      </p>
+      <div id="qrContainer" class="pix-qr-loader">⏳ Gerando QR Code...</div>
+      <p style="font-size:.75rem;color:var(--cinza-sub);margin-top:.8rem;margin-bottom:.3rem;">
+        Ou copie o código Pix abaixo:
+      </p>
+      <div class="pix-codigo" id="pixCodigo" onclick="copiarPix()" title="Toque para copiar">
+        Gerando...
+      </div>
+      <button class="btn btn-secondary btn-block" onclick="copiarPix()" style="margin-top:.6rem;">
+        📋 Copiar código Pix
+      </button>
+    </div>
+
+    <div class="banner-aviso">
+      ⏳ Após o pagamento, o administrador irá confirmar e liberar seu acesso. Você receberá aviso pelo WhatsApp.
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="irParaPalpites()">
+      Já paguei → Ir para palpites
+    </button>
+    <button class="btn btn-secondary btn-block" onclick="voltarStep1()" style="margin-top:.5rem;">
+      ← Voltar
+    </button>
+  </div>
+
+  <!-- Mini form: acessar pagamento de quem já tem código -->
+  <div id="step3" class="card" style="display:none;">
+    <p class="card-titulo">💳 Acessar meu pagamento</p>
+    <div class="form-group">
+      <label>Código de participante</label>
+      <input type="text" id="idPagamento" placeholder="BP123456"
+             style="text-transform:uppercase;letter-spacing:.12em;font-size:1.2rem;font-weight:800;text-align:center;"
+             onkeydown="if(event.key==='Enter')buscarParaPagar()"
+             inputmode="text" autocomplete="off">
+    </div>
+    <div style="display:flex;gap:.7rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="buscarParaPagar()">Ver QR Code</button>
+      <button class="btn btn-secondary" onclick="voltarStep1()">Voltar</button>
+    </div>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span class="bnav-icon">🏠</span>Início
+  </a>
+  <a href="ranking.html">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+  <a href="minha-pontuacao.html">
+    <span class="bnav-icon">📊</span>Pontuação
+  </a>
+</nav>
+
+<script>
+let meuId = '';
+let meuNome = '';
+
+function setStep(n) {
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.className = 'step' + (i+1 < n ? ' feito' : i+1 === n ? ' ativo' : '');
+  });
+}
+
+function mostrarStep(s) {
+  ['step1','step2','step3'].forEach(x => document.getElementById(x).style.display = 'none');
+  document.getElementById(s).style.display = '';
+}
+
+// ── Inscrição nova ───────────────────────────────────────────
+async function inscrever() {
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  if (!nome || !email || !whatsapp) { toast('Preencha todos os campos.', 'erro'); return; }
+  if (!email.includes('@')) { toast('E-mail inválido.', 'erro'); return; }
+  const btn = document.getElementById('btnInscrever');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  const res = await api({ action: 'inscrever', nome, email, whatsapp });
+  if (res.ok) {
+    meuId = res.id; meuNome = nome;
+    localStorage.setItem('bolao_id', meuId);
+    mostrarPagamento(meuId, nome);
+    toast('Inscrição realizada!', 'ok');
+  } else {
+    toast(res.msg || 'Erro.', 'erro');
+    btn.disabled = false; btn.textContent = '⚽ Fazer inscrição';
+  }
+}
+
+// ── Exibir tela de pagamento ─────────────────────────────────
+function mostrarPagamento(id, nome) {
+  mostrarStep('step2');
+  document.getElementById('nomeConfirm').textContent = nome;
+  document.getElementById('idGrande').textContent = id;
+  setStep(2);
+  gerarQR(id);
+}
+
+function gerarQR(id) {
+  const payload = gerarPixCopiaECola(CONFIG.PIX_CHAVE, CONFIG.PIX_NOME, CONFIG.PIX_CIDADE, CONFIG.VALOR_INSCRICAO, id);
+  document.getElementById('pixCodigo').textContent = payload;
+
+  const chaveLimpa  = CONFIG.PIX_CHAVE.replace(/[.\-\/]/g, '');
+  const nomeLimpo   = CONFIG.PIX_NOME.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,25);
+  const cidadeLimpa = CONFIG.PIX_CIDADE.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,15);
+
+  const url = 'https://gerarqrcodepix.com.br/api/v1?' +
+    'nome=' + encodeURIComponent(nomeLimpo) +
+    '&cidade=' + encodeURIComponent(cidadeLimpa) +
+    '&valor=' + CONFIG.VALOR_INSCRICAO.toFixed(2) +
+    '&saida=qr' +
+    '&chave=' + encodeURIComponent(chaveLimpa) +
+    '&txid=' + encodeURIComponent(id.replace(/[^a-zA-Z0-9]/g,'').slice(0,25));
+
+  const container = document.getElementById('qrContainer');
+  const img = document.createElement('img');
+  img.className = 'pix-qr-img';
+  img.alt = 'QR Code Pix';
+  img.onload = () => { container.innerHTML = ''; container.appendChild(img); };
+  img.onerror = () => {
+    // Fallback: payload como texto grande legível
+    container.innerHTML = `
+      <div style="background:var(--cinza-fundo);border-radius:8px;padding:1rem;text-align:center;">
+        <p style="font-size:.78rem;color:var(--cinza-sub);margin-bottom:.5rem;">QR Code indisponível — use o código copia-e-cola abaixo</p>
+      </div>`;
+  };
+  img.src = url;
+}
+
+function copiarPix() {
+  navigator.clipboard.writeText(document.getElementById('pixCodigo').textContent)
+    .then(() => toast('Código Pix copiado!', 'ok'))
+    .catch(() => toast('Selecione e copie manualmente.', 'aviso'));
+}
+
+function irParaPalpites() {
+  if (meuId) localStorage.setItem('bolao_id', meuId);
+  window.location.href = 'palpites.html';
+}
+
+function voltarStep1() { mostrarStep('step1'); setStep(1); }
+
+// ── Buscar pagamento para participante já cadastrado ─────────
+function mostrarPagamentoDireto() { mostrarStep('step3'); }
+
+async function buscarParaPagar() {
+  const id = document.getElementById('idPagamento').value.trim().toUpperCase();
+  if (!id) { toast('Digite o código.', 'erro'); return; }
+  const res = await api({ action: 'verificarID', id });
+  if (!res.ok) { toast(res.msg || 'Código não encontrado.', 'erro'); return; }
+  meuId = res.id; meuNome = res.nome;
+  localStorage.setItem('bolao_id', meuId);
+  if (res.status === 'APROVADO') {
+    toast('Pagamento já confirmado! Redirecionando...', 'ok');
+    setTimeout(() => window.location.href = 'palpites.html', 1500);
+  } else {
+    mostrarPagamento(res.id, res.nome);
+  }
+}
+
+// ── Auto: abrir direto na tela de pagamento via ?pagar=ID ────
+window.onload = () => {
+  const params = new URLSearchParams(window.location.search);
+  const pagarId = params.get('pagar');
+  if (pagarId) {
+    api({ action: 'verificarID', id: pagarId }).then(res => {
+      if (res.ok) { meuId = res.id; meuNome = res.nome; mostrarPagamento(res.id, res.nome); }
+    });
+  }
+};
+</script>
+</body>
+</html>

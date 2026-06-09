@@ -4,10 +4,161 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1A237E">
-  <title>Inscrição — Bolão Copa 2026</title>
+  <title>Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="config.js"></script>
+  <style>
+    /* ── Home hero ──────────────────────────────────────────── */
+    .home-hero {
+      background: linear-gradient(150deg, #1A237E 0%, #283593 55%, #3949AB 100%);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.4rem 1.4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-hero::before {
+      content: '🏆';
+      position: absolute;
+      font-size: 9rem;
+      opacity: .07;
+      right: -1.5rem;
+      top: -1.5rem;
+    }
+    .home-hero .edicao {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-bottom: .3rem;
+    }
+    .home-hero h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.05;
+      margin-bottom: .5rem;
+    }
+    .home-hero .subtitulo {
+      font-size: .85rem;
+      opacity: .8;
+      margin-bottom: 1.2rem;
+    }
+    /* Premiação cards dentro do hero */
+    .prem-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .5rem;
+      margin-bottom: 1.2rem;
+    }
+    .prem-card {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: .6rem .4rem;
+      text-align: center;
+    }
+    .prem-card .pc-emoji { font-size: 1.3rem; display: block; }
+    .prem-card .pc-pct   { font-size: .65rem; opacity: .75; font-weight: 700; text-transform: uppercase; letter-spacing:.04em; }
+    .prem-card .pc-valor { font-size: 1rem; font-weight: 900; color: #FFD54F; margin-top: .15rem; line-height: 1.1; }
+    .prem-card .pc-valor.small { font-size: .82rem; }
+    /* Nav buttons do hero */
+    .hero-nav {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .hero-nav .btn-hero-primary {
+      background: var(--ouro);
+      color: var(--azul);
+      font-size: 1rem;
+      font-weight: 800;
+      padding: .9rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: all .2s;
+    }
+    .hero-nav .btn-hero-primary:hover { background: #FFD54F; }
+    .hero-nav .btn-hero-secondary {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      font-size: .9rem;
+      font-weight: 700;
+      padding: .75rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,.3);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: all .2s;
+    }
+    .hero-nav .btn-hero-secondary:hover { background: rgba(255,255,255,.25); }
+    /* Acesso rápido com código */
+    .acesso-rapido {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-sm);
+      padding: .8rem;
+    }
+    .acesso-rapido label {
+      display: block;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      opacity: .75;
+      margin-bottom: .4rem;
+    }
+    .acesso-rapido .input-row {
+      display: flex;
+      gap: .5rem;
+    }
+    .acesso-rapido input {
+      flex: 1;
+      background: rgba(255,255,255,.15);
+      border: 1.5px solid rgba(255,255,255,.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: .55rem .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .acesso-rapido input::placeholder { opacity: .5; }
+    .acesso-rapido input:focus { outline: none; border-color: var(--ouro); }
+    .acesso-rapido .btn-ir {
+      background: var(--ouro);
+      color: var(--azul);
+      font-weight: 800;
+      font-size: .9rem;
+      padding: .55rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+    .acesso-rapido .btn-ir:hover { background: #FFD54F; }
+    .acesso-rapido .recuperar-link {
+      display: block;
+      margin-top: .4rem;
+      font-size: .72rem;
+      opacity: .65;
+      text-align: center;
+      color: #fff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,109 +169,69 @@
   </div>
   <nav>
     <a href="ranking.html">Ranking</a>
-    <a href="palpites.html">Palpites</a>
+    <a href="inscricao.html">Inscrição</a>
     <a href="admin.html">Admin</a>
   </nav>
 </header>
 
 <div class="container">
 
-  <!-- Hero -->
-  <div class="hero">
-    <h2>Bolão da Copa 2026</h2>
-    <p>Faça seus palpites e concorra a prêmios</p>
-    <span class="valor-badge">Inscrição: R$ 50,00</span>
-  </div>
+  <!-- HOME HERO -->
+  <div class="home-hero" id="homeHero">
+    <div class="edicao">Copa do Mundo 2026</div>
+    <h1>Bolão da<br>Copa 2026</h1>
+    <p class="subtitulo">Acerte os placares e concorra a prêmios</p>
 
-  <!-- Steps -->
-  <div class="steps" id="steps">
-    <div class="step ativo">1 · Cadastro</div>
-    <div class="step">2 · Pagamento</div>
-    <div class="step">3 · Aprovação</div>
-    <div class="step">4 · Palpites</div>
-  </div>
-
-  <!-- STEP 1: Formulário -->
-  <div id="step1" class="card">
-    <p class="card-titulo">Nova inscrição</p>
-
-    <div class="banner-info">
-      🏆 Preencha os 72 jogos da fase de grupos · <strong>Premiação: 60% / 30% / 10%</strong> do total arrecadado
-    </div>
-
-    <div class="form-group">
-      <label>Nome completo</label>
-      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" inputmode="text">
-    </div>
-    <div class="form-group">
-      <label>E-mail</label>
-      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" inputmode="email">
-    </div>
-    <div class="form-group">
-      <label>WhatsApp</label>
-      <input type="tel" id="whatsapp" placeholder="(00) 99999-9999" autocomplete="tel" inputmode="tel">
-    </div>
-
-    <button class="btn btn-primary btn-block" id="btnInscrever" onclick="inscrever()">
-      ⚽ Fazer inscrição
-    </button>
-
-    <p style="margin-top:.9rem;font-size:.82rem;color:var(--cinza-sub);text-align:center;">
-      Já tem código?
-      <a href="#" onclick="mostrarBusca()" style="color:var(--azul);font-weight:700;">Recuperar acesso</a>
-    </p>
-  </div>
-
-  <!-- STEP 2: Pix -->
-  <div id="step2" class="card" style="display:none;">
-    <p class="card-titulo">💳 Pagamento via Pix</p>
-
-    <div style="margin-bottom:.8rem;font-size:.88rem;">
-      Olá <strong id="nomeConfirm"></strong>! Seu código:
-    </div>
-    <div class="codigo-display" id="idGrande"></div>
-    <p style="font-size:.75rem;color:var(--cinza-sub);text-align:center;margin-bottom:.8rem;">
-      📌 Guarde este código — você precisará dele para acessar seus palpites
-    </p>
-
-    <div class="qr-box">
-      <p style="font-size:.82rem;color:var(--cinza-sub);margin-bottom:.8rem;">
-        Pague <strong>R$ 50,00</strong> via Pix para confirmar sua inscrição
-      </p>
-      <canvas id="qrCanvas" style="border-radius:8px;"></canvas>
-      <p style="font-size:.75rem;color:var(--cinza-sub);margin-top:.7rem;">Ou copie o código abaixo:</p>
-      <div class="pix-codigo" id="pixCodigo" onclick="copiarPix()" title="Toque para copiar">
-        Gerando código...
+    <!-- Premiação -->
+    <div class="prem-cards" id="premCards">
+      <div class="prem-card">
+        <span class="pc-emoji">🥇</span>
+        <div class="pc-pct">1º lugar · 60%</div>
+        <div class="pc-valor" id="pc1">R$ —</div>
       </div>
-      <button class="btn btn-secondary btn-block" onclick="copiarPix()" style="margin-top:.6rem;">
-        📋 Copiar código Pix
-      </button>
+      <div class="prem-card">
+        <span class="pc-emoji">🥈</span>
+        <div class="pc-pct">2º lugar · 30%</div>
+        <div class="pc-valor small" id="pc2">R$ —</div>
+      </div>
+      <div class="prem-card">
+        <span class="pc-emoji">🥉</span>
+        <div class="pc-pct">3º lugar · 10%</div>
+        <div class="pc-valor small" id="pc3">R$ —</div>
+      </div>
     </div>
 
-    <div class="banner-aviso">
-      ⏳ Após o pagamento, o administrador irá confirmar e liberar seu acesso. Você receberá aviso pelo WhatsApp.
-    </div>
+    <!-- Navegação principal -->
+    <div class="hero-nav">
+      <a href="inscricao.html" class="btn-hero-primary">⚽ Quero participar — R$ 50,00</a>
+      <a href="ranking.html" class="btn-hero-secondary">🏆 Ver ranking e classificação</a>
 
-    <button class="btn btn-primary btn-block" onclick="irParaPalpites()">
-      Já paguei → Acessar palpites
-    </button>
+      <!-- Acesso rápido por código -->
+      <div class="acesso-rapido">
+        <label>Já sou participante — acessar com meu código</label>
+        <div class="input-row">
+          <input type="text" id="codigoHome" placeholder="BP123456"
+                 inputmode="text" autocomplete="off"
+                 onkeydown="if(event.key==='Enter')acessarHome()">
+          <button class="btn-ir" onclick="acessarHome()">Entrar →</button>
+        </div>
+        <span class="recuperar-link" onclick="mostrarRecuperar()">Esqueci meu código</span>
+      </div>
+    </div>
   </div>
 
-  <!-- STEP 3: Busca por código -->
-  <div id="step3" class="card" style="display:none;">
-    <p class="card-titulo">🔍 Recuperar acesso</p>
+  <!-- Card recuperar código (oculto por padrão) -->
+  <div id="cardRecuperar" class="card" style="display:none;">
+    <p class="card-titulo">🔍 Recuperar código</p>
     <div class="form-group">
-      <label>Seu código de participante</label>
-      <input type="text" id="idBusca" placeholder="Ex: BP123456"
-             style="text-transform:uppercase;letter-spacing:.12em;font-size:1.2rem;font-weight:800;text-align:center;"
-             onkeydown="if(event.key==='Enter')buscarPorId()"
-             inputmode="text">
+      <label>E-mail cadastrado</label>
+      <input type="email" id="emailRecuperar" placeholder="seu@email.com" inputmode="email" autocomplete="email">
     </div>
     <div style="display:flex;gap:.7rem;">
-      <button class="btn btn-primary" style="flex:1;" onclick="buscarPorId()">Buscar</button>
-      <button class="btn btn-secondary" onclick="voltarStep1()">Voltar</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="recuperarPorEmail()">Buscar</button>
+      <button class="btn btn-secondary" onclick="fecharRecuperar()">Cancelar</button>
     </div>
-    <div id="resultadoBusca" style="margin-top:.8rem;"></div>
+    <div id="resultadoRecuperar" style="margin-top:.8rem;"></div>
   </div>
 
 </div>
@@ -128,7 +239,7 @@
 <!-- Bottom nav mobile -->
 <nav class="bottom-nav">
   <a href="index.html" class="ativo">
-    <span class="bnav-icon">📝</span>Inscrição
+    <span class="bnav-icon">🏠</span>Início
   </a>
   <a href="ranking.html">
     <span class="bnav-icon">🏆</span>Ranking
@@ -142,125 +253,71 @@
 </nav>
 
 <script>
-let meuId = '';
-let meuNome = '';
-
-function setStep(n) {
-  document.querySelectorAll('.step').forEach((el, i) => {
-    el.className = 'step' + (i+1 < n ? ' feito' : i+1 === n ? ' ativo' : '');
-  });
+// Carregar premiação atualizada
+async function carregarPremiacao() {
+  try {
+    const res = await api({ action: 'getRanking' });
+    if (!res.ok) return;
+    const brl = v => 'R$\u00A0' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('pc1').textContent = brl(res.premiacao.campeao);
+    document.getElementById('pc2').textContent = brl(res.premiacao.vice);
+    document.getElementById('pc3').textContent = brl(res.premiacao.organizacao);
+  } catch(e) {}
 }
 
-async function inscrever() {
-  const nome = document.getElementById('nome').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-  if (!nome || !email || !whatsapp) { toast('Preencha todos os campos.', 'erro'); return; }
-  if (!email.includes('@')) { toast('E-mail inválido.', 'erro'); return; }
-  const btn = document.getElementById('btnInscrever');
-  btn.disabled = true; btn.textContent = 'Enviando...';
-  const res = await api({ action: 'inscrever', nome, email, whatsapp });
-  if (res.ok) {
-    meuId = res.id; meuNome = nome;
-    mostrarPagamento(res.id, nome);
-    toast('Inscrição realizada!', 'ok');
+async function acessarHome() {
+  const id = document.getElementById('codigoHome').value.trim().toUpperCase();
+  if (!id) { toast('Digite seu código.', 'erro'); return; }
+  const res = await api({ action: 'verificarID', id });
+  if (!res.ok) { toast('Código não encontrado.', 'erro'); return; }
+  localStorage.setItem('bolao_id', id);
+  // Aprovado → palpites; Pendente → tela de pagamento
+  if (res.status === 'APROVADO') {
+    window.location.href = 'palpites.html';
   } else {
-    toast(res.msg || 'Erro.', 'erro');
-    btn.disabled = false; btn.textContent = '⚽ Fazer inscrição';
+    window.location.href = 'inscricao.html?pagar=' + id;
   }
 }
 
-function mostrarPagamento(id, nome) {
-  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
-  document.getElementById('step2').style.display = '';
-  document.getElementById('nomeConfirm').textContent = nome;
-  document.getElementById('idGrande').textContent = id;
-  setStep(2);
-  gerarQR(id);
+function mostrarRecuperar() {
+  document.getElementById('cardRecuperar').style.display = '';
+  document.getElementById('cardRecuperar').scrollIntoView({ behavior: 'smooth' });
 }
 
-function gerarQR(id) {
-  // Gera payload local para o código copia-e-cola
-  const payload = gerarPixCopiaECola(CONFIG.PIX_CHAVE, CONFIG.PIX_NOME, CONFIG.PIX_CIDADE, CONFIG.VALOR_INSCRICAO, id);
-  document.getElementById('pixCodigo').textContent = payload;
-
-  // QR Code via API gerarqrcodepix.com.br — mais confiável que geração local
-  const chaveLimpa = CONFIG.PIX_CHAVE.replace(/[.\-\/]/g, '');
-  const nomeLimpo  = CONFIG.PIX_NOME.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,25);
-  const cidadeLimpa = CONFIG.PIX_CIDADE.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,15);
-  const url = `https://gerarqrcodepix.com.br/api/v1?` +
-    `nome=${encodeURIComponent(nomeLimpo)}` +
-    `&cidade=${encodeURIComponent(cidadeLimpa)}` +
-    `&valor=${CONFIG.VALOR_INSCRICAO.toFixed(2)}` +
-    `&saida=qr` +
-    `&chave=${encodeURIComponent(chaveLimpa)}` +
-    `&txid=${encodeURIComponent(id)}`;
-
-  const canvas = document.getElementById('qrCanvas');
-  const img = document.createElement('img');
-  img.src = url;
-  img.width = 200;
-  img.style.borderRadius = '8px';
-  img.onerror = () => {
-    // Fallback: QRCode.js com payload local
-    QRCode.toCanvas(canvas, payload, { width: 200, margin: 2 });
-  };
-  canvas.replaceWith(img);
-  img.id = 'qrCanvas';
+function fecharRecuperar() {
+  document.getElementById('cardRecuperar').style.display = 'none';
 }
 
-function copiarPix() {
-  navigator.clipboard.writeText(document.getElementById('pixCodigo').textContent)
-    .then(() => toast('Código Pix copiado!', 'ok'));
-}
-
-function irParaPalpites() {
-  if (meuId) localStorage.setItem('bolao_id', meuId);
-  window.location.href = 'palpites.html';
-}
-
-function mostrarBusca() {
-  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
-  document.getElementById('step3').style.display = '';
-}
-
-function voltarStep1() {
-  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
-  document.getElementById('step1').style.display = '';
-  setStep(1);
-}
-
-async function buscarPorId() {
-  const id = document.getElementById('idBusca').value.trim().toUpperCase();
-  if (!id) { toast('Digite o código.', 'erro'); return; }
-  const res = await api({ action: 'verificarID', id });
-  const div = document.getElementById('resultadoBusca');
+async function recuperarPorEmail() {
+  const email = document.getElementById('emailRecuperar').value.trim();
+  if (!email) { toast('Digite seu e-mail.', 'erro'); return; }
+  const res = await api({ action: 'buscarPorEmail', email });
+  const div = document.getElementById('resultadoRecuperar');
   if (res.ok) {
-    const ok = res.status === 'APROVADO';
     div.innerHTML = `
-      <div style="background:var(--azul-fundo);border:2px solid var(--azul-palido);border-radius:var(--radius-sm);padding:1rem;margin-top:.5rem;">
-        <strong style="font-size:1rem;">${res.nome}</strong><br>
-        <span style="font-size:.8rem;color:var(--cinza-sub);">${res.email}</span><br><br>
-        <span class="badge badge-${res.status.toLowerCase()}">${res.status}</span>
-        <br><br>
-        <button class="btn btn-primary btn-block" onclick="acessarComId('${res.id}','${res.nome}','${res.status}')">
-          ${ok ? '⚽ Ir para palpites' : '💳 Ver pagamento'}
+      <div class="banner-info">
+        Olá <strong>${res.nome}</strong>!<br>
+        Seu código é: <strong style="font-size:1.1rem;letter-spacing:.08em;">${res.id}</strong><br><br>
+        <button class="btn btn-primary btn-block" onclick="acessarDireto('${res.id}','${res.status}')">
+          ${res.status === 'APROVADO' ? '⚽ Ir para palpites' : '💳 Ver pagamento'}
         </button>
       </div>`;
   } else {
-    div.innerHTML = `<p style="color:var(--vermelho);font-size:.85rem;margin-top:.5rem;">❌ ${res.msg}</p>`;
+    div.innerHTML = `<p style="color:var(--vermelho);font-size:.85rem;">❌ ${res.msg}</p>`;
   }
 }
 
-function acessarComId(id, nome, status) {
+function acessarDireto(id, status) {
   localStorage.setItem('bolao_id', id);
-  if (status !== 'APROVADO') { meuId = id; meuNome = nome; mostrarPagamento(id, nome); }
-  else window.location.href = 'palpites.html';
+  if (status === 'APROVADO') window.location.href = 'palpites.html';
+  else window.location.href = 'inscricao.html?pagar=' + id;
 }
 
 window.onload = () => {
+  carregarPremiacao();
+  // Se já tem código salvo, preencher campo
   const id = localStorage.getItem('bolao_id');
-  if (id) document.getElementById('idBusca') && (document.getElementById('idBusca').value = id);
+  if (id) document.getElementById('codigoHome').value = id;
 };
 </script>
 </body>
