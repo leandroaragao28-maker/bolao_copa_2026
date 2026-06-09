@@ -36,14 +36,41 @@ const NOMES = {
   COL:'Colômbia', ING:'Inglaterra', CRO:'Croácia', GAN:'Gana', PAN:'Panamá',
 };
 
+// ── Loading overlay ─────────────────────────────────────────
+let _loadingCount = 0;
+function _mostrarLoading() {
+  if (++_loadingCount === 1) {
+    let el = document.getElementById('loading-overlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'loading-overlay';
+      el.innerHTML = '<div class="loading-spinner"></div><span class="loading-texto">Carregando…</span>';
+      document.body.appendChild(el);
+    }
+    el.classList.add('visivel');
+  }
+}
+function _esconderLoading() {
+  if (--_loadingCount <= 0) {
+    _loadingCount = 0;
+    const el = document.getElementById('loading-overlay');
+    if (el) el.classList.remove('visivel');
+  }
+}
+
 // ── API helper ──────────────────────────────────────────────
 async function api(body) {
-  const r = await fetch(CONFIG.API_URL, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    redirect: 'follow'
-  });
-  return r.json();
+  _mostrarLoading();
+  try {
+    const r = await fetch(CONFIG.API_URL, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      redirect: 'follow'
+    });
+    return await r.json();
+  } finally {
+    _esconderLoading();
+  }
 }
 
 // ── Formatar data ───────────────────────────────────────────

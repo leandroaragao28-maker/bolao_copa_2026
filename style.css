@@ -487,6 +487,38 @@ header nav a:hover, header nav a.ativo {
 /* ── Resultado real (admin) ───────────────────────────────── */
 .resultado-salvo { border-color: #1B5E20 !important; background: #E8F5E9 !important; }
 
+/* ── Loading overlay ──────────────────────────────────────── */
+#loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,35,126,.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 9000;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: .8rem;
+}
+#loading-overlay.visivel { display: flex; }
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid rgba(255,255,255,.25);
+  border-top-color: var(--ouro);
+  border-radius: 50%;
+  animation: spin .75s linear infinite;
+}
+.loading-texto {
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  opacity: .9;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Scrollbar fina ───────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
