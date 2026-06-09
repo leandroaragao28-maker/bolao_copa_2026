@@ -440,8 +440,8 @@
           </tr>
           <tr>
             <td>
-              <strong>Empate — acertou gols de um time</strong><br>
-              <span style="font-size:.78rem;color:var(--cinza-sub);">O resultado real foi empate e o participante acertou o placar de ao menos um dos times</span>
+              <strong>Empate real — acertou gols de um time</strong><br>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">O resultado foi empate E o participante acertou o número de gols de ao menos um dos times</span>
             </td>
             <td style="text-align:center;"><span class="pts-num" style="color:#6A1B9A;">7,5</span></td>
           </tr>
@@ -472,7 +472,7 @@
       <div class="aviso-importante">
         <span class="ai-icon">📌</span>
         <div>
-          <strong>Regra especial para empates:</strong> nos jogos em que o resultado real é empate, não existe "vencedor" nem "perdedor". Por isso, acertar o placar de qualquer um dos times vale <strong>7,5 pontos</strong> — mesmo que o palpite não tenha sido um empate. Acertar os dois placares (empate exato) vale os <strong>15 pontos</strong> completos.
+          <strong>Regra especial para empates:</strong> quando o resultado real é empate, não existe "vencedor" nem "perdedor". Por isso, acertar o número de gols de <strong>qualquer um</strong> dos times vale <strong>7,5 pontos</strong>. Porém, se o palpite for um empate com placar diferente do real — por exemplo, palpite 2×2 e resultado 1×1 — nenhum gol foi acertado e a pontuação é <strong>zero</strong>. O que conta é acertar o número, não apenas acertar que seria empate.
         </div>
       </div>
     </div>
@@ -527,8 +527,26 @@
           </div>
         </div>
 
-        <!-- 7,5 pts — palpitou empate exato diferente -->
+        <!-- 7,5 pts — empate real, acertou gols de um time -->
         <div class="exemplo-card ex-empate">
+          <div class="ex-header">
+            <div class="ex-time">🇦🇷 Argentina</div>
+            <div class="ex-placar">
+              <div class="ex-placar-label">Real</div>
+              <div class="ex-placar-num">1 × 1</div>
+              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
+              <div class="ex-placar-num">2 × 1</div>
+            </div>
+            <div class="ex-time ex-time-dir">Austrália 🇦🇺</div>
+          </div>
+          <div class="ex-footer">
+            <span>🤝 Empate real — acertou gols da Austrália (1). O número importa, não o resultado.</span>
+            <span style="font-size:1.1rem;font-weight:900;">7,5 pts</span>
+          </div>
+        </div>
+
+        <!-- 0 pts — empate real, palpitou empate mas errou os dois placares -->
+        <div class="exemplo-card ex-zero">
           <div class="ex-header">
             <div class="ex-time">🇦🇷 Argentina</div>
             <div class="ex-placar">
@@ -540,26 +558,8 @@
             <div class="ex-time ex-time-dir">Austrália 🇦🇺</div>
           </div>
           <div class="ex-footer">
-            <span>🤝 Real foi empate, palpite foi empate — placar diferente</span>
-            <span style="font-size:1.1rem;font-weight:900;">7,5 pts</span>
-          </div>
-        </div>
-
-        <!-- 7,5 pts — empate real, acertou um placar sem palpitar empate -->
-        <div class="exemplo-card ex-empate">
-          <div class="ex-header">
-            <div class="ex-time">🇵🇹 Portugal</div>
-            <div class="ex-placar">
-              <div class="ex-placar-label">Real</div>
-              <div class="ex-placar-num">1 × 1</div>
-              <div class="ex-placar-label" style="margin-top:.3rem;">Palpite</div>
-              <div class="ex-placar-num">2 × 1</div>
-            </div>
-            <div class="ex-time ex-time-dir">Uruguai 🇺🇾</div>
-          </div>
-          <div class="ex-footer">
-            <span>🤝 Real foi empate — acertou gols do Uruguai (1)</span>
-            <span style="font-size:1.1rem;font-weight:900;">7,5 pts</span>
+            <span>❌ Palpitou empate, mas errou os dois placares — acertar o resultado não pontua</span>
+            <span style="font-size:1.1rem;font-weight:900;">0 pts</span>
           </div>
         </div>
 
