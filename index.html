@@ -188,18 +188,18 @@
     <div class="prem-cards" id="premCards">
       <div class="prem-card">
         <span class="pc-emoji">🥇</span>
-        <div class="pc-pct">1º lugar · 60%</div>
+        <div class="pc-pct">Campeão · 60%</div>
         <div class="pc-valor" id="pc1">R$ —</div>
       </div>
       <div class="prem-card">
         <span class="pc-emoji">🥈</span>
-        <div class="pc-pct">2º lugar · 30%</div>
+        <div class="pc-pct">Vice · 30%</div>
         <div class="pc-valor small" id="pc2">R$ —</div>
       </div>
       <div class="prem-card">
-        <span class="pc-emoji">🥉</span>
-        <div class="pc-pct">3º lugar · 10%</div>
-        <div class="pc-valor small" id="pc3">R$ —</div>
+        <span class="pc-emoji">👥</span>
+        <div class="pc-pct">Participantes</div>
+        <div class="pc-valor small" id="pc3">—</div>
       </div>
     </div>
 
@@ -250,7 +250,7 @@ async function carregarPremiacao() {
     const brl = v => 'R$\u00A0' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('pc1').textContent = brl(res.premiacao.campeao);
     document.getElementById('pc2').textContent = brl(res.premiacao.vice);
-    document.getElementById('pc3').textContent = brl(res.premiacao.organizacao);
+    document.getElementById('pc3').textContent = res.totalParticipantes ?? '0';
   } catch(e) {}
 }
 

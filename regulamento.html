@@ -244,7 +244,6 @@
     .prem-barra .pb-label { font-size: .68rem; opacity: .85; margin-top: .1rem; }
     .prem-barra.p1 { background: var(--ouro-escuro); min-height: 120px; }
     .prem-barra.p2 { background: #757575; min-height: 90px; }
-    .prem-barra.p3 { background: #8D5524; min-height: 70px; }
 
     /* ── Aviso importante ─────────────────────────────────── */
     .aviso-importante {
@@ -704,21 +703,26 @@
     <div class="secao-body">
       <p class="reg-p">O valor total arrecadado é distribuído conforme abaixo. Quanto mais participantes, maior o prêmio.</p>
 
+      <!-- Pódio: apenas Campeão e Vice-Campeão -->
       <div class="prem-visual">
         <div class="prem-barra p2">
           <span class="pb-emoji">🥈</span>
           <div class="pb-pct">30%</div>
-          <div class="pb-label">2º lugar</div>
+          <div class="pb-label">Vice-Campeão</div>
         </div>
         <div class="prem-barra p1">
           <span class="pb-emoji">🥇</span>
           <div class="pb-pct">60%</div>
-          <div class="pb-label">1º lugar</div>
+          <div class="pb-label">Campeão</div>
         </div>
-        <div class="prem-barra p3">
-          <span class="pb-emoji">🛠</span>
-          <div class="pb-pct">10%</div>
-          <div class="pb-label">Organização</div>
+      </div>
+
+      <!-- Taxa de organização: fora do pódio, com visual distinto -->
+      <div style="background:var(--cinza-fundo);border:2px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:.75rem 1rem;display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;">
+        <span style="font-size:1.5rem;">🛠️</span>
+        <div>
+          <div style="font-size:.78rem;font-weight:800;color:var(--cinza-sub);text-transform:uppercase;letter-spacing:.04em;">Taxa de organização — 10%</div>
+          <div style="font-size:.82rem;color:var(--cinza-texto);margin-top:.1rem;">Cobre os custos operacionais do bolão. Não é prêmio e não é destinado a nenhum colocado.</div>
         </div>
       </div>
 
@@ -727,8 +731,8 @@
           <tr>
             <th>Participantes</th>
             <th>Arrecadado</th>
-            <th>🥇 1º (60%)</th>
-            <th>🥈 2º (30%)</th>
+            <th>🥇 Campeão (60%)</th>
+            <th>🥈 Vice (30%)</th>
           </tr>
         </thead>
         <tbody>
@@ -740,10 +744,10 @@
       </table>
 
       <ul class="reg-lista" style="margin-top:.8rem;">
-        <li data-icon="📅">O vencedor é o participante com maior pontuação ao fim da fase de grupos (após apuração do 72º jogo).</li>
+        <li data-icon="📅">O Campeão é o participante com maior pontuação ao fim da fase de grupos (após apuração do 72º jogo).</li>
         <li data-icon="💰">O pagamento do prêmio será realizado em até <strong>7 dias úteis</strong> após o encerramento da fase de grupos e apuração final.</li>
         <li data-icon="🏦">O pagamento será feito via Pix para a chave cadastrada pelo participante no momento da inscrição.</li>
-        <li data-icon="🧾">O valor da organização (10%) cobre os custos operacionais do bolão.</li>
+        <li data-icon="🧾">O valor da organização (10%) cobre os custos operacionais do bolão e não constitui premiação.</li>
       </ul>
     </div>
   </div>
