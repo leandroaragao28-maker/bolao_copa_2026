@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
+  <title>Minha Pontuação — Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    /* ── Status de cada jogo ──────────────────────────────── */
+    .jogo-resultado {
+      border-radius: 12px;
+      border: 2px solid var(--cinza-borda);
+      margin-bottom: .5rem;
+      overflow: hidden;
+      background: var(--branco);
+    }
+    .jogo-resultado .jr-header {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: .4rem;
+      padding: .7rem .9rem;
+    }
+    .jogo-resultado .jr-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .4rem .9rem;
+      border-top: 1px solid var(--cinza-borda);
+      font-size: .75rem;
+    }
+    /* Status colors */
+    .jr-cheio    { border-color: #1B5E20; background: #F1F8E9; }
+    .jr-vencedor { border-color: #1565C0; background: #E3F2FD; }
+    .jr-empate   { border-color: #6A1B9A; background: #F3E5F5; }
+    .jr-perdedor { border-color: #E65100; background: #FFF3E0; }
+    .jr-zero     { border-color: #B71C1C; background: #FFEBEE; }
+    .jr-pendente { border-color: var(--cinza-borda); background: var(--branco); }
+    .jr-sem_palpite { border-color: #BDBDBD; background: #FAFAFA; opacity: .65; }
+
+    .jr-cheio    .jr-footer { background: #DCEDC8; border-color: #AED581; }
+    .jr-vencedor .jr-footer { background: #BBDEFB; border-color: #90CAF9; }
+    .jr-empate   .jr-footer { background: #E1BEE7; border-color: #CE93D8; }
+    .jr-perdedor .jr-footer { background: #FFE0B2; border-color: #FFCC80; }
+    .jr-zero     .jr-footer { background: #FFCDD2; border-color: #EF9A9A; }
+
+    .pts-badge {
+      font-weight: 900;
+      font-size: .95rem;
+      min-width: 52px;
+      text-align: center;
+      padding: .2rem .5rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pts-cheio    { color: #1B5E20; background: #DCEDC8; }
+    .pts-vencedor { color: #0D47A1; background: #BBDEFB; }
+    .pts-empate   { color: #4A148C; background: #E1BEE7; }
+    .pts-perdedor { color: #BF360C; background: #FFE0B2; }
+    .pts-zero     { color: #B71C1C; background: #FFCDD2; }
+    .pts-pendente { color: var(--cinza-sub); background: var(--cinza-fundo); }
+    .pts-sem_palpite { color: #9E9E9E; background: #F5F5F5; }
+
+    /* placar pair */
+    .placar-pair {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .15rem;
+      min-width: 80px;
+    }
+    .placar-row {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .88rem;
+    }
+    .placar-row .pl { font-weight: 900; font-size: 1.05rem; min-width: 20px; text-align: center; }
+    .placar-label {
+      font-size: .6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--cinza-sub);
+    }
+
+    /* filtro tabs */
+    .filtro-tabs {
+      display: flex;
+      gap: .4rem;
+      overflow-x: auto;
+      padding-bottom: .3rem;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .filtro-tabs::-webkit-scrollbar { display: none; }
+    .filtro-tab {
+      flex-shrink: 0;
+      padding: .35rem .8rem;
+      border-radius: 20px;
+      border: 2px solid var(--cinza-borda);
+      font-size: .75rem;
+      font-weight: 700;
+      background: var(--branco);
+      color: var(--cinza-sub);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .filtro-tab.ativo {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #fff;
+    }
+
+    /* resumo pontos */
+    .resumo-pts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .5rem;
+      margin-bottom: 1rem;
+    }
+    .resumo-pts-item {
+      text-align: center;
+      padding: .6rem .4rem;
+      border-radius: 10px;
+      font-size: .7rem;
+      font-weight: 700;
+    }
+    .resumo-pts-item .n { font-size: 1.3rem; font-weight: 900; display: block; }
+
+    /* posição destaque */
+    .posicao-hero {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-claro) 100%);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .posicao-hero .pos-num {
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .posicao-hero .pos-info .pts-total {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .posicao-hero .pos-info .pts-label {
+      font-size: .75rem;
+      opacity: .8;
+    }
+    .posicao-hero .pos-info .nome {
+      font-size: .9rem;
+      font-weight: 700;
+      opacity: .9;
+      margin-bottom: .2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">📊</span>
+  <div class="header-texto">
+    <h1>Minha Pontuação</h1>
+  </div>
+  <nav>
+    <a href="index.html">Inscrição</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="palpites.html">Palpites</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- Login -->
+  <div id="telaLogin" class="card">
+    <p class="card-titulo">Conferir minha pontuação</p>
+    <div class="banner-info">
+      Veja jogo a jogo seu palpite, o resultado real e os pontos obtidos.
+    </div>
+    <div class="form-group" style="margin-top:.8rem;">
+      <label>Código de participante</label>
+      <input type="text" id="inputId" placeholder="BP123456"
+             style="text-transform:uppercase;letter-spacing:.12em;font-size:1.3rem;font-weight:900;text-align:center;"
+             onkeydown="if(event.key==='Enter')carregar()"
+             inputmode="text" autocomplete="off">
+    </div>
+    <button class="btn btn-primary btn-block" id="btnCarregar" onclick="carregar()">
+      📊 Ver minha pontuação
+    </button>
+    <p style="text-align:center;margin-top:.8rem;font-size:.82rem;color:var(--cinza-sub);">
+      Não tem código? <a href="index.html" style="color:var(--azul);font-weight:700;">Fazer inscrição</a>
+    </p>
+  </div>
+
+  <!-- Conteúdo após login -->
+  <div id="conteudo" style="display:none;">
+
+    <!-- Posição + pontuação total -->
+    <div class="posicao-hero" id="posicaoHero">
+      <div class="pos-num" id="posNum">—</div>
+      <div class="pos-info">
+        <div class="nome" id="nomeHero"></div>
+        <div class="pts-total" id="ptsTotal">0</div>
+        <div class="pts-label">pontos acumulados</div>
+      </div>
+    </div>
+
+    <!-- Resumo por tipo -->
+    <div class="resumo-pts" id="resumoPts"></div>
+
+    <!-- Filtros -->
+    <div class="filtro-tabs" id="filtroTabs">
+      <button class="filtro-tab ativo" onclick="filtrar('todos', this)">Todos</button>
+      <button class="filtro-tab" onclick="filtrar('cheio', this)">🎯 Cheio</button>
+      <button class="filtro-tab" onclick="filtrar('vencedor', this)">✅ Vencedor</button>
+      <button class="filtro-tab" onclick="filtrar('empate', this)">🤝 Empate</button>
+      <button class="filtro-tab" onclick="filtrar('perdedor', this)">📉 Perdedor</button>
+      <button class="filtro-tab" onclick="filtrar('zero', this)">❌ Zero</button>
+      <button class="filtro-tab" onclick="filtrar('pendente', this)">⏳ Pendentes</button>
+      <button class="filtro-tab" onclick="filtrar('sem_palpite', this)">⚠️ Sem palpite</button>
+    </div>
+
+    <!-- Grupo atual exibido -->
+    <div id="grupoAtual" style="font-size:.75rem;color:var(--cinza-sub);margin-bottom:.5rem;text-align:center;"></div>
+
+    <!-- Lista de jogos -->
+    <div id="listaJogos"></div>
+
+    <!-- Botões de ação -->
+    <div style="display:flex;gap:.7rem;margin-top:.5rem;">
+      <button class="btn btn-secondary btn-sm" onclick="location.reload()">🔄 Atualizar</button>
+      <a href="ranking.html" class="btn btn-secondary btn-sm">🏆 Ver ranking</a>
+      <a href="palpites.html" class="btn btn-secondary btn-sm">✏️ Editar palpites</a>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom nav mobile -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span class="bnav-icon">📝</span>Inscrição
+  </a>
+  <a href="ranking.html">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+  <a href="minha-pontuacao.html" class="ativo">
+    <span class="bnav-icon">📊</span>Pontuação
+  </a>
+</nav>
+
+<script>
+let todosOsJogos = [];
+let filtroAtivo = 'todos';
+
+const STATUS_INFO = {
+  cheio:       { label: 'Placar exato',   pts: '15 pts', cor: '#1B5E20' },
+  vencedor:    { label: 'Vencedor certo', pts: '10 pts', cor: '#1565C0' },
+  empate:      { label: 'Empate certo',   pts: '7,5 pts', cor: '#6A1B9A' },
+  perdedor:    { label: 'Placar parcial', pts: '5 pts',  cor: '#E65100' },
+  zero:        { label: 'Sem pontos',     pts: '0 pts',  cor: '#B71C1C' },
+  pendente:    { label: 'Aguardando resultado', pts: '—', cor: 'var(--cinza-sub)' },
+  sem_palpite: { label: 'Sem palpite',    pts: '—',      cor: '#9E9E9E' },
+};
+
+const PTS_LABELS = {
+  cheio: '15', vencedor: '10', empate: '7,5', perdedor: '5', zero: '0',
+  pendente: '—', sem_palpite: '—'
+};
+
+async function carregar() {
+  const id = document.getElementById('inputId').value.trim().toUpperCase();
+  if (!id) { toast('Digite seu código.', 'erro'); return; }
+
+  const btn = document.getElementById('btnCarregar');
+  btn.disabled = true;
+  btn.textContent = 'Carregando...';
+
+  const res = await api({ action: 'getMinhaPontuacao', id });
+
+  btn.disabled = false;
+  btn.textContent = '📊 Ver minha pontuação';
+
+  if (!res.ok) { toast(res.msg, 'erro'); return; }
+
+  localStorage.setItem('bolao_id', id);
+  document.getElementById('telaLogin').style.display = 'none';
+  document.getElementById('conteudo').style.display = '';
+
+  renderizarPontuacao(res);
+}
+
+function renderizarPontuacao(res) {
+  todosOsJogos = res.jogos;
+
+  // Posição hero
+  const pos = res.posicao;
+  const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+  document.getElementById('posNum').textContent = medals[pos] || (pos ? pos + 'º' : '—');
+  document.getElementById('nomeHero').textContent = res.participante.nome;
+  document.getElementById('ptsTotal').textContent = res.totalPontos.toFixed(1);
+  if (res.totalParticipantes) {
+    document.getElementById('posicaoHero').insertAdjacentHTML('beforeend',
+      `<div style="margin-left:auto;text-align:center;opacity:.8;">
+        <div style="font-size:1.2rem;font-weight:900;">${res.totalParticipantes}</div>
+        <div style="font-size:.65rem;">participantes</div>
+       </div>`
+    );
+  }
+
+  // Resumo por tipo
+  const contagem = { cheio: 0, vencedor: 0, empate: 0, perdedor: 0, zero: 0, pendente: 0, sem_palpite: 0 };
+  res.jogos.forEach(j => contagem[j.status]++);
+
+  const resumoItems = [
+    { status: 'cheio',    label: '🎯 Cheio',    bg: '#DCEDC8', cor: '#1B5E20' },
+    { status: 'vencedor', label: '✅ Vencedor',  bg: '#BBDEFB', cor: '#0D47A1' },
+    { status: 'empate',   label: '🤝 Empate',    bg: '#E1BEE7', cor: '#4A148C' },
+    { status: 'perdedor', label: '📉 Parcial',   bg: '#FFE0B2', cor: '#BF360C' },
+    { status: 'zero',     label: '❌ Zero',      bg: '#FFCDD2', cor: '#B71C1C' },
+    { status: 'pendente', label: '⏳ Pendente',  bg: 'var(--cinza-fundo)', cor: 'var(--cinza-sub)' },
+  ];
+
+  document.getElementById('resumoPts').innerHTML = resumoItems.map(it => `
+    <div class="resumo-pts-item" style="background:${it.bg};cursor:pointer;" onclick="filtrarStatus('${it.status}')">
+      <span class="n" style="color:${it.cor};">${contagem[it.status]}</span>
+      <span style="color:${it.cor};">${it.label}</span>
+    </div>`).join('');
+
+  renderizarLista('todos');
+}
+
+function filtrar(status, btn) {
+  filtroAtivo = status;
+  document.querySelectorAll('.filtro-tab').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderizarLista(status);
+}
+
+function filtrarStatus(status) {
+  filtroAtivo = status;
+  document.querySelectorAll('.filtro-tab').forEach(b => {
+    b.classList.toggle('ativo', b.textContent.toLowerCase().includes(status) || status === 'todos');
+  });
+  renderizarLista(status);
+}
+
+function renderizarLista(filtro) {
+  const jogos = filtro === 'todos' ? todosOsJogos : todosOsJogos.filter(j => j.status === filtro);
+
+  const totalFiltro = jogos.length;
+  const ptsNoFiltro = jogos.reduce((s, j) => s + (j.pts || 0), 0);
+
+  if (filtro !== 'todos') {
+    document.getElementById('grupoAtual').textContent =
+      `${totalFiltro} jogo(s) · ${ptsNoFiltro.toFixed(1)} pts neste filtro`;
+  } else {
+    document.getElementById('grupoAtual').textContent = `${totalFiltro} jogos no total`;
+  }
+
+  const container = document.getElementById('listaJogos');
+  container.innerHTML = '';
+
+  if (!jogos.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:2rem;color:var(--cinza-sub);">
+        <div style="font-size:2rem;margin-bottom:.5rem;">🔍</div>
+        <p>Nenhum jogo neste filtro.</p>
+      </div>`;
+    return;
+  }
+
+  // Agrupar por grupo
+  const grupos = {};
+  jogos.forEach(j => { if (!grupos[j.grupo]) grupos[j.grupo] = []; grupos[j.grupo].push(j); });
+
+  Object.keys(grupos).sort().forEach(grp => {
+    container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
+    grupos[grp].forEach(jogo => renderJogo(jogo, container));
+  });
+}
+
+function renderJogo(jogo, container) {
+  const f1 = BANDEIRAS[jogo.time1] || '🏳';
+  const f2 = BANDEIRAS[jogo.time2] || '🏳';
+  const n1 = NOMES[jogo.time1] || jogo.time1;
+  const n2 = NOMES[jogo.time2] || jogo.time2;
+  const st = jogo.status;
+  const info = STATUS_INFO[st];
+
+  // Construir placar do palpite
+  const temPalp = jogo.palp !== null;
+  const temReal = jogo.real !== null;
+
+  const palpStr = temPalp ? `${jogo.palp.gols1} × ${jogo.palp.gols2}` : '? × ?';
+  const realStr = temReal ? `${jogo.real.gols1} × ${jogo.real.gols2}` : '— × —';
+
+  // Badge de pontos
+  const ptsLabel = jogo.pts !== null ? (jogo.pts % 1 === 0 ? jogo.pts : jogo.pts.toFixed(1)) + ' pts' : PTS_LABELS[st];
+
+  const div = document.createElement('div');
+  div.className = `jogo-resultado jr-${st}`;
+  div.innerHTML = `
+    <div class="jr-header">
+      <div class="time">
+        <span class="bandeira">${f1}</span>
+        <span style="font-size:.82rem;">${n1}</span>
+      </div>
+      <div class="placar-pair">
+        <div class="placar-label">Palpite</div>
+        <div class="placar-row" style="color:${temPalp ? 'var(--azul)' : 'var(--cinza-sub)'};">
+          <span class="pl">${temPalp ? jogo.palp.gols1 : '?'}</span>
+          <span style="font-size:.7rem;color:var(--cinza-sub);">×</span>
+          <span class="pl">${temPalp ? jogo.palp.gols2 : '?'}</span>
+        </div>
+        <div class="placar-label" style="margin-top:.25rem;">Resultado</div>
+        <div class="placar-row" style="color:${temReal ? 'var(--cinza-texto)' : 'var(--cinza-sub)'};">
+          <span class="pl" style="font-size:.95rem;">${temReal ? jogo.real.gols1 : '—'}</span>
+          <span style="font-size:.7rem;color:var(--cinza-sub);">×</span>
+          <span class="pl" style="font-size:.95rem;">${temReal ? jogo.real.gols2 : '—'}</span>
+        </div>
+      </div>
+      <div class="time time-direita">
+        <span style="font-size:.82rem;">${n2}</span>
+        <span class="bandeira">${f2}</span>
+      </div>
+    </div>
+    <div class="jr-footer">
+      <span style="color:${info.cor};font-weight:700;">${info.label}</span>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <span style="font-size:.65rem;color:var(--cinza-sub);">${fmt(jogo.data)} ${jogo.hora}</span>
+        <span class="pts-badge pts-${st}">${ptsLabel}</span>
+      </div>
+    </div>`;
+  container.appendChild(div);
+}
+
+function fmt(iso) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+// Auto-login
+window.onload = async () => {
+  const id = localStorage.getItem('bolao_id');
+  if (id) {
+    document.getElementById('inputId').value = id;
+    await carregar();
+  }
+};
+</script>
+</body>
+</html>
