@@ -5,8 +5,8 @@ const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbyZEHNn7NmtJk1IMUfiKSVbpMcTie2ZrIG2cygqj6I_MhBWdZjtR8gJibIRL4AMn-FsRg/exec',
   BOLAO_NOME: 'Bolão da Copa 2026',
   VALOR_INSCRICAO: 50.00,
-  PIX_CHAVE: 'leandroaragao28@gmail.com',   // ← sua chave Pix
-  PIX_NOME: 'Kleiton Gadelha',          // ← nome do beneficiário
+  PIX_CHAVE: '76889726391',   // ← sua chave Pix
+  PIX_NOME: 'Kylvio Alan Almeida Malveira',          // ← nome do beneficiário
   PIX_CIDADE: 'Tabuleiro do Norte',
 };
 
