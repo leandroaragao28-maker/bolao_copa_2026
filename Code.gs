@@ -174,7 +174,6 @@ function inicializarPlanilha() {
 // ENTRY POINT — doPost
 // ────────────────────────────────────────────────────────────
 function doPost(e) {
-  const cors = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
   try {
     const body = JSON.parse(e.postData.contents);
     const { action } = body;
