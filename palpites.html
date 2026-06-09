@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palpites — Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+
+<header>
+  <span class="logo">⚽</span>
+  <div>
+    <h1>Bolão da Copa 2026</h1>
+    <p>SS&amp;B Construtora</p>
+  </div>
+  <nav>
+    <a href="index.html">Inscrição</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="palpites.html" class="ativo">Meus Palpites</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- Login por código -->
+  <div id="telaLogin" class="card">
+    <p class="card-titulo">🔐 Acessar meus palpites</p>
+    <div class="form-group">
+      <label>Código de participante</label>
+      <input type="text" id="inputId" placeholder="Ex: BP123456"
+             style="text-transform:uppercase;letter-spacing:.08em;font-size:1.1rem;font-weight:700;"
+             onkeydown="if(event.key==='Enter')verificarAcesso()">
+    </div>
+    <button class="btn btn-primary btn-block" onclick="verificarAcesso()">Entrar</button>
+    <p style="text-align:center;margin-top:.8rem;font-size:.82rem;color:var(--cinza-sub);">
+      Não tem código? <a href="index.html" style="color:var(--verde);font-weight:600;">Fazer inscrição</a>
+    </p>
+  </div>
+
+  <!-- Info do participante -->
+  <div id="infoParticipante" style="display:none;" class="card">
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <div style="flex:1;">
+        <p style="font-size:.82rem;color:var(--cinza-sub);">Logado como</p>
+        <p style="font-size:1.1rem;font-weight:700;" id="lblNome">-</p>
+        <p style="font-size:.82rem;color:var(--cinza-sub);" id="lblId">-</p>
+      </div>
+      <div id="statusBadge"></div>
+      <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <!-- Aviso aguardando aprovação -->
+  <div id="avisoAguardando" style="display:none;" class="card">
+    <div style="text-align:center;padding:1.5rem;">
+      <p style="font-size:2rem;">⏳</p>
+      <p style="font-size:1rem;font-weight:700;color:var(--cinza-texto);margin:.5rem 0;">Aguardando confirmação do pagamento</p>
+      <p style="font-size:.88rem;color:var(--cinza-sub);">
+        Após confirmarmos seu pagamento de <strong>R$ 50,00</strong>, você será notificado pelo WhatsApp e poderá preencher seus palpites.
+      </p>
+    </div>
+  </div>
+
+  <!-- Área de palpites -->
+  <div id="areaPalpites" style="display:none;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.8rem;">
+      <div>
+        <h2 style="font-size:1.1rem;font-weight:700;">Seus Palpites</h2>
+        <p style="font-size:.82rem;color:var(--cinza-sub);">Preencha o placar previsto para todos os 72 jogos</p>
+      </div>
+      <div style="display:flex;gap:.8rem;align-items:center;">
+        <span id="contadorPalpites" style="font-size:.85rem;color:var(--cinza-sub);"></span>
+        <button class="btn btn-primary" onclick="salvarTudo()">💾 Salvar palpites</button>
+      </div>
+    </div>
+
+    <div style="background:var(--ouro-claro);border:1.5px solid var(--ouro);border-radius:var(--radius-sm);padding:.8rem 1rem;font-size:.83rem;color:#5D4037;margin-bottom:1.2rem;">
+      ⚽ <strong>Dica:</strong> Preencha todos os jogos de uma vez e clique em "Salvar palpites" ao final. Você pode editar seus palpites até o início do primeiro jogo.
+    </div>
+
+    <div id="listaJogos"></div>
+
+    <button class="btn btn-primary btn-block" onclick="salvarTudo()" style="margin-top:1rem;">
+      💾 Salvar todos os palpites
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+let participanteId = '';
+let participanteStatus = '';
+let jogos = [];
+const palpites = {};
+
+// ── Verificar acesso ──────────────────────────────────────────
+async function verificarAcesso() {
+  const id = document.getElementById('inputId').value.trim().toUpperCase();
+  if (!id) { toast('Digite seu código.', 'erro'); return; }
+
+  const res = await api({ action: 'verificarID', id });
+  if (!res.ok) { toast(res.msg, 'erro'); return; }
+
+  participanteId = res.id;
+  participanteStatus = res.status;
+  localStorage.setItem('bolao_id', participanteId);
+
+  document.getElementById('telaLogin').style.display = 'none';
+  document.getElementById('infoParticipante').style.display = '';
+  document.getElementById('lblNome').textContent = res.nome;
+  document.getElementById('lblId').textContent = res.id;
+
+  const badgeClass = res.status === 'APROVADO' ? 'badge-aprovado' : 'badge-pendente';
+  const badgeLabel = res.status === 'APROVADO' ? '✅ Aprovado' : '⏳ Pendente';
+  document.getElementById('statusBadge').innerHTML = `<span class="badge ${badgeClass}">${badgeLabel}</span>`;
+
+  if (res.status !== 'APROVADO') {
+    document.getElementById('avisoAguardando').style.display = '';
+  } else {
+    carregarJogos();
+  }
+}
+
+function sair() {
+  localStorage.removeItem('bolao_id');
+  location.reload();
+}
+
+// ── Carregar jogos e palpites salvos ──────────────────────────
+async function carregarJogos() {
+  document.getElementById('areaPalpites').style.display = '';
+
+  const resJogos = await api({ action: 'getJogos' });
+  if (!resJogos.ok) { toast('Erro ao carregar jogos.', 'erro'); return; }
+  jogos = resJogos.jogos;
+
+  // Renderizar por grupo
+  const grupos = {};
+  jogos.forEach(j => {
+    if (!grupos[j.grupo]) grupos[j.grupo] = [];
+    grupos[j.grupo].push(j);
+  });
+
+  const container = document.getElementById('listaJogos');
+  container.innerHTML = '';
+
+  Object.keys(grupos).sort().forEach(grp => {
+    const grpDiv = document.createElement('div');
+    grpDiv.innerHTML = `<span class="grupo-titulo">Grupo ${grp}</span>`;
+
+    grupos[grp].forEach(jogo => {
+      const f1 = BANDEIRAS[jogo.time1] || '🏳';
+      const f2 = BANDEIRAS[jogo.time2] || '🏳';
+      const n1 = NOMES[jogo.time1] || jogo.time1;
+      const n2 = NOMES[jogo.time2] || jogo.time2;
+
+      const card = document.createElement('div');
+      card.className = 'jogo-card';
+      card.innerHTML = `
+        <div class="time">
+          <span class="bandeira">${f1}</span>
+          <span>${n1}</span>
+        </div>
+        <div>
+          <div class="jogo-meta">${formatarDataJogo(jogo.data)} ${jogo.hora}</div>
+          <div class="placar-inputs">
+            <input type="number" min="0" max="30" id="g1_${jogo.id}"
+                   placeholder="?" oninput="registrarPalpite(${jogo.id})">
+            <span class="placar-sep">×</span>
+            <input type="number" min="0" max="30" id="g2_${jogo.id}"
+                   placeholder="?" oninput="registrarPalpite(${jogo.id})">
+          </div>
+        </div>
+        <div class="time time-direita">
+          <span>${n2}</span>
+          <span class="bandeira">${f2}</span>
+        </div>`;
+      grpDiv.appendChild(card);
+    });
+
+    container.appendChild(grpDiv);
+  });
+
+  atualizarContador();
+}
+
+function formatarDataJogo(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+function registrarPalpite(jogoId) {
+  const g1 = document.getElementById('g1_' + jogoId).value;
+  const g2 = document.getElementById('g2_' + jogoId).value;
+  if (g1 !== '' && g2 !== '') {
+    palpites[jogoId] = { jogoId, gols1: parseInt(g1), gols2: parseInt(g2) };
+  } else {
+    delete palpites[jogoId];
+  }
+  atualizarContador();
+}
+
+function atualizarContador() {
+  const total = jogos.length;
+  const preenchidos = Object.keys(palpites).length;
+  document.getElementById('contadorPalpites').textContent =
+    `${preenchidos}/${total} jogos preenchidos`;
+}
+
+async function salvarTudo() {
+  const lista = Object.values(palpites);
+  if (lista.length === 0) { toast('Preencha ao menos um palpite.', 'aviso'); return; }
+
+  const res = await api({
+    action: 'salvarPalpites',
+    id: participanteId,
+    palpites: lista
+  });
+
+  if (res.ok) toast(`${lista.length} palpite(s) salvos!`, 'ok');
+  else toast(res.msg || 'Erro ao salvar.', 'erro');
+}
+
+// ── Auto-login ────────────────────────────────────────────────
+window.onload = async () => {
+  const id = localStorage.getItem('bolao_id');
+  if (id) {
+    document.getElementById('inputId').value = id;
+    await verificarAcesso();
+  }
+};
+</script>
+</body>
+</html>

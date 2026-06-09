@@ -1,0 +1,358 @@
+/* style.css — Bolão Copa 2026 */
+:root {
+  --verde:        #1B5E20;
+  --verde-med:    #2E7D32;
+  --verde-claro:  #4CAF50;
+  --verde-palido: #A5D6A7;
+  --verde-fundo:  #E8F5E9;
+  --ouro:         #F9A825;
+  --ouro-claro:   #FFF8E1;
+  --cinza-texto:  #263238;
+  --cinza-sub:    #546E7A;
+  --cinza-borda:  #CFD8DC;
+  --cinza-fundo:  #F5F7F8;
+  --branco:       #FFFFFF;
+  --sombra:       0 2px 12px rgba(27,94,32,.10);
+  --sombra-forte: 0 4px 24px rgba(27,94,32,.18);
+  --radius:       12px;
+  --radius-sm:    8px;
+  font-size: 16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--cinza-fundo);
+  color: var(--cinza-texto);
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+header {
+  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-med) 100%);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+header .logo { font-size: 2rem; }
+header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; }
+header p  { font-size: .8rem; opacity: .85; }
+header nav { margin-left: auto; display: flex; gap: .5rem; }
+header nav a {
+  color: rgba(255,255,255,.85);
+  text-decoration: none;
+  font-size: .85rem;
+  padding: .4rem .8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.3);
+  transition: all .2s;
+}
+header nav a:hover, header nav a.ativo {
+  background: rgba(255,255,255,.2);
+  color: #fff;
+}
+
+/* ── Container ────────────────────────────────────────────── */
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+
+/* ── Card ─────────────────────────────────────────────────── */
+.card {
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.card-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--verde);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.card-titulo::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--verde);
+  border-radius: 2px;
+}
+
+/* ── Formulário ───────────────────────────────────────────── */
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--cinza-sub); margin-bottom: .35rem; }
+.form-group input, .form-group select {
+  width: 100%;
+  padding: .65rem .9rem;
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm);
+  font-size: .95rem;
+  transition: border .2s;
+  background: var(--branco);
+  color: var(--cinza-texto);
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(76,175,80,.12);
+}
+
+/* ── Botões ───────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .65rem 1.3rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+}
+.btn-primary { background: var(--verde); color: #fff; }
+.btn-primary:hover { background: var(--verde-med); transform: translateY(-1px); box-shadow: var(--sombra); }
+.btn-secondary { background: var(--verde-fundo); color: var(--verde); }
+.btn-secondary:hover { background: var(--verde-palido); }
+.btn-ouro { background: var(--ouro); color: #fff; }
+.btn-ouro:hover { background: #F57F17; transform: translateY(-1px); }
+.btn-danger { background: #C62828; color: #fff; }
+.btn-danger:hover { background: #B71C1C; }
+.btn-sm { padding: .4rem .8rem; font-size: .82rem; }
+.btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ── Badge status ──────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.badge-pendente  { background: #FFF3E0; color: #E65100; }
+.badge-aprovado  { background: var(--verde-fundo); color: var(--verde); }
+.badge-reprovado { background: #FFEBEE; color: #C62828; }
+
+/* ── Ranking ───────────────────────────────────────────────── */
+.ranking-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: center;
+  gap: .8rem;
+  padding: .8rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: .5rem;
+  background: var(--cinza-fundo);
+  border: 1.5px solid transparent;
+  transition: all .2s;
+}
+.ranking-item:hover { border-color: var(--verde-palido); background: var(--verde-fundo); }
+.ranking-item.pos-1 { background: #FFF8E1; border-color: var(--ouro); }
+.ranking-item.pos-2 { background: #F8F8F8; border-color: #9E9E9E; }
+.ranking-item.pos-3 { background: #FFF3E0; border-color: #FF8A65; }
+.ranking-pos {
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--cinza-sub);
+}
+.ranking-item.pos-1 .ranking-pos { color: var(--ouro); }
+.ranking-item.pos-2 .ranking-pos { color: #757575; }
+.ranking-item.pos-3 .ranking-pos { color: #FF8A65; }
+.ranking-nome { font-weight: 600; font-size: .95rem; }
+.ranking-sub  { font-size: .78rem; color: var(--cinza-sub); }
+.ranking-pts  { font-size: 1.3rem; font-weight: 800; color: var(--verde); }
+
+/* ── Premiação ────────────────────────────────────────────── */
+.premiacao-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.premiacao-item {
+  text-align: center;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--verde-fundo);
+  border: 1.5px solid var(--verde-palido);
+}
+.premiacao-item .emoji { font-size: 2rem; display: block; margin-bottom: .3rem; }
+.premiacao-item .label { font-size: .8rem; color: var(--cinza-sub); font-weight: 600; }
+.premiacao-item .valor { font-size: 1.4rem; font-weight: 800; color: var(--verde); }
+
+/* ── QR Code ──────────────────────────────────────────────── */
+.qr-box {
+  text-align: center;
+  padding: 1.5rem;
+  border: 2px dashed var(--verde-palido);
+  border-radius: var(--radius);
+  margin: 1rem 0;
+}
+.pix-codigo {
+  font-family: monospace;
+  font-size: .75rem;
+  background: var(--cinza-fundo);
+  padding: .8rem;
+  border-radius: var(--radius-sm);
+  word-break: break-all;
+  color: var(--cinza-sub);
+  border: 1px solid var(--cinza-borda);
+  margin-top: .8rem;
+}
+
+/* ── Jogo card ────────────────────────────────────────────── */
+.jogo-card {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .8rem;
+  padding: .8rem 1rem;
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm);
+  margin-bottom: .6rem;
+  background: var(--branco);
+  transition: border-color .2s;
+}
+.jogo-card:hover { border-color: var(--verde-palido); }
+.time { display: flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .9rem; }
+.time-direita { justify-content: flex-end; }
+.time .bandeira { font-size: 1.3rem; }
+.placar-inputs { display: flex; align-items: center; gap: .4rem; }
+.placar-inputs input {
+  width: 42px;
+  text-align: center;
+  padding: .4rem;
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.placar-inputs input:focus { border-color: var(--verde-claro); outline: none; }
+.placar-sep { font-size: 1rem; color: var(--cinza-sub); font-weight: 700; }
+.jogo-meta { font-size: .72rem; color: var(--cinza-sub); text-align: center; }
+.grupo-titulo {
+  background: var(--verde);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+  padding: .3rem .8rem;
+  border-radius: 4px;
+  margin: 1rem 0 .5rem;
+  display: inline-block;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
+  background: var(--cinza-texto);
+  color: #fff;
+  padding: .75rem 1.5rem;
+  border-radius: 20px;
+  font-size: .9rem;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 9999;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.toast-ok      { background: var(--verde); }
+.toast.toast-erro    { background: #C62828; }
+.toast.toast-aviso   { background: var(--ouro); color: #333; }
+
+/* ── Status steps ─────────────────────────────────────────── */
+.steps { display: flex; gap: 0; margin: 1.5rem 0; }
+.step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding-top: 2.5rem;
+  font-size: .78rem;
+  color: var(--cinza-sub);
+}
+.step::before {
+  content: attr(data-num);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--cinza-borda);
+  color: var(--cinza-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: .9rem;
+  z-index: 1;
+}
+.step::after {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--cinza-borda);
+}
+.step:last-child::after { display: none; }
+.step.ativo::before  { background: var(--verde); color: #fff; }
+.step.feito::before  { background: var(--verde-claro); color: #fff; content: '✓'; }
+.step.ativo, .step.feito { color: var(--cinza-texto); font-weight: 600; }
+
+/* ── Tabela admin ─────────────────────────────────────────── */
+.tabela { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.tabela th {
+  background: var(--verde);
+  color: #fff;
+  padding: .6rem .8rem;
+  text-align: left;
+  font-weight: 600;
+}
+.tabela td { padding: .6rem .8rem; border-bottom: 1px solid var(--cinza-borda); }
+.tabela tr:hover td { background: var(--verde-fundo); }
+
+/* ── Stats bar ────────────────────────────────────────────── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-item {
+  background: var(--branco);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+.stat-valor { font-size: 1.6rem; font-weight: 800; color: var(--verde); }
+.stat-label { font-size: .78rem; color: var(--cinza-sub); font-weight: 600; margin-top: .2rem; }
+
+/* ── Responsivo ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .container { padding: 1rem .75rem; }
+  header h1 { font-size: 1.1rem; }
+  header nav a { padding: .3rem .6rem; font-size: .78rem; }
+  .jogo-card { grid-template-columns: 1fr; gap: .4rem; }
+  .time-direita { justify-content: flex-start; }
+  .placar-inputs { justify-content: center; }
+  .premiacao-grid { grid-template-columns: 1fr; }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
