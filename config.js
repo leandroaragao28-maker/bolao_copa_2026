@@ -15,10 +15,10 @@ const BANDEIRAS = {
   MEX:'🇲🇽', AFS:'🇿🇦', COR:'🇰🇷', TCH:'🇨🇿', CAN:'🇨🇦', BOS:'🇧🇦',
   QAT:'🇶🇦', SUI:'🇨🇭', BRA:'🇧🇷', MAR:'🇲🇦', HAI:'🇭🇹', ESC:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
   EUA:'🇺🇸', PAR:'🇵🇾', AUS:'🇦🇺', TUR:'🇹🇷', ALE:'🇩🇪', CUR:'🇨🇼',
-  CDM:'🇨🇩', EQU:'🇪🇨', HOL:'🇳🇱', JAP:'🇯🇵', SUE:'🇸🇪', TUN:'🇹🇳',
+  CDM:'🇨🇮', EQU:'🇪🇨', HOL:'🇳🇱', JAP:'🇯🇵', SUE:'🇸🇪', TUN:'🇹🇳',
   BEL:'🇧🇪', EGI:'🇪🇬', IRA:'🇮🇷', NZE:'🇳🇿', ESP:'🇪🇸', CAB:'🇨🇻',
-  ARS:'🇦🇷', URU:'🇺🇾', FRA:'🇫🇷', SEN:'🇸🇳', IRQ:'🇮🇶', NOR:'🇳🇴',
-  ARG:'🇦🇷', AGL:'🇦🇴', AUT:'🇦🇹', JOR:'🇯🇴', POR:'🇵🇹', RDC:'🇨🇩',
+  ARS:'🇸🇦', URU:'🇺🇾', FRA:'🇫🇷', SEN:'🇸🇳', IRQ:'🇮🇶', NOR:'🇳🇴',
+  ARG:'🇦🇷', AGL:'🇩🇿', AUT:'🇦🇹', JOR:'🇯🇴', POR:'🇵🇹', RDC:'🇨🇩',
   UZB:'🇺🇿', COL:'🇨🇴', ING:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', CRO:'🇭🇷', GAN:'🇬🇭', PAN:'🇵🇦',
 };
 
@@ -27,11 +27,11 @@ const NOMES = {
   MEX:'México', AFS:'África do Sul', COR:'Coreia do Sul', TCH:'República Tcheca',
   CAN:'Canadá', BOS:'Bósnia', QAT:'Catar', SUI:'Suíça', BRA:'Brasil',
   MAR:'Marrocos', HAI:'Haiti', ESC:'Escócia', EUA:'EUA', PAR:'Paraguai',
-  AUS:'Austrália', TUR:'Turquia', ALE:'Alemanha', CUR:'Curaçao', CDM:'Congo',
+  AUS:'Austrália', TUR:'Turquia', ALE:'Alemanha', CUR:'Curaçao', CDM:'Costa do Marfim',
   EQU:'Equador', HOL:'Holanda', JAP:'Japão', SUE:'Suécia', TUN:'Tunísia',
   BEL:'Bélgica', EGI:'Egito', IRA:'Irã', NZE:'Nova Zelândia', ESP:'Espanha',
-  CAB:'Cabo Verde', ARS:'Argentina', URU:'Uruguai', FRA:'França', SEN:'Senegal',
-  IRQ:'Iraque', NOR:'Noruega', ARG:'Argentina', AGL:'Angola', AUT:'Áustria',
+  CAB:'Cabo Verde', ARS:'Arábia Saudita', URU:'Uruguai', FRA:'França', SEN:'Senegal',
+  IRQ:'Iraque', NOR:'Noruega', ARG:'Argentina', AGL:'Argélia', AUT:'Áustria',
   JOR:'Jordânia', POR:'Portugal', RDC:'Rep. D. Congo', UZB:'Uzbequistão',
   COL:'Colômbia', ING:'Inglaterra', CRO:'Croácia', GAN:'Gana', PAN:'Panamá',
 };
