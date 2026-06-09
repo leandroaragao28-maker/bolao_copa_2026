@@ -37,7 +37,7 @@
     .jr-empate   { border-color: #6A1B9A; background: #F3E5F5; }
     .jr-perdedor { border-color: #E65100; background: #FFF3E0; }
     .jr-zero     { border-color: #B71C1C; background: #FFEBEE; }
-    .jr-pendente { border-color: var(--cinza-borda); background: var(--branco); }
+    .jr-pendente_pagamento { border-color: #FFCC80; background: #FFF8E1; opacity: .85; }
     .jr-sem_palpite { border-color: #BDBDBD; background: #FAFAFA; opacity: .65; }
 
     .jr-cheio    .jr-footer { background: #DCEDC8; border-color: #AED581; }
@@ -226,6 +226,7 @@
       <button class="filtro-tab" onclick="filtrar('perdedor', this)">📉 Perdedor</button>
       <button class="filtro-tab" onclick="filtrar('zero', this)">❌ Zero</button>
       <button class="filtro-tab" onclick="filtrar('pendente', this)">⏳ Pendentes</button>
+      <button class="filtro-tab" onclick="filtrar('pendente_pagamento', this)">💳 Pgto pendente</button>
       <button class="filtro-tab" onclick="filtrar('sem_palpite', this)">⚠️ Sem palpite</button>
     </div>
 
@@ -267,18 +268,19 @@ let todosOsJogos = [];
 let filtroAtivo = 'todos';
 
 const STATUS_INFO = {
-  cheio:       { label: 'Placar exato',   pts: '15 pts', cor: '#1B5E20' },
-  vencedor:    { label: 'Vencedor certo', pts: '10 pts', cor: '#1565C0' },
-  empate:      { label: 'Empate certo',   pts: '7,5 pts', cor: '#6A1B9A' },
-  perdedor:    { label: 'Placar parcial', pts: '5 pts',  cor: '#E65100' },
-  zero:        { label: 'Sem pontos',     pts: '0 pts',  cor: '#B71C1C' },
-  pendente:    { label: 'Aguardando resultado', pts: '—', cor: 'var(--cinza-sub)' },
-  sem_palpite: { label: 'Sem palpite',    pts: '—',      cor: '#9E9E9E' },
+  cheio:              { label: 'Placar exato',          pts: '15 pts', cor: '#1B5E20' },
+  vencedor:           { label: 'Vencedor certo',        pts: '10 pts', cor: '#1565C0' },
+  empate:             { label: 'Empate certo',          pts: '7,5 pts', cor: '#6A1B9A' },
+  perdedor:           { label: 'Placar parcial',        pts: '5 pts',  cor: '#E65100' },
+  zero:               { label: 'Sem pontos',            pts: '0 pts',  cor: '#B71C1C' },
+  pendente:           { label: 'Aguardando resultado',  pts: '—',      cor: 'var(--cinza-sub)' },
+  pendente_pagamento: { label: 'Pagamento pendente',    pts: '—',      cor: '#BF360C' },
+  sem_palpite:        { label: 'Sem palpite',           pts: '—',      cor: '#9E9E9E' },
 };
 
 const PTS_LABELS = {
   cheio: '15', vencedor: '10', empate: '7,5', perdedor: '5', zero: '0',
-  pendente: '—', sem_palpite: '—'
+  pendente: '—', pendente_pagamento: '—', sem_palpite: '—'
 };
 
 async function carregar() {
@@ -306,12 +308,24 @@ async function carregar() {
 function renderizarPontuacao(res) {
   todosOsJogos = res.jogos;
 
+  // Banner de pagamento pendente
+  if (!res.pagamentoAprovado) {
+    document.getElementById('conteudo').insertAdjacentHTML('afterbegin', `
+      <div class="banner-aviso" style="margin-bottom:1rem;">
+        ⏳ <strong>Pagamento pendente.</strong> Seus palpites estão salvos, mas a pontuação só será contabilizada no ranking após a confirmação do pagamento.
+      </div>`);
+  }
+
   // Posição hero
   const pos = res.posicao;
   const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
-  document.getElementById('posNum').textContent = medals[pos] || (pos ? pos + 'º' : '—');
+  document.getElementById('posNum').textContent = res.pagamentoAprovado
+    ? (medals[pos] || (pos ? pos + 'º' : '—'))
+    : '⏳';
   document.getElementById('nomeHero').textContent = res.participante.nome;
-  document.getElementById('ptsTotal').textContent = res.totalPontos.toFixed(1);
+  document.getElementById('ptsTotal').textContent = res.pagamentoAprovado
+    ? res.totalPontos.toFixed(1)
+    : '—';
   if (res.totalParticipantes) {
     document.getElementById('posicaoHero').insertAdjacentHTML('beforeend',
       `<div style="margin-left:auto;text-align:center;opacity:.8;">
@@ -326,12 +340,12 @@ function renderizarPontuacao(res) {
   res.jogos.forEach(j => contagem[j.status]++);
 
   const resumoItems = [
-    { status: 'cheio',    label: '🎯 Cheio',    bg: '#DCEDC8', cor: '#1B5E20' },
-    { status: 'vencedor', label: '✅ Vencedor',  bg: '#BBDEFB', cor: '#0D47A1' },
-    { status: 'empate',   label: '🤝 Empate',    bg: '#E1BEE7', cor: '#4A148C' },
-    { status: 'perdedor', label: '📉 Parcial',   bg: '#FFE0B2', cor: '#BF360C' },
-    { status: 'zero',     label: '❌ Zero',      bg: '#FFCDD2', cor: '#B71C1C' },
-    { status: 'pendente', label: '⏳ Pendente',  bg: 'var(--cinza-fundo)', cor: 'var(--cinza-sub)' },
+    { status: 'cheio',              label: '🎯 Cheio',    bg: '#DCEDC8', cor: '#1B5E20' },
+    { status: 'vencedor',           label: '✅ Vencedor',  bg: '#BBDEFB', cor: '#0D47A1' },
+    { status: 'empate',             label: '🤝 Empate',    bg: '#E1BEE7', cor: '#4A148C' },
+    { status: 'perdedor',           label: '📉 Parcial',   bg: '#FFE0B2', cor: '#BF360C' },
+    { status: 'zero',               label: '❌ Zero',      bg: '#FFCDD2', cor: '#B71C1C' },
+    { status: 'pendente',           label: '⏳ Pendente',  bg: 'var(--cinza-fundo)', cor: 'var(--cinza-sub)' },
   ];
 
   document.getElementById('resumoPts').innerHTML = resumoItems.map(it => `

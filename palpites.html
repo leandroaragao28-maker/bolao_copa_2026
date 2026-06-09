@@ -52,13 +52,9 @@
     </div>
   </div>
 
-  <!-- Aguardando -->
-  <div id="avisoAguardando" style="display:none;" class="card">
-    <div style="text-align:center;padding:1rem 0;">
-      <div style="font-size:3rem;margin-bottom:.5rem;">⏳</div>
-      <p style="font-weight:800;font-size:1rem;margin-bottom:.4rem;">Aguardando confirmação</p>
-      <p style="font-size:.85rem;color:var(--cinza-sub);">Após confirmarmos seu Pix de <strong>R$ 50,00</strong>, seu acesso será liberado e você receberá aviso pelo WhatsApp.</p>
-    </div>
+  <!-- Aviso pagamento pendente (não bloqueia) -->
+  <div id="avisoAguardando" style="display:none;" class="banner-aviso">
+    ⏳ <strong>Pagamento pendente.</strong> Você pode preencher e salvar seus palpites normalmente, mas sua pontuação só será contabilizada no ranking após a confirmação do pagamento de <strong>R$ 50,00</strong>.
   </div>
 
   <!-- Área de palpites -->
@@ -118,7 +114,7 @@ async function verificarAcesso() {
   document.getElementById('statusBadge').innerHTML =
     `<span class="badge badge-${res.status.toLowerCase()}">${ok ? '✅ Aprovado' : '⏳ Pendente'}</span>`;
   if (!ok) document.getElementById('avisoAguardando').style.display = '';
-  else carregarJogos();
+  carregarJogos();
 }
 
 function sair() {
