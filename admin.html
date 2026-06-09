@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
   <title>Admin — Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
@@ -11,90 +12,70 @@
 
 <header>
   <span class="logo">⚙️</span>
-  <div>
-    <h1>Administração — Bolão Copa 2026</h1>
-    <p>SS&amp;B Construtora</p>
+  <div class="header-texto">
+    <h1>Administração</h1>
   </div>
   <nav>
-    <a href="index.html">Site público</a>
+    <a href="index.html">Site</a>
     <a href="ranking.html">Ranking</a>
   </nav>
 </header>
 
 <div class="container">
 
-  <!-- Login admin -->
-  <div id="telaLoginAdmin" class="card" style="max-width:400px;margin:auto;">
+  <!-- Login -->
+  <div id="telaLoginAdmin" class="card" style="max-width:380px;margin:0 auto;">
     <p class="card-titulo">🔐 Acesso restrito</p>
     <div class="form-group">
-      <label>Senha do administrador</label>
+      <label>Senha</label>
       <input type="password" id="senhaAdmin" placeholder="••••••••"
-             onkeydown="if(event.key==='Enter')loginAdmin()">
+             onkeydown="if(event.key==='Enter')loginAdmin()" inputmode="text">
     </div>
     <button class="btn btn-primary btn-block" onclick="loginAdmin()">Entrar</button>
   </div>
 
-  <!-- Painel admin -->
+  <!-- Painel -->
   <div id="painelAdmin" style="display:none;">
 
     <!-- Abas -->
-    <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="mostrarAba('participantes')">👥 Participantes</button>
-      <button class="btn btn-secondary" onclick="mostrarAba('resultados')">⚽ Lançar Resultados</button>
-      <button class="btn btn-secondary" onclick="mostrarAba('resumo')">📊 Resumo</button>
-      <button class="btn btn-secondary btn-sm" onclick="sairAdmin()" style="margin-left:auto;">Sair</button>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;overflow-x:auto;padding-bottom:.3rem;">
+      <button class="btn btn-primary btn-sm" id="tabBtnPart" onclick="mostrarAba('participantes')">👥 Participantes</button>
+      <button class="btn btn-secondary btn-sm" id="tabBtnRes" onclick="mostrarAba('resultados')">⚽ Resultados</button>
+      <button class="btn btn-secondary btn-sm" id="tabBtnRes2" onclick="mostrarAba('resumo')">📊 Resumo</button>
+      <button class="btn btn-secondary btn-sm" onclick="sairAdmin()" style="margin-left:auto;white-space:nowrap;">Sair</button>
     </div>
 
-    <!-- ABA: Participantes -->
+    <!-- ABA Participantes -->
     <div id="abaParticipantes">
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
-          <p class="card-titulo" style="margin:0;">👥 Participantes inscritos</p>
-          <button class="btn btn-secondary btn-sm" onclick="carregarParticipantes()">🔄 Atualizar</button>
+      <div class="stats-bar" style="grid-template-columns:repeat(2,1fr);margin-bottom:.8rem;" id="statsParticipantes"></div>
+
+      <div class="card" style="padding:.8rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+          <p class="card-titulo" style="margin:0;font-size:.9rem;">Participantes</p>
+          <button class="btn btn-secondary btn-sm" onclick="carregarParticipantes()">🔄</button>
         </div>
 
-        <div id="statsParticipantes" class="stats-bar" style="margin-bottom:1rem;"></div>
-
-        <div style="overflow-x:auto;">
-          <table class="tabela" id="tabelaPart">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>WhatsApp</th>
-                <th>Status</th>
-                <th>Inscrição</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="corpoPart">
-              <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--cinza-sub);">Carregando...</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Cards de participantes (mobile-friendly) -->
+        <div id="listaParticipantes"></div>
       </div>
     </div>
 
-    <!-- ABA: Resultados -->
+    <!-- ABA Resultados -->
     <div id="abaResultados" style="display:none;">
-      <div class="card">
-        <p class="card-titulo">⚽ Lançar resultados reais</p>
-        <p style="font-size:.85rem;color:var(--cinza-sub);margin-bottom:1rem;">
-          Insira o placar real de cada jogo. O ranking é atualizado automaticamente.
-        </p>
-
+      <div class="card" style="padding:.8rem;">
+        <p class="card-titulo" style="font-size:.9rem;">Lançar resultados reais</p>
+        <div class="banner-info" style="margin-bottom:.8rem;">
+          Insira o placar final de cada jogo. O ranking atualiza automaticamente.
+        </div>
         <div id="listaResultados"></div>
       </div>
     </div>
 
-    <!-- ABA: Resumo -->
+    <!-- ABA Resumo -->
     <div id="abaResumo" style="display:none;">
       <div class="card">
-        <p class="card-titulo">📊 Resumo do bolão</p>
-        <div id="resumoConteudo">
-          <div style="text-align:center;padding:2rem;color:var(--cinza-sub);">Carregando...</div>
-        </div>
+        <p class="card-titulo">Resumo do bolão</p>
+        <div id="resumoConteudo"><div style="text-align:center;padding:2rem;color:var(--cinza-sub);">Carregando...</div></div>
       </div>
     </div>
 
@@ -108,7 +89,7 @@ let jogosCache = [];
 
 async function loginAdmin() {
   const s = document.getElementById('senhaAdmin').value;
-  if (!s) { toast('Digite a senha.', 'erro'); return; }
+  if (!s) return;
   const res = await api({ action: 'adminLogin', senha: s });
   if (res.ok) {
     senhaAdmin = s;
@@ -116,202 +97,172 @@ async function loginAdmin() {
     document.getElementById('painelAdmin').style.display = '';
     carregarParticipantes();
     carregarJogosAdmin();
-  } else {
-    toast(res.msg || 'Senha incorreta.', 'erro');
-  }
+  } else toast(res.msg || 'Senha incorreta.', 'erro');
 }
 
-function sairAdmin() {
-  senhaAdmin = '';
-  location.reload();
-}
+function sairAdmin() { senhaAdmin = ''; location.reload(); }
 
 function mostrarAba(aba) {
   ['participantes','resultados','resumo'].forEach(a => {
     document.getElementById('aba' + a.charAt(0).toUpperCase() + a.slice(1)).style.display = a === aba ? '' : 'none';
   });
+  ['Part','Res','Res2'].forEach(s => {
+    const el = document.getElementById('tabBtn' + s);
+    if (el) el.className = 'btn btn-secondary btn-sm';
+  });
+  const map = { participantes: 'Part', resultados: 'Res', resumo: 'Res2' };
+  const activeEl = document.getElementById('tabBtn' + map[aba]);
+  if (activeEl) activeEl.className = 'btn btn-primary btn-sm';
   if (aba === 'resumo') carregarResumo();
 }
 
-// ── Participantes ─────────────────────────────────────────────
+// ── Participantes ──────────────────────────────────────────
 async function carregarParticipantes() {
   const res = await api({ action: 'getParticipantes', senha: senhaAdmin });
   if (!res.ok) { toast(res.msg, 'erro'); return; }
-
   const lista = res.participantes;
-  const pendentes = lista.filter(p => p.status === 'PENDENTE').length;
-  const aprovados = lista.filter(p => p.status === 'APROVADO').length;
+  const pend = lista.filter(p => p.status === 'PENDENTE').length;
+  const aprov = lista.filter(p => p.status === 'APROVADO').length;
 
   document.getElementById('statsParticipantes').innerHTML = `
     <div class="stat-item"><div class="stat-valor">${lista.length}</div><div class="stat-label">Total</div></div>
-    <div class="stat-item"><div class="stat-valor" style="color:#E65100;">${pendentes}</div><div class="stat-label">Pendentes</div></div>
-    <div class="stat-item"><div class="stat-valor">${aprovados}</div><div class="stat-label">Aprovados</div></div>
-    <div class="stat-item"><div class="stat-valor">R$ ${(aprovados * 50).toLocaleString('pt-BR', {minimumFractionDigits:2})}</div><div class="stat-label">Arrecadado</div></div>
-  `;
+    <div class="stat-item" style="border-color:#FFCC80;background:#FFF3E0;"><div class="stat-valor" style="color:#BF360C;">${pend}</div><div class="stat-label">Pendentes</div></div>
+    <div class="stat-item" style="border-color:var(--azul-palido);background:var(--azul-fundo);"><div class="stat-valor">${aprov}</div><div class="stat-label">Aprovados</div></div>
+    <div class="stat-item destaque"><div class="stat-valor" style="font-size:1.1rem;">R$${(aprov*50).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="stat-label">Arrecadado</div></div>`;
 
-  const tbody = document.getElementById('corpoPart');
-  tbody.innerHTML = '';
-
-  if (lista.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--cinza-sub);">Nenhum participante ainda.</td></tr>';
+  const div = document.getElementById('listaParticipantes');
+  div.innerHTML = '';
+  if (!lista.length) {
+    div.innerHTML = '<p style="text-align:center;color:var(--cinza-sub);padding:1.5rem 0;">Nenhum participante ainda.</p>';
     return;
   }
-
   lista.forEach(p => {
-    const tr = document.createElement('tr');
-    const badgeClass = p.status === 'APROVADO' ? 'badge-aprovado' : p.status === 'REPROVADO' ? 'badge-reprovado' : 'badge-pendente';
-    tr.innerHTML = `
-      <td><code style="font-size:.82rem;">${p.id}</code></td>
-      <td><strong>${p.nome}</strong></td>
-      <td style="font-size:.82rem;">${p.email}</td>
-      <td style="font-size:.82rem;">${p.whatsapp}</td>
-      <td><span class="badge ${badgeClass}">${p.status}</span></td>
-      <td style="font-size:.78rem;white-space:nowrap;">${formatarData(p.dataInscricao)}</td>
-      <td>
-        ${p.status !== 'APROVADO' ? `<button class="btn btn-primary btn-sm" onclick="aprovar('${p.id}')">✅ Aprovar</button> ` : ''}
-        ${p.status === 'APROVADO' ? `<button class="btn btn-danger btn-sm" onclick="revogar('${p.id}')">❌ Revogar</button>` : ''}
-      </td>`;
-    tbody.appendChild(tr);
+    const pend = p.status !== 'APROVADO';
+    const card = document.createElement('div');
+    card.style.cssText = 'border:2px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:.8rem;margin-bottom:.6rem;';
+    if (p.status === 'APROVADO') card.style.borderColor = 'var(--azul-palido)';
+    if (p.status === 'PENDENTE') card.style.borderColor = '#FFCC80';
+    card.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:800;font-size:.9rem;">${p.nome}</div>
+          <div style="font-size:.72rem;color:var(--cinza-sub);">${p.email}</div>
+          <div style="font-size:.72rem;color:var(--cinza-sub);">${p.whatsapp}</div>
+        </div>
+        <span class="badge badge-${p.status.toLowerCase()}">${p.status}</span>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;">
+        <code style="font-size:.72rem;background:var(--cinza-fundo);padding:.2rem .5rem;border-radius:4px;flex:1;">${p.id}</code>
+        ${pend ? `<button class="btn btn-primary btn-sm" onclick="aprovar('${p.id}')">✅ Aprovar</button>` : `<button class="btn btn-danger btn-sm" onclick="revogar('${p.id}')">Revogar</button>`}
+      </div>`;
+    div.appendChild(card);
   });
 }
 
 async function aprovar(id) {
-  if (!confirm(`Confirmar pagamento e aprovar participante ${id}?`)) return;
+  if (!confirm(`Confirmar pagamento e aprovar ${id}?`)) return;
   const res = await api({ action: 'aprovarParticipante', senha: senhaAdmin, id, status: 'APROVADO' });
-  if (res.ok) { toast('Participante aprovado!', 'ok'); carregarParticipantes(); }
+  if (res.ok) { toast('Aprovado!', 'ok'); carregarParticipantes(); }
   else toast(res.msg, 'erro');
 }
 
 async function revogar(id) {
   if (!confirm(`Revogar aprovação de ${id}?`)) return;
   const res = await api({ action: 'aprovarParticipante', senha: senhaAdmin, id, status: 'PENDENTE' });
-  if (res.ok) { toast('Aprovação revogada.', 'aviso'); carregarParticipantes(); }
+  if (res.ok) { toast('Revogado.', 'aviso'); carregarParticipantes(); }
   else toast(res.msg, 'erro');
 }
 
-// ── Resultados ────────────────────────────────────────────────
+// ── Resultados ──────────────────────────────────────────────
 async function carregarJogosAdmin() {
-  const [resJogos, resRes] = await Promise.all([
+  const [resJ, resR] = await Promise.all([
     api({ action: 'getJogos' }),
     api({ action: 'getResultados', senha: senhaAdmin })
   ]);
-
-  if (!resJogos.ok) return;
-  jogosCache = resJogos.jogos;
-  if (resRes.ok) resultadosAtuais = resRes.resultados;
+  if (!resJ.ok) return;
+  jogosCache = resJ.jogos;
+  if (resR.ok) resultadosAtuais = resR.resultados;
 
   const grupos = {};
-  jogosCache.forEach(j => {
-    if (!grupos[j.grupo]) grupos[j.grupo] = [];
-    grupos[j.grupo].push(j);
-  });
+  jogosCache.forEach(j => { if (!grupos[j.grupo]) grupos[j.grupo] = []; grupos[j.grupo].push(j); });
 
   const container = document.getElementById('listaResultados');
   container.innerHTML = '';
 
   Object.keys(grupos).sort().forEach(grp => {
-    const grpDiv = document.createElement('div');
-    grpDiv.innerHTML = `<span class="grupo-titulo">Grupo ${grp}</span>`;
-
+    container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
     grupos[grp].forEach(jogo => {
-      const f1 = BANDEIRAS[jogo.time1] || '🏳';
-      const f2 = BANDEIRAS[jogo.time2] || '🏳';
-      const n1 = NOMES[jogo.time1] || jogo.time1;
-      const n2 = NOMES[jogo.time2] || jogo.time2;
-      const res = resultadosAtuais[jogo.id];
-      const jaApurado = res !== undefined;
-
+      const f1 = BANDEIRAS[jogo.time1] || '🏳', f2 = BANDEIRAS[jogo.time2] || '🏳';
+      const n1 = NOMES[jogo.time1] || jogo.time1, n2 = NOMES[jogo.time2] || jogo.time2;
+      const r = resultadosAtuais[jogo.id];
+      const salvo = r !== undefined;
       const card = document.createElement('div');
-      card.className = 'jogo-card';
-      card.style.borderColor = jaApurado ? 'var(--verde-palido)' : '';
-      card.style.background = jaApurado ? 'var(--verde-fundo)' : '';
+      card.className = 'jogo-card' + (salvo ? ' resultado-salvo' : '');
+      card.id = 'rcard_' + jogo.id;
       card.innerHTML = `
         <div class="time">
           <span class="bandeira">${f1}</span>
           <span>${n1}</span>
         </div>
-        <div>
-          <div class="jogo-meta">${formatarDataJogo(jogo.data)} ${jogo.hora}</div>
-          <div class="placar-inputs">
-            <input type="number" min="0" max="30" id="ra1_${jogo.id}" value="${jaApurado ? res.gols1 : ''}" placeholder="?" style="${jaApurado ? 'border-color:var(--verde);' : ''}">
+        <div style="text-align:center;">
+          <div class="jogo-meta">${fmt(jogo.data)} ${jogo.hora}</div>
+          <div class="placar-inputs" style="flex-direction:row;margin:.3rem 0;">
+            <input type="number" min="0" max="30" id="ra1_${jogo.id}" value="${salvo ? r.gols1 : ''}" placeholder="?" inputmode="numeric" style="${salvo ? 'border-color:#1B5E20;' : ''}">
             <span class="placar-sep">×</span>
-            <input type="number" min="0" max="30" id="ra2_${jogo.id}" value="${jaApurado ? res.gols2 : ''}" placeholder="?" style="${jaApurado ? 'border-color:var(--verde);' : ''}">
+            <input type="number" min="0" max="30" id="ra2_${jogo.id}" value="${salvo ? r.gols2 : ''}" placeholder="?" inputmode="numeric" style="${salvo ? 'border-color:#1B5E20;' : ''}">
           </div>
-          <div style="text-align:center;margin-top:.3rem;">
-            <button class="btn btn-primary btn-sm" onclick="salvarResultado(${jogo.id})">
-              ${jaApurado ? '✏️ Atualizar' : '💾 Salvar'}
-            </button>
-          </div>
+          <button class="btn btn-${salvo ? 'secondary' : 'primary'} btn-sm" onclick="salvarResultado(${jogo.id})">
+            ${salvo ? '✏️' : '💾'}
+          </button>
         </div>
         <div class="time time-direita">
           <span>${n2}</span>
           <span class="bandeira">${f2}</span>
         </div>`;
-      grpDiv.appendChild(card);
+      container.appendChild(card);
     });
-
-    container.appendChild(grpDiv);
   });
 }
 
-function formatarDataJogo(iso) {
-  const d = new Date(iso + 'T12:00:00');
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+function fmt(iso) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
 async function salvarResultado(jogoId) {
   const g1 = document.getElementById('ra1_' + jogoId).value;
   const g2 = document.getElementById('ra2_' + jogoId).value;
   if (g1 === '' || g2 === '') { toast('Preencha os dois placares.', 'aviso'); return; }
-
-  const res = await api({
-    action: 'salvarResultado',
-    senha: senhaAdmin,
-    jogoId,
-    gols1: parseInt(g1),
-    gols2: parseInt(g2)
-  });
-
+  const res = await api({ action: 'salvarResultado', senha: senhaAdmin, jogoId, gols1: parseInt(g1), gols2: parseInt(g2) });
   if (res.ok) {
     toast('Resultado salvo!', 'ok');
     resultadosAtuais[jogoId] = { gols1: parseInt(g1), gols2: parseInt(g2) };
-    // Destacar como apurado
-    const i1 = document.getElementById('ra1_' + jogoId);
-    const i2 = document.getElementById('ra2_' + jogoId);
-    i1.style.borderColor = 'var(--verde)';
-    i2.style.borderColor = 'var(--verde)';
-  } else {
-    toast(res.msg || 'Erro.', 'erro');
-  }
+    document.getElementById('rcard_' + jogoId)?.classList.add('resultado-salvo');
+  } else toast(res.msg || 'Erro.', 'erro');
 }
 
-// ── Resumo ────────────────────────────────────────────────────
+// ── Resumo ──────────────────────────────────────────────────
 async function carregarResumo() {
   const res = await api({ action: 'getRanking' });
-  if (!res.ok) { toast(res.msg, 'erro'); return; }
-
-  const div = document.getElementById('resumoConteudo');
+  if (!res.ok) return;
   const top3 = res.ranking.slice(0, 3);
-  const medals = ['🥇','🥈','🥉'];
-
-  div.innerHTML = `
-    <div class="stats-bar" style="margin-bottom:1.5rem;">
-      <div class="stat-item"><div class="stat-valor">${res.totalParticipantes}</div><div class="stat-label">Participantes aprovados</div></div>
-      <div class="stat-item"><div class="stat-valor">R$ ${(res.totalArrecadado).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="stat-label">Total arrecadado</div></div>
-      <div class="stat-item"><div class="stat-valor">${res.jogosComResultado}/${res.totalJogos}</div><div class="stat-label">Jogos apurados</div></div>
+  const m = ['🥇','🥈','🥉'];
+  const brl = v => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  document.getElementById('resumoConteudo').innerHTML = `
+    <div class="stats-bar" style="grid-template-columns:repeat(2,1fr);margin-bottom:1rem;">
+      <div class="stat-item"><div class="stat-valor">${res.totalParticipantes}</div><div class="stat-label">Aprovados</div></div>
+      <div class="stat-item destaque"><div class="stat-valor" style="font-size:1.1rem;">${brl(res.totalArrecadado)}</div><div class="stat-label">Arrecadado</div></div>
+      <div class="stat-item"><div class="stat-valor">${res.jogosComResultado}</div><div class="stat-label">Jogos apurados</div></div>
+      <div class="stat-item"><div class="stat-valor">${res.totalJogos}</div><div class="stat-label">Total de jogos</div></div>
     </div>
-    <h3 style="font-size:.95rem;font-weight:700;margin-bottom:.8rem;">Top 3 atual:</h3>
+    <p style="font-weight:800;font-size:.88rem;margin-bottom:.6rem;color:var(--azul);">Top 3 atual:</p>
     ${top3.length ? top3.map((r,i) => `
-      <div style="display:flex;align-items:center;gap:.8rem;padding:.6rem 1rem;background:var(--cinza-fundo);border-radius:var(--radius-sm);margin-bottom:.4rem;">
-        <span style="font-size:1.3rem;">${medals[i]}</span>
-        <span style="flex:1;font-weight:600;">${r.nome}</span>
-        <span style="font-size:1.1rem;font-weight:800;color:var(--verde);">${r.pontos.toFixed(1)} pts</span>
-      </div>`).join('') : '<p style="color:var(--cinza-sub);">Nenhum resultado apurado ainda.</p>'}
-    <div style="margin-top:1.5rem;padding:1rem;background:var(--ouro-claro);border:1.5px solid var(--ouro);border-radius:var(--radius-sm);">
-      <strong>Premiação estimada:</strong><br>
-      🥇 Campeão: <strong>R$ ${(res.premiacao.campeao).toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong> &nbsp;|&nbsp;
-      🥈 Vice: <strong>R$ ${(res.premiacao.vice).toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong> &nbsp;|&nbsp;
-      🛠 Org.: <strong>R$ ${(res.premiacao.organizacao).toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong>
+      <div style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;background:var(--cinza-fundo);border-radius:var(--radius-sm);margin-bottom:.4rem;">
+        <span style="font-size:1.3rem;">${m[i]}</span>
+        <span style="flex:1;font-weight:700;font-size:.9rem;">${r.nome}</span>
+        <span style="font-weight:900;color:var(--azul);">${r.pontos.toFixed(1)} pts</span>
+      </div>`).join('') : '<p style="color:var(--cinza-sub);font-size:.85rem;">Nenhum resultado ainda.</p>'}
+    <div class="banner-aviso" style="margin-top:1rem;">
+      🥇 ${brl(res.premiacao.campeao)} &nbsp;|&nbsp; 🥈 ${brl(res.premiacao.vice)} &nbsp;|&nbsp; 🛠 ${brl(res.premiacao.organizacao)}
     </div>`;
 }
 </script>

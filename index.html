@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
   <title>Inscrição — Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -12,115 +13,130 @@
 
 <header>
   <span class="logo">⚽</span>
-  <div>
-    <h1>Bolão da Copa 2026</h1>
-    <p>SS&amp;B Construtora</p>
+  <div class="header-texto">
+    <h1>Bolão Copa 2026</h1>
   </div>
   <nav>
-    <a href="index.html" class="ativo">Inscrição</a>
     <a href="ranking.html">Ranking</a>
-    <a href="palpites.html">Meus Palpites</a>
+    <a href="palpites.html">Palpites</a>
+    <a href="admin.html">Admin</a>
   </nav>
 </header>
 
 <div class="container">
 
-  <!-- Steps de progresso -->
-  <div class="steps" id="steps">
-    <div class="step ativo" data-num="1">Cadastro</div>
-    <div class="step" data-num="2">Pagamento</div>
-    <div class="step" data-num="3">Aguardar aprovação</div>
-    <div class="step" data-num="4">Palpites</div>
+  <!-- Hero -->
+  <div class="hero">
+    <h2>Bolão da Copa 2026</h2>
+    <p>Faça seus palpites e concorra a prêmios</p>
+    <span class="valor-badge">Inscrição: R$ 50,00</span>
   </div>
 
-  <!-- STEP 1: Formulário de cadastro -->
+  <!-- Steps -->
+  <div class="steps" id="steps">
+    <div class="step ativo">1 · Cadastro</div>
+    <div class="step">2 · Pagamento</div>
+    <div class="step">3 · Aprovação</div>
+    <div class="step">4 · Palpites</div>
+  </div>
+
+  <!-- STEP 1: Formulário -->
   <div id="step1" class="card">
-    <p class="card-titulo">Inscrição no Bolão</p>
+    <p class="card-titulo">Nova inscrição</p>
 
-    <div style="background:var(--verde-fundo);border:1.5px solid var(--verde-palido);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1.2rem;font-size:.88rem;color:var(--cinza-sub);">
-      <strong style="color:var(--verde);">Regulamento rápido:</strong><br>
-      Valor: <strong>R$ 50,00</strong> (pagamento via Pix) &nbsp;|&nbsp;
-      Preencha os placares de todos os 72 jogos da fase de grupos antes do início<br>
-      <strong>Premiação:</strong> 🥇 60% &nbsp; 🥈 30% &nbsp; 🛠 10% (organização)
+    <div class="banner-info">
+      🏆 Preencha os 72 jogos da fase de grupos · <strong>Premiação: 60% / 30% / 10%</strong> do total arrecadado
     </div>
 
     <div class="form-group">
-      <label>Nome completo *</label>
-      <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
+      <label>Nome completo</label>
+      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" inputmode="text">
     </div>
     <div class="form-group">
-      <label>E-mail *</label>
-      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+      <label>E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" inputmode="email">
     </div>
     <div class="form-group">
-      <label>WhatsApp *</label>
-      <input type="tel" id="whatsapp" placeholder="(85) 99999-9999" autocomplete="tel">
+      <label>WhatsApp</label>
+      <input type="tel" id="whatsapp" placeholder="(00) 99999-9999" autocomplete="tel" inputmode="tel">
     </div>
 
     <button class="btn btn-primary btn-block" id="btnInscrever" onclick="inscrever()">
-      ⚽ Realizar inscrição
+      ⚽ Fazer inscrição
     </button>
 
-    <p style="margin-top:1rem;font-size:.82rem;color:var(--cinza-sub);text-align:center;">
-      Já tem inscrição?
-      <a href="#" onclick="buscarInscricao()" style="color:var(--verde);font-weight:600;">Recuperar meu acesso</a>
+    <p style="margin-top:.9rem;font-size:.82rem;color:var(--cinza-sub);text-align:center;">
+      Já tem código?
+      <a href="#" onclick="mostrarBusca()" style="color:var(--azul);font-weight:700;">Recuperar acesso</a>
     </p>
   </div>
 
-  <!-- STEP 2: QR Code Pix -->
+  <!-- STEP 2: Pix -->
   <div id="step2" class="card" style="display:none;">
     <p class="card-titulo">💳 Pagamento via Pix</p>
 
-    <div style="margin-bottom:1rem;font-size:.9rem;color:var(--cinza-sub);">
-      Olá <strong id="nomeConfirm"></strong>! Seu código de participante é
-      <code id="idConfirm" style="background:var(--verde-fundo);color:var(--verde);padding:.2rem .5rem;border-radius:4px;font-weight:700;font-size:1rem;"></code>
+    <div style="margin-bottom:.8rem;font-size:.88rem;">
+      Olá <strong id="nomeConfirm"></strong>! Seu código:
     </div>
+    <div class="codigo-display" id="idGrande"></div>
+    <p style="font-size:.75rem;color:var(--cinza-sub);text-align:center;margin-bottom:.8rem;">
+      📌 Guarde este código — você precisará dele para acessar seus palpites
+    </p>
 
     <div class="qr-box">
-      <p style="font-size:.85rem;color:var(--cinza-sub);margin-bottom:1rem;">
-        Escaneie o QR Code abaixo com o app do seu banco para pagar <strong>R$ 50,00</strong>
+      <p style="font-size:.82rem;color:var(--cinza-sub);margin-bottom:.8rem;">
+        Pague <strong>R$ 50,00</strong> via Pix para confirmar sua inscrição
       </p>
-      <canvas id="qrCanvas"></canvas>
-      <p style="margin-top:.8rem;font-size:.78rem;color:var(--cinza-sub);">
-        Ou copie o código Pix:
-      </p>
-      <div class="pix-codigo" id="pixCodigo" onclick="copiarPix()" style="cursor:pointer;" title="Clique para copiar">
-        Gerando...
+      <canvas id="qrCanvas" style="border-radius:8px;"></canvas>
+      <p style="font-size:.75rem;color:var(--cinza-sub);margin-top:.7rem;">Ou copie o código abaixo:</p>
+      <div class="pix-codigo" id="pixCodigo" onclick="copiarPix()" title="Toque para copiar">
+        Gerando código...
       </div>
-      <button class="btn btn-secondary btn-sm" onclick="copiarPix()" style="margin-top:.6rem;">
+      <button class="btn btn-secondary btn-block" onclick="copiarPix()" style="margin-top:.6rem;">
         📋 Copiar código Pix
       </button>
     </div>
 
-    <div style="background:var(--ouro-claro);border:1.5px solid var(--ouro);border-radius:var(--radius-sm);padding:1rem;font-size:.85rem;color:#5D4037;margin-bottom:1rem;">
-      ⚠️ <strong>Importante:</strong> Após realizar o pagamento, o administrador irá confirmar e liberar seu acesso para preencher os palpites. Você receberá a confirmação pelo WhatsApp.
+    <div class="banner-aviso">
+      ⏳ Após o pagamento, o administrador irá confirmar e liberar seu acesso. Você receberá aviso pelo WhatsApp.
     </div>
 
-    <div style="text-align:center;">
-      <p style="font-size:.82rem;color:var(--cinza-sub);margin-bottom:.5rem;">Salve seu código de participante:</p>
-      <div style="font-size:1.5rem;font-weight:800;color:var(--verde);letter-spacing:.1em;" id="idGrande"></div>
-    </div>
-
-    <button class="btn btn-primary btn-block" onclick="irParaPalpites()" style="margin-top:1rem;">
-      Já paguei → Ir para meus palpites
+    <button class="btn btn-primary btn-block" onclick="irParaPalpites()">
+      Já paguei → Acessar palpites
     </button>
   </div>
 
-  <!-- STEP 3: Recuperar acesso -->
+  <!-- STEP 3: Busca por código -->
   <div id="step3" class="card" style="display:none;">
-    <p class="card-titulo">🔍 Recuperar meu acesso</p>
+    <p class="card-titulo">🔍 Recuperar acesso</p>
     <div class="form-group">
       <label>Seu código de participante</label>
-      <input type="text" id="idBusca" placeholder="Ex: BP123456" style="text-transform:uppercase;letter-spacing:.1em;font-size:1.1rem;">
+      <input type="text" id="idBusca" placeholder="Ex: BP123456"
+             style="text-transform:uppercase;letter-spacing:.12em;font-size:1.2rem;font-weight:800;text-align:center;"
+             onkeydown="if(event.key==='Enter')buscarPorId()"
+             inputmode="text">
     </div>
-    <div style="display:flex;gap:.8rem;">
-      <button class="btn btn-primary" onclick="buscarPorId()">Buscar</button>
+    <div style="display:flex;gap:.7rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="buscarPorId()">Buscar</button>
       <button class="btn btn-secondary" onclick="voltarStep1()">Voltar</button>
     </div>
-    <div id="resultadoBusca" style="margin-top:1rem;"></div>
+    <div id="resultadoBusca" style="margin-top:.8rem;"></div>
   </div>
 
 </div>
+
+<!-- Bottom nav mobile -->
+<nav class="bottom-nav">
+  <a href="index.html" class="ativo">
+    <span class="bnav-icon">📝</span>Inscrição
+  </a>
+  <a href="ranking.html">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+</nav>
 
 <script>
 let meuId = '';
@@ -128,9 +144,7 @@ let meuNome = '';
 
 function setStep(n) {
   document.querySelectorAll('.step').forEach((el, i) => {
-    el.classList.remove('ativo', 'feito');
-    if (i + 1 < n) el.classList.add('feito');
-    if (i + 1 === n) el.classList.add('ativo');
+    el.className = 'step' + (i+1 < n ? ' feito' : i+1 === n ? ' ativo' : '');
   });
 }
 
@@ -138,56 +152,39 @@ async function inscrever() {
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
   const whatsapp = document.getElementById('whatsapp').value.trim();
-
   if (!nome || !email || !whatsapp) { toast('Preencha todos os campos.', 'erro'); return; }
   if (!email.includes('@')) { toast('E-mail inválido.', 'erro'); return; }
-
   const btn = document.getElementById('btnInscrever');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
+  btn.disabled = true; btn.textContent = 'Enviando...';
   const res = await api({ action: 'inscrever', nome, email, whatsapp });
-
   if (res.ok) {
-    meuId = res.id;
-    meuNome = nome;
-    mostrarPagamento(meuId, nome);
+    meuId = res.id; meuNome = nome;
+    mostrarPagamento(res.id, nome);
     toast('Inscrição realizada!', 'ok');
   } else {
-    toast(res.msg || 'Erro na inscrição.', 'erro');
-    btn.disabled = false;
-    btn.textContent = '⚽ Realizar inscrição';
+    toast(res.msg || 'Erro.', 'erro');
+    btn.disabled = false; btn.textContent = '⚽ Fazer inscrição';
   }
 }
 
 function mostrarPagamento(id, nome) {
-  document.getElementById('step1').style.display = 'none';
+  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
   document.getElementById('step2').style.display = '';
-  document.getElementById('step3').style.display = 'none';
   document.getElementById('nomeConfirm').textContent = nome;
-  document.getElementById('idConfirm').textContent = id;
   document.getElementById('idGrande').textContent = id;
   setStep(2);
   gerarQR(id);
 }
 
 function gerarQR(id) {
-  const pixPayload = gerarPixCopiaECola(
-    CONFIG.PIX_CHAVE,
-    CONFIG.PIX_NOME,
-    CONFIG.PIX_CIDADE,
-    CONFIG.VALOR_INSCRICAO,
-    id
-  );
-  document.getElementById('pixCodigo').textContent = pixPayload;
-  QRCode.toCanvas(document.getElementById('qrCanvas'), pixPayload, { width: 220, margin: 2 }, function(err) {
-    if (err) document.getElementById('pixCodigo').textContent = pixPayload;
-  });
+  const payload = gerarPixCopiaECola(CONFIG.PIX_CHAVE, CONFIG.PIX_NOME, CONFIG.PIX_CIDADE, CONFIG.VALOR_INSCRICAO, id);
+  document.getElementById('pixCodigo').textContent = payload;
+  QRCode.toCanvas(document.getElementById('qrCanvas'), payload, { width: 200, margin: 2, color: { dark: '#1A237E', light: '#E8EAF6' } });
 }
 
 function copiarPix() {
-  const texto = document.getElementById('pixCodigo').textContent;
-  navigator.clipboard.writeText(texto).then(() => toast('Código Pix copiado!', 'ok'));
+  navigator.clipboard.writeText(document.getElementById('pixCodigo').textContent)
+    .then(() => toast('Código Pix copiado!', 'ok'));
 }
 
 function irParaPalpites() {
@@ -195,15 +192,14 @@ function irParaPalpites() {
   window.location.href = 'palpites.html';
 }
 
-function buscarInscricao() {
-  document.getElementById('step1').style.display = 'none';
-  document.getElementById('step2').style.display = 'none';
+function mostrarBusca() {
+  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
   document.getElementById('step3').style.display = '';
 }
 
 function voltarStep1() {
+  ['step1','step2','step3'].forEach(s => document.getElementById(s).style.display = 'none');
   document.getElementById('step1').style.display = '';
-  document.getElementById('step3').style.display = 'none';
   setStep(1);
 }
 
@@ -213,37 +209,31 @@ async function buscarPorId() {
   const res = await api({ action: 'verificarID', id });
   const div = document.getElementById('resultadoBusca');
   if (res.ok) {
-    const statusColor = res.status === 'APROVADO' ? 'var(--verde)' : '#E65100';
+    const ok = res.status === 'APROVADO';
     div.innerHTML = `
-      <div style="background:var(--verde-fundo);border:1.5px solid var(--verde-palido);border-radius:var(--radius-sm);padding:1rem;">
-        <strong>${res.nome}</strong><br>
-        <small style="color:var(--cinza-sub);">${res.email}</small><br>
-        Status: <span style="font-weight:700;color:${statusColor};">${res.status}</span>
+      <div style="background:var(--azul-fundo);border:2px solid var(--azul-palido);border-radius:var(--radius-sm);padding:1rem;margin-top:.5rem;">
+        <strong style="font-size:1rem;">${res.nome}</strong><br>
+        <span style="font-size:.8rem;color:var(--cinza-sub);">${res.email}</span><br><br>
+        <span class="badge badge-${res.status.toLowerCase()}">${res.status}</span>
         <br><br>
-        <button class="btn btn-primary btn-sm" onclick="acessarComId('${res.id}','${res.nome}','${res.status}')">Acessar meus palpites</button>
+        <button class="btn btn-primary btn-block" onclick="acessarComId('${res.id}','${res.nome}','${res.status}')">
+          ${ok ? '⚽ Ir para palpites' : '💳 Ver pagamento'}
+        </button>
       </div>`;
   } else {
-    div.innerHTML = `<div style="color:#C62828;font-size:.88rem;">${res.msg}</div>`;
+    div.innerHTML = `<p style="color:var(--vermelho);font-size:.85rem;margin-top:.5rem;">❌ ${res.msg}</p>`;
   }
 }
 
 function acessarComId(id, nome, status) {
   localStorage.setItem('bolao_id', id);
-  if (status !== 'APROVADO') {
-    meuId = id;
-    meuNome = nome;
-    mostrarPagamento(id, nome);
-  } else {
-    window.location.href = 'palpites.html';
-  }
+  if (status !== 'APROVADO') { meuId = id; meuNome = nome; mostrarPagamento(id, nome); }
+  else window.location.href = 'palpites.html';
 }
 
-// Verificar se já tem ID salvo
 window.onload = () => {
   const id = localStorage.getItem('bolao_id');
-  if (id) {
-    document.getElementById('idBusca') && (document.getElementById('idBusca').value = id);
-  }
+  if (id) document.getElementById('idBusca') && (document.getElementById('idBusca').value = id);
 };
 </script>
 </body>

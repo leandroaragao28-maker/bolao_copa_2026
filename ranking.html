@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
   <title>Ranking — Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
@@ -10,158 +11,159 @@
 <body>
 
 <header>
-  <span class="logo">⚽</span>
-  <div>
-    <h1>Bolão da Copa 2026</h1>
-    <p>SS&amp;B Construtora</p>
+  <span class="logo">🏆</span>
+  <div class="header-texto">
+    <h1>Ranking</h1>
   </div>
   <nav>
     <a href="index.html">Inscrição</a>
     <a href="ranking.html" class="ativo">Ranking</a>
-    <a href="palpites.html">Meus Palpites</a>
+    <a href="palpites.html">Palpites</a>
   </nav>
 </header>
 
 <div class="container">
 
   <!-- Stats -->
-  <div class="stats-bar" id="statsBar">
+  <div class="stats-bar">
     <div class="stat-item">
-      <div class="stat-valor" id="totalPart">-</div>
+      <div class="stat-valor" id="totalPart">—</div>
       <div class="stat-label">Participantes</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-valor" id="totalArrecadado">-</div>
-      <div class="stat-label">Total arrecadado</div>
+    <div class="stat-item destaque">
+      <div class="stat-valor" id="totalArrecadado">—</div>
+      <div class="stat-label">Arrecadado</div>
     </div>
     <div class="stat-item">
-      <div class="stat-valor" id="totalJogos">-</div>
+      <div class="stat-valor" id="totalJogos">—</div>
       <div class="stat-label">Jogos apurados</div>
     </div>
     <div class="stat-item">
-      <div class="stat-valor" id="ultimaAtt">-</div>
-      <div class="stat-label">Última atualização</div>
+      <div class="stat-valor" id="ultimaAtt" style="font-size:1rem;">—</div>
+      <div class="stat-label">Atualizado</div>
     </div>
   </div>
 
   <!-- Premiação -->
   <div class="card">
-    <p class="card-titulo">🏆 Premiação estimada</p>
+    <p class="card-titulo">Premiação estimada</p>
     <div class="premiacao-grid">
-      <div class="premiacao-item">
+      <div class="premiacao-item destaque premiacao-full">
         <span class="emoji">🥇</span>
-        <div class="label">Campeão (60%)</div>
-        <div class="valor" id="premCampeao">R$ -</div>
+        <div class="label">Campeão · 60%</div>
+        <div class="valor" id="premCampeao">R$ —</div>
       </div>
       <div class="premiacao-item">
         <span class="emoji">🥈</span>
-        <div class="label">Vice-campeão (30%)</div>
-        <div class="valor" id="premVice">R$ -</div>
+        <div class="label">Vice · 30%</div>
+        <div class="valor" id="premVice">R$ —</div>
       </div>
       <div class="premiacao-item" style="background:var(--cinza-fundo);border-color:var(--cinza-borda);">
         <span class="emoji">🛠</span>
-        <div class="label">Organização (10%)</div>
-        <div class="valor" id="premOrg" style="color:var(--cinza-sub);">R$ -</div>
+        <div class="label">Organização · 10%</div>
+        <div class="valor" id="premOrg" style="color:var(--cinza-sub);">R$ —</div>
       </div>
     </div>
   </div>
 
   <!-- Ranking -->
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
-      <p class="card-titulo" style="margin:0;">📊 Classificação geral</p>
-      <button class="btn btn-secondary btn-sm" onclick="carregarRanking()">🔄 Atualizar</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+      <p class="card-titulo" style="margin:0;">Classificação</p>
+      <button class="btn btn-secondary btn-sm" onclick="carregarRanking()">🔄</button>
     </div>
 
-    <div id="avisoInicio" style="display:none;background:var(--verde-fundo);border:1.5px solid var(--verde-palido);border-radius:var(--radius-sm);padding:.8rem;font-size:.85rem;color:var(--cinza-sub);margin-bottom:1rem;">
-      ⚽ O ranking começa a ser atualizado após a apuração do primeiro jogo.
+    <div id="avisoInicio" style="display:none;" class="banner-info">
+      O ranking será exibido após o primeiro jogo ser apurado.
     </div>
 
     <div id="listaRanking">
       <div style="text-align:center;padding:2rem;color:var(--cinza-sub);">
-        <div style="font-size:2rem;">⏳</div>
-        <p>Carregando ranking...</p>
+        <div style="font-size:2.5rem;">⏳</div>
+        <p style="margin-top:.5rem;font-size:.9rem;">Carregando...</p>
       </div>
     </div>
   </div>
 
   <!-- Pontuação -->
   <div class="card">
-    <p class="card-titulo">📋 Sistema de pontuação</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
-      <div style="background:var(--verde-fundo);border-radius:var(--radius-sm);padding:.8rem;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:800;color:var(--verde);">15 pts</div>
-        <div style="font-size:.8rem;color:var(--cinza-sub);">Placar exato</div>
+    <p class="card-titulo">Sistema de pontuação</p>
+    <div class="pont-grid">
+      <div class="pont-item" style="background:#E8EAF6;">
+        <div class="pont-pts" style="color:var(--azul);">15</div>
+        <div class="pont-desc" style="color:var(--azul-med);">Placar exato</div>
       </div>
-      <div style="background:#E3F2FD;border-radius:var(--radius-sm);padding:.8rem;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:800;color:#1565C0;">10 pts</div>
-        <div style="font-size:.8rem;color:var(--cinza-sub);">Acertou o vencedor</div>
+      <div class="pont-item" style="background:#E3F2FD;">
+        <div class="pont-pts" style="color:#1565C0;">10</div>
+        <div class="pont-desc" style="color:#1565C0;">Acertou o vencedor</div>
       </div>
-      <div style="background:#F3E5F5;border-radius:var(--radius-sm);padding:.8rem;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:800;color:#6A1B9A;">7,5 pts</div>
-        <div style="font-size:.8rem;color:var(--cinza-sub);">Acertou o empate</div>
+      <div class="pont-item" style="background:#F3E5F5;">
+        <div class="pont-pts" style="color:#6A1B9A;">7,5</div>
+        <div class="pont-desc" style="color:#6A1B9A;">Acertou o empate</div>
       </div>
-      <div style="background:var(--ouro-claro);border-radius:var(--radius-sm);padding:.8rem;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:800;color:#E65100;">5 pts</div>
-        <div style="font-size:.8rem;color:var(--cinza-sub);">Acertou placar do perdedor</div>
+      <div class="pont-item" style="background:var(--ouro-claro);">
+        <div class="pont-pts" style="color:var(--ouro-escuro);">5</div>
+        <div class="pont-desc" style="color:var(--ouro-escuro);">Placar do perdedor</div>
       </div>
     </div>
   </div>
 
 </div>
 
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span class="bnav-icon">📝</span>Inscrição
+  </a>
+  <a href="ranking.html" class="ativo">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+</nav>
+
 <script>
 const medalhas = ['🥇','🥈','🥉'];
 
+function brl(v) {
+  return 'R$\u00A0' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 async function carregarRanking() {
-  document.getElementById('ultimaAtt').textContent = 'Atualizando...';
+  document.getElementById('ultimaAtt').textContent = '...';
   const res = await api({ action: 'getRanking' });
   if (!res.ok) { toast(res.msg, 'erro'); return; }
 
-  // Stats
   document.getElementById('totalPart').textContent = res.totalParticipantes;
-  document.getElementById('totalArrecadado').textContent = formatBRL(res.totalArrecadado);
+  document.getElementById('totalArrecadado').textContent = brl(res.totalArrecadado);
   document.getElementById('totalJogos').textContent = `${res.jogosComResultado}/${res.totalJogos}`;
   document.getElementById('ultimaAtt').textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('premCampeao').textContent = brl(res.premiacao.campeao);
+  document.getElementById('premVice').textContent = brl(res.premiacao.vice);
+  document.getElementById('premOrg').textContent = brl(res.premiacao.organizacao);
 
-  // Premiação
-  document.getElementById('premCampeao').textContent = formatBRL(res.premiacao.campeao);
-  document.getElementById('premVice').textContent = formatBRL(res.premiacao.vice);
-  document.getElementById('premOrg').textContent = formatBRL(res.premiacao.organizacao);
-
-  // Ranking
   const lista = document.getElementById('listaRanking');
-
-  if (res.ranking.length === 0) {
+  if (!res.ranking.length || res.jogosComResultado === 0) {
     document.getElementById('avisoInicio').style.display = '';
-    lista.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--cinza-sub);">Nenhum resultado apurado ainda.</div>';
+    lista.innerHTML = '';
     return;
-  }
-
-  if (res.jogosComResultado === 0) {
-    document.getElementById('avisoInicio').style.display = '';
   }
 
   lista.innerHTML = '';
   res.ranking.forEach((r, i) => {
     const div = document.createElement('div');
-    div.className = `ranking-item${i < 3 ? ' pos-' + (i+1) : ''}`;
+    div.className = `ranking-item${i < 3 ? ' pos-' + (i + 1) : ''}`;
     div.innerHTML = `
       <div class="ranking-pos">${i < 3 ? medalhas[i] : r.posicao + 'º'}</div>
       <div>
         <div class="ranking-nome">${r.nome}</div>
-        <div class="ranking-sub">${r.jogosComPalpite} palpite(s) registrado(s)</div>
+        <div class="ranking-sub">${r.jogosComPalpite} palpite(s)</div>
       </div>
-      <div class="ranking-pts">${r.pontos.toFixed(1)}</div>`;
+      <div class="ranking-pts">${r.pontos.toFixed(1)}<span style="font-size:.6rem;font-weight:600;"> pts</span></div>`;
     lista.appendChild(div);
   });
 }
 
-function formatBRL(v) {
-  return 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-// Auto-refresh a cada 2 minutos
 carregarRanking();
 setInterval(carregarRanking, 120000);
 </script>

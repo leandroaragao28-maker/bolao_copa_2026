@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A237E">
   <title>Palpites — Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
@@ -11,118 +12,110 @@
 
 <header>
   <span class="logo">⚽</span>
-  <div>
-    <h1>Bolão da Copa 2026</h1>
-    <p>SS&amp;B Construtora</p>
+  <div class="header-texto">
+    <h1>Meus Palpites</h1>
   </div>
   <nav>
     <a href="index.html">Inscrição</a>
     <a href="ranking.html">Ranking</a>
-    <a href="palpites.html" class="ativo">Meus Palpites</a>
+    <a href="palpites.html" class="ativo">Palpites</a>
   </nav>
 </header>
 
 <div class="container">
 
-  <!-- Login por código -->
+  <!-- Login -->
   <div id="telaLogin" class="card">
-    <p class="card-titulo">🔐 Acessar meus palpites</p>
+    <p class="card-titulo">Acessar palpites</p>
     <div class="form-group">
       <label>Código de participante</label>
-      <input type="text" id="inputId" placeholder="Ex: BP123456"
-             style="text-transform:uppercase;letter-spacing:.08em;font-size:1.1rem;font-weight:700;"
-             onkeydown="if(event.key==='Enter')verificarAcesso()">
+      <input type="text" id="inputId" placeholder="BP123456"
+             style="text-transform:uppercase;letter-spacing:.12em;font-size:1.3rem;font-weight:900;text-align:center;"
+             onkeydown="if(event.key==='Enter')verificarAcesso()"
+             inputmode="text" autocomplete="off">
     </div>
     <button class="btn btn-primary btn-block" onclick="verificarAcesso()">Entrar</button>
     <p style="text-align:center;margin-top:.8rem;font-size:.82rem;color:var(--cinza-sub);">
-      Não tem código? <a href="index.html" style="color:var(--verde);font-weight:600;">Fazer inscrição</a>
+      Não tem código? <a href="index.html" style="color:var(--azul);font-weight:700;">Fazer inscrição</a>
     </p>
   </div>
 
-  <!-- Info do participante -->
-  <div id="infoParticipante" style="display:none;" class="card">
-    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-      <div style="flex:1;">
-        <p style="font-size:.82rem;color:var(--cinza-sub);">Logado como</p>
-        <p style="font-size:1.1rem;font-weight:700;" id="lblNome">-</p>
-        <p style="font-size:.82rem;color:var(--cinza-sub);" id="lblId">-</p>
+  <!-- Info participante -->
+  <div id="infoParticipante" style="display:none;">
+    <div style="display:flex;align-items:center;gap:.8rem;background:var(--branco);border-radius:var(--radius-sm);padding:.8rem 1rem;box-shadow:var(--sombra);margin-bottom:1rem;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="lblNome">-</div>
+        <div style="font-size:.75rem;color:var(--cinza-sub);font-family:monospace;" id="lblId">-</div>
       </div>
-      <div id="statusBadge"></div>
+      <div id="statusBadge" style="flex-shrink:0;"></div>
       <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
     </div>
   </div>
 
-  <!-- Aviso aguardando aprovação -->
+  <!-- Aguardando -->
   <div id="avisoAguardando" style="display:none;" class="card">
-    <div style="text-align:center;padding:1.5rem;">
-      <p style="font-size:2rem;">⏳</p>
-      <p style="font-size:1rem;font-weight:700;color:var(--cinza-texto);margin:.5rem 0;">Aguardando confirmação do pagamento</p>
-      <p style="font-size:.88rem;color:var(--cinza-sub);">
-        Após confirmarmos seu pagamento de <strong>R$ 50,00</strong>, você será notificado pelo WhatsApp e poderá preencher seus palpites.
-      </p>
+    <div style="text-align:center;padding:1rem 0;">
+      <div style="font-size:3rem;margin-bottom:.5rem;">⏳</div>
+      <p style="font-weight:800;font-size:1rem;margin-bottom:.4rem;">Aguardando confirmação</p>
+      <p style="font-size:.85rem;color:var(--cinza-sub);">Após confirmarmos seu Pix de <strong>R$ 50,00</strong>, seu acesso será liberado e você receberá aviso pelo WhatsApp.</p>
     </div>
   </div>
 
   <!-- Área de palpites -->
   <div id="areaPalpites" style="display:none;">
 
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.8rem;">
-      <div>
-        <h2 style="font-size:1.1rem;font-weight:700;">Seus Palpites</h2>
-        <p style="font-size:.82rem;color:var(--cinza-sub);">Preencha o placar previsto para todos os 72 jogos</p>
-      </div>
-      <div style="display:flex;gap:.8rem;align-items:center;">
-        <span id="contadorPalpites" style="font-size:.85rem;color:var(--cinza-sub);"></span>
-        <button class="btn btn-primary" onclick="salvarTudo()">💾 Salvar palpites</button>
-      </div>
+    <div class="banner-aviso" id="bannerDica">
+      ⚽ Preencha todos os jogos e toque em <strong>Salvar</strong>. Você pode editar até o início da Copa.
     </div>
 
-    <div style="background:var(--ouro-claro);border:1.5px solid var(--ouro);border-radius:var(--radius-sm);padding:.8rem 1rem;font-size:.83rem;color:#5D4037;margin-bottom:1.2rem;">
-      ⚽ <strong>Dica:</strong> Preencha todos os jogos de uma vez e clique em "Salvar palpites" ao final. Você pode editar seus palpites até o início do primeiro jogo.
+    <!-- Contador flutuante -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;gap:.5rem;">
+      <span id="contadorPalpites" style="font-size:.8rem;color:var(--cinza-sub);font-weight:700;"></span>
+      <button class="btn btn-primary btn-sm" onclick="salvarTudo()">💾 Salvar palpites</button>
     </div>
 
     <div id="listaJogos"></div>
 
-    <button class="btn btn-primary btn-block" onclick="salvarTudo()" style="margin-top:1rem;">
+    <button class="btn btn-primary btn-block" onclick="salvarTudo()" style="margin-top:.5rem;">
       💾 Salvar todos os palpites
     </button>
-
   </div>
 
 </div>
 
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span class="bnav-icon">📝</span>Inscrição
+  </a>
+  <a href="ranking.html">
+    <span class="bnav-icon">🏆</span>Ranking
+  </a>
+  <a href="palpites.html" class="ativo">
+    <span class="bnav-icon">⚽</span>Palpites
+  </a>
+</nav>
+
 <script>
 let participanteId = '';
-let participanteStatus = '';
 let jogos = [];
 const palpites = {};
 
-// ── Verificar acesso ──────────────────────────────────────────
 async function verificarAcesso() {
   const id = document.getElementById('inputId').value.trim().toUpperCase();
   if (!id) { toast('Digite seu código.', 'erro'); return; }
-
   const res = await api({ action: 'verificarID', id });
   if (!res.ok) { toast(res.msg, 'erro'); return; }
-
   participanteId = res.id;
-  participanteStatus = res.status;
   localStorage.setItem('bolao_id', participanteId);
-
   document.getElementById('telaLogin').style.display = 'none';
   document.getElementById('infoParticipante').style.display = '';
   document.getElementById('lblNome').textContent = res.nome;
   document.getElementById('lblId').textContent = res.id;
-
-  const badgeClass = res.status === 'APROVADO' ? 'badge-aprovado' : 'badge-pendente';
-  const badgeLabel = res.status === 'APROVADO' ? '✅ Aprovado' : '⏳ Pendente';
-  document.getElementById('statusBadge').innerHTML = `<span class="badge ${badgeClass}">${badgeLabel}</span>`;
-
-  if (res.status !== 'APROVADO') {
-    document.getElementById('avisoAguardando').style.display = '';
-  } else {
-    carregarJogos();
-  }
+  const ok = res.status === 'APROVADO';
+  document.getElementById('statusBadge').innerHTML =
+    `<span class="badge badge-${res.status.toLowerCase()}">${ok ? '✅ Aprovado' : '⏳ Pendente'}</span>`;
+  if (!ok) document.getElementById('avisoAguardando').style.display = '';
+  else carregarJogos();
 }
 
 function sair() {
@@ -130,108 +123,88 @@ function sair() {
   location.reload();
 }
 
-// ── Carregar jogos e palpites salvos ──────────────────────────
 async function carregarJogos() {
   document.getElementById('areaPalpites').style.display = '';
+  const res = await api({ action: 'getJogos' });
+  if (!res.ok) { toast('Erro ao carregar jogos.', 'erro'); return; }
+  jogos = res.jogos;
 
-  const resJogos = await api({ action: 'getJogos' });
-  if (!resJogos.ok) { toast('Erro ao carregar jogos.', 'erro'); return; }
-  jogos = resJogos.jogos;
-
-  // Renderizar por grupo
   const grupos = {};
-  jogos.forEach(j => {
-    if (!grupos[j.grupo]) grupos[j.grupo] = [];
-    grupos[j.grupo].push(j);
-  });
+  jogos.forEach(j => { if (!grupos[j.grupo]) grupos[j.grupo] = []; grupos[j.grupo].push(j); });
 
   const container = document.getElementById('listaJogos');
   container.innerHTML = '';
 
   Object.keys(grupos).sort().forEach(grp => {
-    const grpDiv = document.createElement('div');
-    grpDiv.innerHTML = `<span class="grupo-titulo">Grupo ${grp}</span>`;
-
+    container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
     grupos[grp].forEach(jogo => {
       const f1 = BANDEIRAS[jogo.time1] || '🏳';
       const f2 = BANDEIRAS[jogo.time2] || '🏳';
       const n1 = NOMES[jogo.time1] || jogo.time1;
       const n2 = NOMES[jogo.time2] || jogo.time2;
-
       const card = document.createElement('div');
       card.className = 'jogo-card';
+      card.id = 'card_' + jogo.id;
       card.innerHTML = `
         <div class="time">
           <span class="bandeira">${f1}</span>
           <span>${n1}</span>
         </div>
-        <div>
-          <div class="jogo-meta">${formatarDataJogo(jogo.data)} ${jogo.hora}</div>
-          <div class="placar-inputs">
-            <input type="number" min="0" max="30" id="g1_${jogo.id}"
-                   placeholder="?" oninput="registrarPalpite(${jogo.id})">
+        <div style="text-align:center;">
+          <div class="jogo-meta">${fmt(jogo.data)} ${jogo.hora}</div>
+          <div class="placar-inputs" style="flex-direction:row;margin-top:.3rem;">
+            <input type="number" min="0" max="30" id="g1_${jogo.id}" placeholder="?" inputmode="numeric"
+                   oninput="reg(${jogo.id})">
             <span class="placar-sep">×</span>
-            <input type="number" min="0" max="30" id="g2_${jogo.id}"
-                   placeholder="?" oninput="registrarPalpite(${jogo.id})">
+            <input type="number" min="0" max="30" id="g2_${jogo.id}" placeholder="?" inputmode="numeric"
+                   oninput="reg(${jogo.id})">
           </div>
         </div>
         <div class="time time-direita">
           <span>${n2}</span>
           <span class="bandeira">${f2}</span>
         </div>`;
-      grpDiv.appendChild(card);
+      container.appendChild(card);
     });
-
-    container.appendChild(grpDiv);
   });
-
   atualizarContador();
 }
 
-function formatarDataJogo(iso) {
+function fmt(iso) {
   const d = new Date(iso + 'T12:00:00');
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
-function registrarPalpite(jogoId) {
-  const g1 = document.getElementById('g1_' + jogoId).value;
-  const g2 = document.getElementById('g2_' + jogoId).value;
+function reg(id) {
+  const g1 = document.getElementById('g1_' + id).value;
+  const g2 = document.getElementById('g2_' + id).value;
+  const card = document.getElementById('card_' + id);
   if (g1 !== '' && g2 !== '') {
-    palpites[jogoId] = { jogoId, gols1: parseInt(g1), gols2: parseInt(g2) };
+    palpites[id] = { jogoId: id, gols1: parseInt(g1), gols2: parseInt(g2) };
+    card.classList.add('tem-palpite');
   } else {
-    delete palpites[jogoId];
+    delete palpites[id];
+    card.classList.remove('tem-palpite');
   }
   atualizarContador();
 }
 
 function atualizarContador() {
-  const total = jogos.length;
-  const preenchidos = Object.keys(palpites).length;
-  document.getElementById('contadorPalpites').textContent =
-    `${preenchidos}/${total} jogos preenchidos`;
+  const t = jogos.length, p = Object.keys(palpites).length;
+  document.getElementById('contadorPalpites').textContent = `${p} de ${t} jogos preenchidos`;
 }
 
 async function salvarTudo() {
   const lista = Object.values(palpites);
-  if (lista.length === 0) { toast('Preencha ao menos um palpite.', 'aviso'); return; }
-
-  const res = await api({
-    action: 'salvarPalpites',
-    id: participanteId,
-    palpites: lista
-  });
-
+  if (!lista.length) { toast('Preencha ao menos um palpite.', 'aviso'); return; }
+  const res = await api({ action: 'salvarPalpites', id: participanteId, palpites: lista });
   if (res.ok) toast(`${lista.length} palpite(s) salvos!`, 'ok');
   else toast(res.msg || 'Erro ao salvar.', 'erro');
 }
 
-// ── Auto-login ────────────────────────────────────────────────
 window.onload = async () => {
   const id = localStorage.getItem('bolao_id');
-  if (id) {
-    document.getElementById('inputId').value = id;
-    await verificarAcesso();
-  }
+  if (id) { document.getElementById('inputId').value = id; await verificarAcesso(); }
 };
 </script>
 </body>
