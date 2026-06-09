@@ -2,12 +2,12 @@
 // ⚠️ Substitua a URL abaixo pela URL do seu Web App do Google Apps Script
 
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/SEU_DEPLOYMENT_ID_AQUI/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbyZEHNn7NmtJk1IMUfiKSVbpMcTie2ZrIG2cygqj6I_MhBWdZjtR8gJibIRL4AMn-FsRg/exec',
   BOLAO_NOME: 'Bolão da Copa 2026',
   VALOR_INSCRICAO: 50.00,
-  PIX_CHAVE: 'SEU_CPF_AQUI',      // ← CPF sem pontos e traço: ex: 12345678901
+  PIX_CHAVE: '76889726391',      // ← CPF sem pontos e traço: ex: 12345678901
   PIX_NOME: 'Bolão Copa 2026',    // ← nome do beneficiário (sem acentos, max 25 chars)
-  PIX_CIDADE: 'Caucaia',          // ← cidade (sem acentos, max 15 chars)
+  PIX_CIDADE: 'Tabuleiro do Norte',          // ← cidade (sem acentos, max 15 chars)
 };
 
 // ── Bandeiras por sigla ─────────────────────────────────────
