@@ -180,9 +180,33 @@ function mostrarPagamento(id, nome) {
 }
 
 function gerarQR(id) {
+  // Gera payload local para o código copia-e-cola
   const payload = gerarPixCopiaECola(CONFIG.PIX_CHAVE, CONFIG.PIX_NOME, CONFIG.PIX_CIDADE, CONFIG.VALOR_INSCRICAO, id);
   document.getElementById('pixCodigo').textContent = payload;
-  QRCode.toCanvas(document.getElementById('qrCanvas'), payload, { width: 200, margin: 2, color: { dark: '#1A237E', light: '#E8EAF6' } });
+
+  // QR Code via API gerarqrcodepix.com.br — mais confiável que geração local
+  const chaveLimpa = CONFIG.PIX_CHAVE.replace(/[.\-\/]/g, '');
+  const nomeLimpo  = CONFIG.PIX_NOME.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,25);
+  const cidadeLimpa = CONFIG.PIX_CIDADE.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').slice(0,15);
+  const url = `https://gerarqrcodepix.com.br/api/v1?` +
+    `nome=${encodeURIComponent(nomeLimpo)}` +
+    `&cidade=${encodeURIComponent(cidadeLimpa)}` +
+    `&valor=${CONFIG.VALOR_INSCRICAO.toFixed(2)}` +
+    `&saida=qr` +
+    `&chave=${encodeURIComponent(chaveLimpa)}` +
+    `&txid=${encodeURIComponent(id)}`;
+
+  const canvas = document.getElementById('qrCanvas');
+  const img = document.createElement('img');
+  img.src = url;
+  img.width = 200;
+  img.style.borderRadius = '8px';
+  img.onerror = () => {
+    // Fallback: QRCode.js com payload local
+    QRCode.toCanvas(canvas, payload, { width: 200, margin: 2 });
+  };
+  canvas.replaceWith(img);
+  img.id = 'qrCanvas';
 }
 
 function copiarPix() {
