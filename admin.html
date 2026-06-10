@@ -55,6 +55,13 @@
           <button class="btn btn-secondary btn-sm" onclick="carregarParticipantes()">🔄</button>
         </div>
 
+        <!-- Filtros -->
+        <div style="display:flex;gap:.4rem;margin-bottom:.8rem;flex-wrap:wrap;" id="filtrosBtns">
+          <button class="btn btn-primary btn-sm" id="filtro-todos"     onclick="setFiltro('todos')">Todos</button>
+          <button class="btn btn-secondary btn-sm" id="filtro-pendente" onclick="setFiltro('pendente')" style="border-color:#FFCC80;color:#BF360C;">⏳ Pendentes</button>
+          <button class="btn btn-secondary btn-sm" id="filtro-aprovado" onclick="setFiltro('aprovado')" style="border-color:var(--azul-palido);color:var(--azul);">✅ Aprovados</button>
+        </div>
+
         <!-- Cards de participantes (mobile-friendly) -->
         <div id="listaParticipantes"></div>
       </div>
@@ -117,27 +124,63 @@ function mostrarAba(aba) {
 }
 
 // ── Participantes ──────────────────────────────────────────
+let _listaParticipantes = [];
+let _filtroAtual = 'todos';
+
 async function carregarParticipantes() {
   const res = await api({ action: 'getParticipantes', senha: senhaAdmin });
   if (!res.ok) { toast(res.msg, 'erro'); return; }
-  const lista = res.participantes;
-  const pend = lista.filter(p => p.status === 'PENDENTE').length;
-  const aprov = lista.filter(p => p.status === 'APROVADO').length;
+  _listaParticipantes = res.participantes;
+
+  const pend  = _listaParticipantes.filter(p => p.status === 'PENDENTE').length;
+  const aprov = _listaParticipantes.filter(p => p.status === 'APROVADO').length;
 
   document.getElementById('statsParticipantes').innerHTML = `
-    <div class="stat-item"><div class="stat-valor">${lista.length}</div><div class="stat-label">Total</div></div>
+    <div class="stat-item"><div class="stat-valor">${_listaParticipantes.length}</div><div class="stat-label">Total</div></div>
     <div class="stat-item" style="border-color:#FFCC80;background:#FFF3E0;"><div class="stat-valor" style="color:#BF360C;">${pend}</div><div class="stat-label">Pendentes</div></div>
     <div class="stat-item" style="border-color:var(--azul-palido);background:var(--azul-fundo);"><div class="stat-valor">${aprov}</div><div class="stat-label">Aprovados</div></div>
     <div class="stat-item destaque"><div class="stat-valor" style="font-size:1.1rem;">R$${(aprov*50).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="stat-label">Arrecadado</div></div>`;
 
+  // Após aprovar/revogar, pendentes ficam na frente
+  _listaParticipantes.sort((a, b) => {
+    if (a.status === b.status) return 0;
+    return a.status === 'PENDENTE' ? -1 : 1;
+  });
+
+  renderizarParticipantes();
+}
+
+function setFiltro(filtro) {
+  _filtroAtual = filtro;
+  ['todos','pendente','aprovado'].forEach(f => {
+    const btn = document.getElementById('filtro-' + f);
+    btn.className = f === filtro ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+  });
+  // Reaplica cor dos botões não-ativos
+  document.getElementById('filtro-pendente').style.cssText = filtro === 'pendente' ? '' : 'border-color:#FFCC80;color:#BF360C;';
+  document.getElementById('filtro-aprovado').style.cssText = filtro === 'aprovado' ? '' : 'border-color:var(--azul-palido);color:var(--azul);';
+  renderizarParticipantes();
+}
+
+function renderizarParticipantes() {
+  const filtro = _filtroAtual;
+  const lista  = _listaParticipantes.filter(p => {
+    if (filtro === 'pendente') return p.status === 'PENDENTE';
+    if (filtro === 'aprovado') return p.status === 'APROVADO';
+    return true;
+  });
+
   const div = document.getElementById('listaParticipantes');
   div.innerHTML = '';
+
   if (!lista.length) {
-    div.innerHTML = '<p style="text-align:center;color:var(--cinza-sub);padding:1.5rem 0;">Nenhum participante ainda.</p>';
+    const label = filtro === 'pendente' ? 'pendentes' : filtro === 'aprovado' ? 'aprovados' : '';
+    div.innerHTML = `<p style="text-align:center;color:var(--cinza-sub);padding:1.5rem 0;">Nenhum participante ${label} encontrado.</p>`;
     return;
   }
+
   lista.forEach(p => {
-    const pend = p.status !== 'APROVADO';
+    const isPend = p.status !== 'APROVADO';
     const card = document.createElement('div');
     card.style.cssText = 'border:2px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:.8rem;margin-bottom:.6rem;';
     if (p.status === 'APROVADO') card.style.borderColor = 'var(--azul-palido)';
@@ -153,7 +196,9 @@ async function carregarParticipantes() {
       </div>
       <div style="display:flex;gap:.5rem;align-items:center;">
         <code style="font-size:.72rem;background:var(--cinza-fundo);padding:.2rem .5rem;border-radius:4px;flex:1;">${p.id}</code>
-        ${pend ? `<button class="btn btn-primary btn-sm" onclick="aprovar('${p.id}')">✅ Aprovar</button>` : `<button class="btn btn-danger btn-sm" onclick="revogar('${p.id}')">Revogar</button>`}
+        ${isPend
+          ? `<button class="btn btn-primary btn-sm" onclick="aprovar('${p.id}')">✅ Aprovar</button>`
+          : `<button class="btn btn-danger btn-sm" onclick="revogar('${p.id}')">Revogar</button>`}
       </div>`;
     div.appendChild(card);
   });
