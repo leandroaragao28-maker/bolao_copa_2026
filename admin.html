@@ -55,11 +55,12 @@
           <button class="btn btn-secondary btn-sm" onclick="carregarParticipantes()">🔄</button>
         </div>
 
-        <!-- Filtros -->
-        <div style="display:flex;gap:.4rem;margin-bottom:.8rem;flex-wrap:wrap;" id="filtrosBtns">
+        <!-- Filtros + Report -->
+        <div style="display:flex;gap:.4rem;margin-bottom:.8rem;flex-wrap:wrap;align-items:center;" id="filtrosBtns">
           <button class="btn btn-primary btn-sm" id="filtro-todos"     onclick="setFiltro('todos')">Todos</button>
           <button class="btn btn-secondary btn-sm" id="filtro-pendente" onclick="setFiltro('pendente')" style="border-color:#FFCC80;color:#BF360C;">⏳ Pendentes</button>
           <button class="btn btn-secondary btn-sm" id="filtro-aprovado" onclick="setFiltro('aprovado')" style="border-color:var(--azul-palido);color:var(--azul);">✅ Aprovados</button>
+          <button class="btn btn-secondary btn-sm" onclick="abrirReport()" style="margin-left:auto;white-space:nowrap;">📋 Report WhatsApp</button>
         </div>
 
         <!-- Cards de participantes (mobile-friendly) -->
@@ -86,6 +87,26 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Modal Report WhatsApp -->
+<div id="modalReport" style="display:none;position:fixed;inset:0;background:rgba(26,35,126,.55);backdrop-filter:blur(3px);z-index:8000;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#fff;border-radius:var(--radius);box-shadow:var(--sombra-forte);width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="background:var(--azul);color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.7rem;">
+      <span style="font-size:1.2rem;">📋</span>
+      <span style="font-weight:800;font-size:1rem;flex:1;">Report para WhatsApp</span>
+      <button onclick="fecharReport()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;width:2rem;height:2rem;cursor:pointer;font-size:1rem;line-height:1;">✕</button>
+    </div>
+    <div style="padding:1rem;flex:1;overflow-y:auto;">
+      <textarea id="reportTexto" readonly
+        style="width:100%;min-height:280px;font-family:monospace;font-size:.82rem;line-height:1.6;border:2px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:.8rem;resize:none;color:var(--cinza-texto);background:var(--cinza-fundo);">
+      </textarea>
+    </div>
+    <div style="padding:.8rem 1rem;border-top:1px solid var(--cinza-borda);display:flex;gap:.6rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="copiarReport()">📋 Copiar texto</button>
+      <button class="btn btn-secondary" onclick="fecharReport()">Fechar</button>
+    </div>
   </div>
 </div>
 
@@ -307,6 +328,70 @@ async function salvarResultado(jogoId) {
     resultadosAtuais[jogoId] = { gols1: parseInt(g1), gols2: parseInt(g2) };
     document.getElementById('rcard_' + jogoId)?.classList.add('resultado-salvo');
   } else toast(res.msg || 'Erro.', 'erro');
+}
+
+// ── Report WhatsApp ─────────────────────────────────────────
+function abrirReport() {
+  const total = 72;
+  const aprovados = _listaParticipantes.filter(p => p.status === 'APROVADO');
+
+  if (!aprovados.length) {
+    toast('Nenhum participante aprovado ainda.', 'aviso');
+    return;
+  }
+
+  // Ordena: completos → incompletos (desc) → sem palpites
+  aprovados.sort((a, b) => {
+    const fa = _contagemPalpites[a.id] || 0;
+    const fb = _contagemPalpites[b.id] || 0;
+    if (fa === total && fb !== total) return -1;
+    if (fb === total && fa !== total) return  1;
+    return fb - fa;
+  });
+
+  const completos   = aprovados.filter(p => (_contagemPalpites[p.id] || 0) >= total).length;
+  const incompletos = aprovados.filter(p => { const f = _contagemPalpites[p.id] || 0; return f > 0 && f < total; }).length;
+  const semPalpite  = aprovados.filter(p => (_contagemPalpites[p.id] || 0) === 0).length;
+
+  // Comprimento do nome mais longo para alinhar colunas
+  const maxNome = Math.max(...aprovados.map(p => p.nome.length));
+
+  const linhas = aprovados.map(p => {
+    const feitos = _contagemPalpites[p.id] || 0;
+    const icone  = feitos >= total ? '✅' : feitos > 0 ? '⚠️' : '❌';
+    const nome   = p.nome.padEnd(maxNome, ' ');
+    const cont   = `${String(feitos).padStart(2, ' ')}/${total}`;
+    return `${icone} ${nome}   ${cont}`;
+  });
+
+  const sep   = '━'.repeat(Math.min(maxNome + 16, 32));
+  const data  = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const hora  = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  const texto = [
+    `📊 *Bolão Copa 2026 — Palpites*`,
+    `_Atualizado em ${data} às ${hora}_`,
+    sep,
+    ...linhas,
+    sep,
+    `👥 ${aprovados.length} participante${aprovados.length !== 1 ? 's' : ''} aprovado${aprovados.length !== 1 ? 's' : ''}`,
+    `✅ ${completos} completo${completos !== 1 ? 's' : ''} · ⚠️ ${incompletos} incompleto${incompletos !== 1 ? 's' : ''} · ❌ ${semPalpite} sem palpites`,
+  ].join('\n');
+
+  document.getElementById('reportTexto').value = texto;
+  const modal = document.getElementById('modalReport');
+  modal.style.display = 'flex';
+}
+
+function fecharReport() {
+  document.getElementById('modalReport').style.display = 'none';
+}
+
+function copiarReport() {
+  const texto = document.getElementById('reportTexto').value;
+  navigator.clipboard.writeText(texto)
+    .then(() => toast('Texto copiado! Cole no WhatsApp.', 'ok'))
+    .catch(() => toast('Selecione e copie manualmente.', 'aviso'));
 }
 
 // ── Resumo ──────────────────────────────────────────────────
