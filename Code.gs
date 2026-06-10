@@ -104,6 +104,18 @@ const JOGOS = [
 ];
 
 // ────────────────────────────────────────────────────────────
+// PRAZO PARA PALPITAR
+// ────────────────────────────────────────────────────────────
+// Palpites são bloqueados 5 minutos antes do início do jogo (hora de Brasília, -03:00).
+function palpiteEncerrado(jogo) {
+  const partes = jogo.hora.replace('h', ':').split(':');
+  const h = parseInt(partes[0], 10);
+  const m = parseInt(partes[1] || '0', 10);
+  const iso = jogo.data + 'T' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':00-03:00';
+  return Date.now() >= new Date(iso).getTime() - 5 * 60 * 1000;
+}
+
+// ────────────────────────────────────────────────────────────
 // PONTUAÇÃO
 // ────────────────────────────────────────────────────────────
 function calcularPontos(palp1, palp2, real1, real2) {
@@ -275,21 +287,39 @@ function salvarPalpites(body) {
   const part = verificarParticipante(id);
   if (!part.ok) return part;
 
+  // Mapa de jogos e conjunto dos que ainda estão abertos para palpite
+  const mapJogos = {};
+  const idsAbertos = new Set();
+  JOGOS.forEach(j => {
+    mapJogos[j.id] = j;
+    if (!palpiteEncerrado(j)) idsAbertos.add(j.id);
+  });
+
+  // Aceitar apenas palpites de jogos ainda não iniciados
+  const palpitesValidos = palpites.filter(p => idsAbertos.has(p.jogoId));
+  const rejeitados = palpites.length - palpitesValidos.length;
+
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const aba = ss.getSheetByName('Palpites');
   const agora = new Date().toISOString();
 
-  // Remover palpites anteriores deste participante
+  // Remover APENAS palpites anteriores de jogos ainda abertos.
+  // Palpites de jogos já iniciados ficam preservados (não podem ser sobrescritos).
   const dados = aba.getDataRange().getValues();
   for (let i = dados.length - 1; i >= 1; i--) {
-    if (dados[i][0] === id) aba.deleteRow(i + 1);
+    if (dados[i][0] === id && idsAbertos.has(dados[i][1])) {
+      aba.deleteRow(i + 1);
+    }
   }
 
-  // Inserir novos palpites
-  palpites.forEach(p => {
+  // Inserir os palpites válidos
+  palpitesValidos.forEach(p => {
     aba.appendRow([id, p.jogoId, p.gols1, p.gols2, agora]);
   });
 
+  if (rejeitados > 0) {
+    return { ok: true, msg: `Palpites salvos. ${rejeitados} ignorado(s) (jogo já iniciado).` };
+  }
   return { ok: true, msg: 'Palpites salvos com sucesso!' };
 }
 

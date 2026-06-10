@@ -181,13 +181,12 @@ let jogos = [];
 const palpites = {};         // palpites editados nesta sessão (não salvos ainda)
 const palpitesSalvos = {};   // palpites que já estão no servidor
 
-// ── Verificar horário de início do jogo ──────────────────────
-function jogoJaComecou(jogo) {
-  // Converte data + hora do jogo para timestamp
-  const horaNum = jogo.hora.replace('h','').replace(':','.');
+// ── Verificar prazo para palpitar ─────────────────────────────
+// Palpites são bloqueados 5 minutos antes do início do jogo.
+function palpiteEncerrado(jogo) {
   const [h, m] = jogo.hora.replace('h',':00').replace('h30',':30').split(':');
   const dt = new Date(jogo.data + 'T' + String(h).padStart(2,'0') + ':' + (m||'00') + ':00-03:00');
-  return Date.now() >= dt.getTime();
+  return Date.now() >= dt.getTime() - 5 * 60 * 1000;
 }
 
 // ── Acesso ───────────────────────────────────────────────────
@@ -249,7 +248,7 @@ async function carregarJogos() {
   Object.keys(grupos).sort().forEach(grp => {
     container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
     grupos[grp].forEach(jogo => {
-      const travado = jogoJaComecou(jogo);
+      const travado = palpiteEncerrado(jogo);
       if (travado) travados++;
 
       const f1 = BANDEIRAS[jogo.time1] || '🏳';
@@ -345,7 +344,7 @@ async function salvarTudo() {
   // Filtra apenas palpites editáveis (jogos não travados)
   const lista = Object.values(palpites).filter(p => {
     const jogo = jogos.find(j => j.id == p.jogoId);
-    return jogo && !jogoJaComecou(jogo);
+    return jogo && !palpiteEncerrado(jogo);
   });
 
   if (!lista.length) { toast('Nenhum palpite novo para salvar.', 'aviso'); return; }

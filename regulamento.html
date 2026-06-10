@@ -392,10 +392,10 @@
       <ul class="reg-lista">
         <li data-icon="⚽">O bolão abrange os <strong>72 jogos da fase de grupos</strong> da Copa do Mundo 2026, distribuídos em 12 grupos (A a L) com 4 seleções cada.</li>
         <li data-icon="📝">O participante deve informar o <strong>placar exato</strong> que prevê para cada jogo — número de gols do time 1 e número de gols do time 2.</li>
-        <li data-icon="✏️">Os palpites podem ser <strong>preenchidos e editados a qualquer momento</strong> antes do início de cada jogo. Após o apito inicial, o campo do jogo fica travado automaticamente.</li>
-        <li data-icon="💾">O sistema salva apenas os palpites dos jogos ainda não iniciados. Ao clicar em "Salvar", apenas jogos em aberto são gravados.</li>
-        <li data-icon="🔒">Jogos já iniciados ou encerrados aparecem com o ícone 🔒 e os campos desabilitados. O palpite salvo até aquele momento é o válido.</li>
-        <li data-icon="⚠️">Jogos sem palpite registrado até o início não geram nenhuma pontuação — nem zero, nem desconto. Simplesmente não pontuam.</li>
+        <li data-icon="✏️">Os palpites podem ser <strong>preenchidos e editados a qualquer momento</strong> até <strong>5 minutos antes do início de cada jogo</strong>. A partir desse momento, o campo do jogo fica travado automaticamente.</li>
+        <li data-icon="💾">O sistema salva apenas os palpites dos jogos ainda em aberto. Ao clicar em "Salvar", jogos cujo prazo já se encerrou (faltando 5 minutos ou menos para o início) são ignorados.</li>
+        <li data-icon="🔒">Jogos com prazo encerrado (5 minutos antes do início, em andamento ou já encerrados) aparecem com o ícone 🔒 e os campos desabilitados. O palpite salvo até aquele momento é o válido.</li>
+        <li data-icon="⚠️">Jogos sem palpite registrado até o encerramento do prazo não geram nenhuma pontuação — nem zero, nem desconto. Simplesmente não pontuam.</li>
       </ul>
 
       <div class="aviso-importante">
@@ -461,7 +461,7 @@
           <tr>
             <td>
               <strong>Sem palpite</strong><br>
-              <span style="font-size:.78rem;color:var(--cinza-sub);">Jogo não preenchido antes do início</span>
+              <span style="font-size:.78rem;color:var(--cinza-sub);">Jogo não preenchido até 5 min antes do início</span>
             </td>
             <td style="text-align:center;"><span class="pts-num" style="color:var(--cinza-sub);">—</span></td>
           </tr>
@@ -625,7 +625,7 @@
       <div class="aviso-importante">
         <span class="ai-icon">⚠️</span>
         <div>
-          Palpites salvos antes da aprovação do pagamento <strong>são válidos</strong> e serão considerados normalmente após a confirmação. O participante não perde pontos de jogos já ocorridos — desde que o palpite tenha sido registrado antes do início daquele jogo.
+          Palpites salvos antes da aprovação do pagamento <strong>são válidos</strong> e serão considerados normalmente após a confirmação. O participante não perde pontos de jogos já ocorridos — desde que o palpite tenha sido registrado <strong>até 5 minutos antes do início</strong> daquele jogo.
         </div>
       </div>
     </div>
