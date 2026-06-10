@@ -164,6 +164,10 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;gap:.5rem;flex-wrap:wrap;">
       <span id="contadorPalpites" style="font-size:.8rem;color:var(--cinza-sub);font-weight:700;"></span>
       <span id="travasInfo" style="font-size:.75rem;color:var(--cinza-sub);"></span>
+      <a href="comprovante.html" target="_blank" rel="noopener" id="linkComprovante"
+         style="display:none;font-size:.78rem;font-weight:700;color:var(--azul);background:var(--azul-fundo);padding:.35rem .7rem;border-radius:6px;text-decoration:none;border:1px solid var(--azul-palido);white-space:nowrap;">
+        📄 Baixar PDF
+      </a>
     </div>
 
     <div id="listaJogos"></div>
@@ -201,6 +205,7 @@ async function verificarAcesso() {
 
   document.getElementById('telaLogin').style.display = 'none';
   document.getElementById('infoParticipante').style.display = '';
+  document.getElementById('linkComprovante').style.display = 'inline-block';
   document.getElementById('lblNome').textContent = res.nome;
   document.getElementById('lblId').textContent = res.id;
 
@@ -302,6 +307,7 @@ async function carregarJogos() {
   }
 
   atualizarContador();
+  aplicarTwemoji(container);
 }
 
 function fmt(iso) {

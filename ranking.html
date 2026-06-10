@@ -152,6 +152,7 @@ async function carregarRanking() {
       <div class="ranking-pts">${r.pontos.toFixed(1)}<span style="font-size:.6rem;font-weight:600;"> pts</span></div>`;
     lista.appendChild(div);
   });
+  aplicarTwemoji(lista);
 }
 
 carregarRanking();

@@ -393,6 +393,7 @@ function renderizarLista(filtro) {
     container.insertAdjacentHTML('beforeend', `<span class="grupo-titulo">Grupo ${grp}</span>`);
     grupos[grp].forEach(jogo => renderJogo(jogo, container));
   });
+  aplicarTwemoji(container);
 }
 
 function renderJogo(jogo, container) {

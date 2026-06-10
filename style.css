@@ -330,6 +330,12 @@ header nav a:hover, header nav a.ativo {
 }
 .time-direita { justify-content: flex-end; text-align: right; }
 .time .bandeira { font-size: 1.4rem; flex-shrink: 0; }
+img.emoji-tw {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.15em;
+  display: inline-block;
+}
 .placar-inputs { display: flex; align-items: center; gap: .3rem; flex-direction: column; }
 .placar-inputs input {
   width: 46px;

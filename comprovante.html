@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprovante de Palpites — Bolão Copa 2026</title>
+  <script src="config.js"></script>
+  <style>
+    :root {
+      --azul:      #1A237E;
+      --azul-med:  #283593;
+      --cinza-tx:  #1A1A2E;
+      --cinza-sub: #607080;
+      --cinza-bd:  #E0E0E0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #ECEFF1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--cinza-tx);
+      padding: 1rem 0.5rem 4rem;
+    }
+    .barra-acoes {
+      max-width: 760px;
+      margin: 0 auto 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .5rem;
+      padding: 0 .5rem;
+    }
+    .barra-acoes button, .barra-acoes a {
+      background: var(--azul);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .6rem 1.1rem;
+      font-size: .85rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .barra-acoes a.secundario {
+      background: #fff;
+      color: var(--azul);
+      border: 1px solid var(--azul);
+    }
+    .barra-acoes button:active { transform: scale(.98); }
+
+    .pagina {
+      background: #fff;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px 44px 28px;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      min-height: 80vh;
+    }
+
+    .cabecalho {
+      border-bottom: 2px solid var(--azul);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .cabecalho h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--azul);
+      letter-spacing: .3px;
+    }
+    .cabecalho .sub { font-size: 13px; color: var(--cinza-sub); margin-top: 2px; }
+
+    .info-tabela {
+      width: 100%;
+      font-size: 13px;
+      margin-bottom: 22px;
+      border-collapse: collapse;
+    }
+    .info-tabela td { padding: 4px 0; }
+    .info-tabela td:first-child { color: var(--cinza-sub); width: 130px; }
+    .info-tabela td:last-child { text-align: right; font-weight: 600; }
+
+    .grupo-titulo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--azul);
+      margin: 22px 0 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--cinza-bd);
+    }
+    .tabela-jogos {
+      width: 100%;
+      font-size: 12.5px;
+      border-collapse: collapse;
+    }
+    .tabela-jogos td { padding: 5px 4px; vertical-align: middle; }
+    .tabela-jogos .col-data {
+      color: var(--cinza-sub);
+      width: 78px;
+      white-space: nowrap;
+    }
+    .tabela-jogos .col-time1 { text-align: left; }
+    .tabela-jogos .col-palp {
+      text-align: center;
+      width: 58px;
+      font-weight: 700;
+      color: var(--azul);
+      white-space: nowrap;
+    }
+    .tabela-jogos .col-time2 { text-align: right; }
+    .tabela-jogos tr.sem-palpite td { color: #B0B0B0; }
+    .tabela-jogos tr.sem-palpite .col-palp {
+      font-style: italic;
+      font-weight: 500;
+      color: #B0B0B0;
+    }
+
+    .rodape {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--cinza-bd);
+      font-size: 11px;
+      color: var(--cinza-sub);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .mensagem {
+      max-width: 460px;
+      margin: 3rem auto;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: .9rem;
+    }
+    .mensagem input {
+      width: 100%;
+      padding: .6rem;
+      font-size: 1rem;
+      border: 1px solid var(--cinza-bd);
+      border-radius: 6px;
+      margin: .8rem 0;
+      text-transform: uppercase;
+    }
+
+    img.emoji-tw {
+      height: 1em;
+      width: auto;
+      vertical-align: -0.15em;
+      display: inline-block;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .barra-acoes, .no-print { display: none !important; }
+      .pagina {
+        box-shadow: none;
+        max-width: none;
+        margin: 0;
+        padding: 0 0 0 0;
+        min-height: 0;
+      }
+      .grupo-titulo { break-after: avoid; }
+      .tabela-jogos { break-inside: avoid; }
+      @page { size: A4; margin: 14mm 16mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="barra-acoes no-print">
+  <a href="palpites.html" class="secundario">← Voltar</a>
+  <button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<div id="conteudo">
+  <div class="mensagem" id="msgInicial">Carregando comprovante…</div>
+</div>
+
+<script>
+async function init() {
+  let id = new URLSearchParams(location.search).get('id') || localStorage.getItem('bolao_id');
+
+  if (!id) {
+    document.getElementById('conteudo').innerHTML = `
+      <div class="mensagem">
+        <p>Digite seu código de participante para gerar o comprovante:</p>
+        <input id="inpId" placeholder="EX: LA0001" autocapitalize="characters">
+        <button onclick="entrarComId()" style="background:var(--azul);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:6px;font-weight:700;cursor:pointer;">Gerar</button>
+      </div>`;
+    return;
+  }
+
+  await gerarComprovante(id);
+}
+
+function entrarComId() {
+  const v = document.getElementById('inpId').value.trim().toUpperCase();
+  if (!v) return;
+  location.href = 'comprovante.html?id=' + encodeURIComponent(v);
+}
+
+async function gerarComprovante(id) {
+  const [resPart, resJogos, resPalp] = await Promise.all([
+    api({ action: 'verificarID', id }),
+    api({ action: 'getJogos' }),
+    api({ action: 'getMeusPalpites', id })
+  ]);
+
+  if (!resPart.ok) {
+    document.getElementById('conteudo').innerHTML =
+      `<div class="mensagem">Código não encontrado: <strong>${id}</strong><br><br>
+       <a href="comprovante.html" style="color:var(--azul);">Tentar outro código</a></div>`;
+    return;
+  }
+  if (!resJogos.ok) {
+    document.getElementById('conteudo').innerHTML =
+      `<div class="mensagem">Erro ao carregar jogos. Tente novamente em instantes.</div>`;
+    return;
+  }
+
+  const jogos = resJogos.jogos;
+  const palpMap = {};
+  if (resPalp.ok && resPalp.palpites) {
+    resPalp.palpites.forEach(p => { palpMap[p.jogoId] = p; });
+  }
+
+  const agora = new Date();
+  const dataGer = agora.toLocaleDateString('pt-BR') + ' às ' +
+                  agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const total = jogos.length;
+  const preenchidos = Object.keys(palpMap).length;
+  const statusBadge = resPart.status === 'APROVADO' ? 'Aprovado' : 'Pendente';
+
+  const grupos = {};
+  jogos.forEach(j => { (grupos[j.grupo] = grupos[j.grupo] || []).push(j); });
+
+  let html = `
+    <div class="pagina">
+      <div class="cabecalho">
+        <h1>Bolão Copa 2026</h1>
+        <div class="sub">Comprovante de palpites — fase de grupos</div>
+      </div>
+      <table class="info-tabela">
+        <tr><td>Participante</td><td>${escapeHtml(resPart.nome || '')}</td></tr>
+        <tr><td>Código</td><td>${escapeHtml(resPart.id)}</td></tr>
+        <tr><td>Situação</td><td>${statusBadge}</td></tr>
+        <tr><td>Palpites preenchidos</td><td>${preenchidos} de ${total}</td></tr>
+        <tr><td>Gerado em</td><td>${dataGer}</td></tr>
+      </table>`;
+
+  Object.keys(grupos).sort().forEach(grp => {
+    html += `<div class="grupo-titulo">Grupo ${grp}</div>`;
+    html += `<table class="tabela-jogos">`;
+    grupos[grp].forEach(jogo => {
+      const p = palpMap[jogo.id];
+      const tem = !!p;
+      const f1 = BANDEIRAS[jogo.time1] || '🏳';
+      const f2 = BANDEIRAS[jogo.time2] || '🏳';
+      const n1 = NOMES[jogo.time1] || jogo.time1;
+      const n2 = NOMES[jogo.time2] || jogo.time2;
+      const palpTxt = tem ? `${p.gols1} × ${p.gols2}` : '— sem palpite —';
+      html += `
+        <tr class="${tem ? '' : 'sem-palpite'}">
+          <td class="col-data">${fmtData(jogo.data)} ${jogo.hora}</td>
+          <td class="col-time1">${f1} ${n1}</td>
+          <td class="col-palp">${palpTxt}</td>
+          <td class="col-time2">${n2} ${f2}</td>
+        </tr>`;
+    });
+    html += `</table>`;
+  });
+
+  html += `
+      <div class="rodape">
+        Documento gerado pelo sistema Bolão Copa 2026 — apenas para conferência.<br>
+        Os palpites oficiais são os armazenados no servidor no momento do início de cada jogo.
+      </div>
+    </div>`;
+
+  document.getElementById('conteudo').innerHTML = html;
+  aplicarTwemoji(document.getElementById('conteudo'));
+}
+
+function fmtData(iso) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+init();
+</script>
+</body>
+</html>

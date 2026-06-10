@@ -139,3 +139,26 @@ function gerarPixCopiaECola(chave, nome, cidade, valor, txid) {
 
   return payload + crc16(payload);
 }
+
+// ── Twemoji: bandeiras como SVG (Windows não renderiza flag emojis) ──
+(function carregarTwemoji() {
+  if (window.twemoji) return;
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js';
+  s.crossOrigin = 'anonymous';
+  s.async = true;
+  s.onload = () => aplicarTwemoji();
+  document.head.appendChild(s);
+})();
+
+function aplicarTwemoji(raiz) {
+  if (!window.twemoji) return;
+  const alvo = raiz || document.body;
+  if (!alvo) return;
+  window.twemoji.parse(alvo, {
+    folder: 'svg',
+    ext: '.svg',
+    base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/',
+    className: 'emoji-tw'
+  });
+}
