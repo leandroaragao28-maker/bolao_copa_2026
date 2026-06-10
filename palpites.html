@@ -114,6 +114,8 @@
     <a href="index.html">Início</a>
     <a href="ranking.html">Ranking</a>
     <a href="palpites.html" class="ativo">Palpites</a>
+    <a href="minha-pontuacao.html">Pontuação</a>
+    <a href="regulamento.html">Regras</a>
   </nav>
 </header>
 
@@ -356,12 +358,13 @@ async function salvarTudo() {
   if (!lista.length) { toast('Nenhum palpite novo para salvar.', 'aviso'); return; }
 
   const fab = document.getElementById('fabSalvar');
-  fab.textContent = 'Salvando...';
+  fab.innerHTML = 'Salvando…';
   fab.disabled = true;
 
   const res = await api({ action: 'salvarPalpites', id: participanteId, palpites: lista });
 
   fab.disabled = false;
+  fab.innerHTML = '💾 Salvar <span class="fab-count" id="fabCount">0</span>';
   atualizarContador();
 
   if (res.ok) {
