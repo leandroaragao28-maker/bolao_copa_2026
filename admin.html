@@ -125,12 +125,17 @@ function mostrarAba(aba) {
 
 // ── Participantes ──────────────────────────────────────────
 let _listaParticipantes = [];
+let _contagemPalpites   = {};
 let _filtroAtual = 'todos';
 
 async function carregarParticipantes() {
-  const res = await api({ action: 'getParticipantes', senha: senhaAdmin });
+  const [res, resP] = await Promise.all([
+    api({ action: 'getParticipantes',    senha: senhaAdmin }),
+    api({ action: 'getPalpitesContagem', senha: senhaAdmin })
+  ]);
   if (!res.ok) { toast(res.msg, 'erro'); return; }
   _listaParticipantes = res.participantes;
+  _contagemPalpites   = resP.ok ? resP.contagem : {};
 
   const pend  = _listaParticipantes.filter(p => p.status === 'PENDENTE').length;
   const aprov = _listaParticipantes.filter(p => p.status === 'APROVADO').length;
@@ -185,6 +190,18 @@ function renderizarParticipantes() {
     card.style.cssText = 'border:2px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:.8rem;margin-bottom:.6rem;';
     if (p.status === 'APROVADO') card.style.borderColor = 'var(--azul-palido)';
     if (p.status === 'PENDENTE') card.style.borderColor = '#FFCC80';
+    const total    = 72;
+    const feitos   = _contagemPalpites[p.id] || 0;
+    const completo = feitos >= total;
+    const algum    = feitos > 0 && !completo;
+    const nenhum   = feitos === 0;
+
+    const palpitesCor   = completo ? '#1B5E20'  : algum ? '#E65100' : '#B71C1C';
+    const palpitesBg    = completo ? '#E8F5E9'  : algum ? '#FFF3E0' : '#FFEBEE';
+    const palpitesBorda = completo ? '#A5D6A7'  : algum ? '#FFCC80' : '#EF9A9A';
+    const palpitesIcon  = completo ? '✅'        : algum ? '⚠️'      : '❌';
+    const palpitesTxt   = completo ? 'Completo' : algum ? 'Incompleto' : 'Sem palpites';
+
     card.innerHTML = `
       <div style="display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem;">
         <div style="flex:1;min-width:0;">
@@ -193,6 +210,12 @@ function renderizarParticipantes() {
           <div style="font-size:.72rem;color:var(--cinza-sub);">${p.whatsapp}</div>
         </div>
         <span class="badge badge-${p.status.toLowerCase()}">${p.status}</span>
+      </div>
+      <div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;">
+        <div style="flex:1;background:${palpitesBg};border:1.5px solid ${palpitesBorda};border-radius:6px;padding:.3rem .6rem;display:flex;align-items:center;gap:.4rem;">
+          <span style="font-size:.85rem;">${palpitesIcon}</span>
+          <span style="font-size:.72rem;font-weight:700;color:${palpitesCor};">${feitos}/${total} palpites · ${palpitesTxt}</span>
+        </div>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center;">
         <code style="font-size:.72rem;background:var(--cinza-fundo);padding:.2rem .5rem;border-radius:4px;flex:1;">${p.id}</code>

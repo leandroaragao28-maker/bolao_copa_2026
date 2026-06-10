@@ -205,6 +205,7 @@ function doPost(e) {
     else if (action === 'getMeusPalpites')     resultado = getMeusPalpites(body.id);
     else if (action === 'buscarPorEmail')      resultado = buscarPorEmail(body.email);
     else if (action === 'inicializar')         resultado = inicializarPlanilha();
+    else if (action === 'getPalpitesContagem') resultado = getPalpitesContagem(body.senha);
     else resultado = { ok: false, msg: 'Ação desconhecida.' };
 
     return ContentService
@@ -593,6 +594,24 @@ function getMeusPalpites(id) {
     }
   }
   return { ok: true, palpites: lista };
+}
+
+// ────────────────────────────────────────────────────────────
+// ADMIN — Contagem de palpites por participante
+// ────────────────────────────────────────────────────────────
+function getPalpitesContagem(senha) {
+  if (senha !== ADMIN_PASSWORD) return { ok: false, msg: 'Acesso negado.' };
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const aba = ss.getSheetByName('Palpites');
+  if (!aba) return { ok: true, contagem: {} };
+  const dados = aba.getDataRange().getValues();
+  const contagem = {};
+  for (let i = 1; i < dados.length; i++) {
+    const pid = dados[i][0];
+    if (!pid) continue;
+    contagem[pid] = (contagem[pid] || 0) + 1;
+  }
+  return { ok: true, contagem };
 }
 
 // ────────────────────────────────────────────────────────────
