@@ -190,7 +190,7 @@ const palpitesSalvos = {};   // palpites que já estão no servidor
 // ── Verificar prazo para palpitar ─────────────────────────────
 // Palpites são bloqueados 5 minutos antes do início do jogo.
 function palpiteEncerrado(jogo) {
-  const [h, m] = jogo.hora.replace('h',':00').replace('h30',':30').split(':');
+  const [h, m] = jogo.hora.replace('h30',':30').replace('h',':00').split(':');
   const dt = new Date(jogo.data + 'T' + String(h).padStart(2,'0') + ':' + (m||'00') + ':00-03:00');
   return Date.now() >= dt.getTime() - 5 * 60 * 1000;
 }
