@@ -82,7 +82,10 @@
     <!-- ABA Resumo -->
     <div id="abaResumo" style="display:none;">
       <div class="card">
-        <p class="card-titulo">Resumo do bolão</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem;">
+          <p class="card-titulo" style="margin:0;">Resumo do bolão</p>
+          <button class="btn btn-secondary btn-sm" onclick="abrirReportRanking()" style="white-space:nowrap;">📋 Report WhatsApp</button>
+        </div>
         <div id="resumoConteudo"><div style="text-align:center;padding:2rem;color:var(--cinza-sub);">Carregando...</div></div>
       </div>
     </div>
@@ -392,6 +395,50 @@ function copiarReport() {
   navigator.clipboard.writeText(texto)
     .then(() => toast('Texto copiado! Cole no WhatsApp.', 'ok'))
     .catch(() => toast('Selecione e copie manualmente.', 'aviso'));
+}
+
+// ── Report Ranking WhatsApp ─────────────────────────────────
+async function abrirReportRanking() {
+  const res = await api({ action: 'getRanking' });
+  if (!res.ok) { toast('Erro ao carregar ranking.', 'erro'); return; }
+
+  const { ranking, totalParticipantes, jogosComResultado, totalJogos, premiacao } = res;
+
+  if (!jogosComResultado) {
+    toast('Nenhum jogo apurado ainda.', 'aviso');
+    return;
+  }
+
+  const brl = v => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const medalhas = ['🥇', '🥈', '🥉'];
+  const maxNome  = Math.max(...ranking.map(r => r.nome.length));
+
+  const linhas = ranking.map(r => {
+    const pos    = r.posicao <= 3 ? medalhas[r.posicao - 1] : ` ${String(r.posicao).padStart(2, ' ')} `;
+    const nome   = r.nome.padEnd(maxNome, ' ');
+    const pts    = r.pontos.toFixed(1).padStart(7, ' ') + ' pts';
+    return `${pos} ${nome}   ${pts}`;
+  });
+
+  const sep  = '━'.repeat(Math.min(maxNome + 20, 32));
+  const data = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  const texto = [
+    `🏆 *Bolão Copa 2026 — Ranking*`,
+    `_Atualizado em ${data} às ${hora}_`,
+    sep,
+    ...linhas,
+    sep,
+    `👥 ${totalParticipantes} participante${totalParticipantes !== 1 ? 's' : ''} · ⚽ ${jogosComResultado}/${totalJogos} jogos apurados`,
+    `💰 Premiação atual:`,
+    `   🥇 Campeão  ${brl(premiacao.campeao)}`,
+    `   🥈 Vice     ${brl(premiacao.vice)}`,
+  ].join('\n');
+
+  document.getElementById('reportTexto').value = texto;
+  document.getElementById('modalReport').style.display = 'flex';
 }
 
 // ── Resumo ──────────────────────────────────────────────────
