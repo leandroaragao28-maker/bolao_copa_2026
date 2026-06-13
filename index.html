@@ -101,6 +101,44 @@
       transition: all .2s;
     }
     .hero-nav .btn-hero-secondary:hover { background: rgba(255,255,255,.25); }
+    /* Prévia do ranking (top 3) */
+    .mini-ranking {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-sm);
+      padding: .7rem .85rem;
+    }
+    .mini-ranking .mr-titulo {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      opacity: .8;
+      margin-bottom: .4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mini-ranking .mr-ver-tudo {
+      font-size: .65rem;
+      color: #FFD54F;
+      text-decoration: none;
+      font-weight: 700;
+      opacity: .9;
+    }
+    .mr-item {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .4rem .1rem;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .mr-item:last-child { border-bottom: none; }
+    .mr-pos { font-size: 1.1rem; width: 1.5rem; text-align: center; flex-shrink: 0; }
+    .mr-nome { flex: 1; min-width: 0; font-weight: 700; font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mr-pts { font-weight: 900; font-size: .9rem; color: #FFD54F; white-space: nowrap; }
+    .mr-vazio { font-size: .8rem; opacity: .75; text-align: center; padding: .7rem 0; }
+
     /* Acesso rápido com código */
     .acesso-rapido {
       background: rgba(255,255,255,.1);
@@ -205,7 +243,16 @@
 
     <!-- Navegação principal -->
     <div class="hero-nav">
-      <a href="inscricao.html" class="btn-hero-primary">⚽ Quero participar — R$ 50,00</a>
+      <!-- Prévia do ranking (inscrições encerradas) -->
+      <div class="mini-ranking" id="miniRanking">
+        <div class="mr-titulo">
+          <span>🏆 Prévia do ranking</span>
+          <a href="ranking.html" class="mr-ver-tudo">Ver tudo →</a>
+        </div>
+        <div id="mrLista">
+          <div class="mr-vazio">Carregando…</div>
+        </div>
+      </div>
       <a href="ranking.html" class="btn-hero-secondary">🏆 Ver ranking e classificação</a>
 
       <!-- Acesso rápido por código -->
@@ -251,7 +298,24 @@ async function carregarPremiacao() {
     document.getElementById('pc1').textContent = brl(res.premiacao.campeao);
     document.getElementById('pc2').textContent = brl(res.premiacao.vice);
     document.getElementById('pc3').textContent = res.totalParticipantes ?? '0';
+    preencherMiniRanking(res.ranking || []);
   } catch(e) {}
+}
+
+function preencherMiniRanking(ranking) {
+  const lista = document.getElementById('mrLista');
+  const top3 = ranking.slice(0, 3);
+  if (!top3.length) {
+    lista.innerHTML = '<div class="mr-vazio">Ranking disponível após o início dos jogos.</div>';
+    return;
+  }
+  const medalhas = ['🥇', '🥈', '🥉'];
+  lista.innerHTML = top3.map((r, i) => `
+    <div class="mr-item">
+      <span class="mr-pos">${medalhas[i]}</span>
+      <span class="mr-nome">${r.nome}</span>
+      <span class="mr-pts">${r.pontos.toFixed(1)} pts</span>
+    </div>`).join('');
 }
 
 async function acessarHome() {
