@@ -260,7 +260,7 @@ const STATUS_INFO = {
   cheio:              { label: 'Placar exato',          pts: '15 pts', cor: '#1B5E20' },
   vencedor:           { label: 'Vencedor certo',        pts: '10 pts', cor: '#1565C0' },
   empate:             { label: 'Empate certo',          pts: '7,5 pts', cor: '#6A1B9A' },
-  perdedor:           { label: 'Placar parcial',        pts: '5 pts',  cor: '#E65100' },
+  perdedor:           { label: 'Placar do perdedor',    pts: '5 pts',  cor: '#E65100' },
   zero:               { label: 'Sem pontos',            pts: '0 pts',  cor: '#B71C1C' },
   pendente:           { label: 'Aguardando resultado',  pts: '—',      cor: 'var(--cinza-sub)' },
   pendente_pagamento: { label: 'Pagamento pendente',    pts: '—',      cor: '#BF360C' },
@@ -332,7 +332,7 @@ function renderizarPontuacao(res) {
     { status: 'cheio',              label: '🎯 Cheio',    bg: '#DCEDC8', cor: '#1B5E20' },
     { status: 'vencedor',           label: '✅ Vencedor',  bg: '#BBDEFB', cor: '#0D47A1' },
     { status: 'empate',             label: '🤝 Empate',    bg: '#E1BEE7', cor: '#4A148C' },
-    { status: 'perdedor',           label: '📉 Parcial',   bg: '#FFE0B2', cor: '#BF360C' },
+    { status: 'perdedor',           label: '📉 Perdedor',  bg: '#FFE0B2', cor: '#BF360C' },
     { status: 'zero',               label: '❌ Zero',      bg: '#FFCDD2', cor: '#B71C1C' },
     { status: 'pendente',           label: '⏳ Pendente',  bg: 'var(--cinza-fundo)', cor: 'var(--cinza-sub)' },
   ];

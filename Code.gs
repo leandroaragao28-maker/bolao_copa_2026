@@ -9,7 +9,7 @@
 // 5. Copie a URL do Web App e cole em config.js nos arquivos HTML
 // ============================================================
 
-const SPREADSHEET_ID = 'SEU_SPREADSHEET_ID_AQUI'; // ← substitua isso
+const SPREADSHEET_ID = '12W795VSK894w6laOmT9VAFZ2ySvQRMnLlBzv4_SdEzE'; // ← substitua isso
 const ADMIN_PASSWORD = 'bolao2026admin'; // ← troque por uma senha segura
 
 // ────────────────────────────────────────────────────────────
@@ -18,89 +18,100 @@ const ADMIN_PASSWORD = 'bolao2026admin'; // ← troque por uma senha segura
 // ────────────────────────────────────────────────────────────
 const JOGOS = [
   // Grupo A
-  { id: 1,  data: '2026-06-11', hora: '16h', time1: 'MEX', time2: 'AFS', grupo: 'A' },
-  { id: 2,  data: '2026-06-11', hora: '23h', time1: 'COR', time2: 'TCH', grupo: 'A' },
-  { id: 3,  data: '2026-06-18', hora: '13h', time1: 'TCH', time2: 'AFS', grupo: 'A' },
-  { id: 4,  data: '2026-06-18', hora: '22h', time1: 'MEX', time2: 'COR', grupo: 'A' },
-  { id: 5,  data: '2026-06-24', hora: '22h', time1: 'TCH', time2: 'MEX', grupo: 'A' },
-  { id: 6,  data: '2026-06-24', hora: '22h', time1: 'AFS', time2: 'COR', grupo: 'A' },
+  { id: 1,  data: '2026-06-11', hora: '16h',   time1: 'MEX', time2: 'AFS', grupo: 'A' },
+  { id: 2,  data: '2026-06-11', hora: '23h',   time1: 'COR', time2: 'TCH', grupo: 'A' },
+  { id: 3,  data: '2026-06-18', hora: '13h',   time1: 'TCH', time2: 'AFS', grupo: 'A' },
+  { id: 4,  data: '2026-06-18', hora: '22h',   time1: 'MEX', time2: 'COR', grupo: 'A' },
+  { id: 5,  data: '2026-06-24', hora: '22h',   time1: 'AFS', time2: 'COR', grupo: 'A' },
+  { id: 6,  data: '2026-06-24', hora: '22h',   time1: 'TCH', time2: 'MEX', grupo: 'A' },
+
   // Grupo B
-  { id: 7,  data: '2026-06-12', hora: '16h', time1: 'CAN', time2: 'BOS', grupo: 'B' },
-  { id: 8,  data: '2026-06-12', hora: '16h', time1: 'QAT', time2: 'SUI', grupo: 'B' },
-  { id: 9,  data: '2026-06-18', hora: '16h', time1: 'SUI', time2: 'BOS', grupo: 'B' },
-  { id: 10, data: '2026-06-19', hora: '1h',  time1: 'CAN', time2: 'QAT', grupo: 'B' },
-  { id: 11, data: '2026-06-24', hora: '13h', time1: 'SUI', time2: 'CAN', grupo: 'B' },
-  { id: 12, data: '2026-06-24', hora: '16h', time1: 'BOS', time2: 'QAT', grupo: 'B' },
+  { id: 7,  data: '2026-06-12', hora: '16h',   time1: 'CAN', time2: 'BOS', grupo: 'B' },
+  { id: 8,  data: '2026-06-13', hora: '16h',   time1: 'QAT', time2: 'SUI', grupo: 'B' },
+  { id: 9,  data: '2026-06-18', hora: '16h',   time1: 'SUI', time2: 'BOS', grupo: 'B' },
+  { id: 10, data: '2026-06-18', hora: '19h',   time1: 'CAN', time2: 'QAT', grupo: 'B' },
+  { id: 11, data: '2026-06-24', hora: '16h',   time1: 'SUI', time2: 'CAN', grupo: 'B' },
+  { id: 12, data: '2026-06-24', hora: '16h',   time1: 'BOS', time2: 'QAT', grupo: 'B' },
+
   // Grupo C
-  { id: 13, data: '2026-06-13', hora: '19h', time1: 'BRA', time2: 'MAR', grupo: 'C' },
-  { id: 14, data: '2026-06-13', hora: '22h', time1: 'HAI', time2: 'ESC', grupo: 'C' },
-  { id: 15, data: '2026-06-19', hora: '15h', time1: 'ESC', time2: 'MAR', grupo: 'C' },
+  { id: 13, data: '2026-06-13', hora: '19h',   time1: 'BRA', time2: 'MAR', grupo: 'C' },
+  { id: 14, data: '2026-06-13', hora: '22h',   time1: 'HAI', time2: 'ESC', grupo: 'C' },
+  { id: 15, data: '2026-06-19', hora: '19h',   time1: 'ESC', time2: 'MAR', grupo: 'C' },
   { id: 16, data: '2026-06-19', hora: '21h30', time1: 'BRA', time2: 'HAI', grupo: 'C' },
-  { id: 17, data: '2026-06-24', hora: '19h', time1: 'ESC', time2: 'BRA', grupo: 'C' },
-  { id: 18, data: '2026-06-24', hora: '19h', time1: 'MAR', time2: 'HAI', grupo: 'C' },
+  { id: 17, data: '2026-06-24', hora: '19h',   time1: 'MAR', time2: 'HAI', grupo: 'C' },
+  { id: 18, data: '2026-06-24', hora: '19h',   time1: 'ESC', time2: 'BRA', grupo: 'C' },
+
   // Grupo D
-  { id: 19, data: '2026-06-12', hora: '22h', time1: 'EUA', time2: 'PAR', grupo: 'D' },
-  { id: 20, data: '2026-06-13', hora: '1h',  time1: 'AUS', time2: 'TUR', grupo: 'D' },
-  { id: 21, data: '2026-06-20', hora: '0h',  time1: 'TUR', time2: 'PAR', grupo: 'D' },
-  { id: 22, data: '2026-06-20', hora: '16h', time1: 'EUA', time2: 'AUS', grupo: 'D' },
-  { id: 23, data: '2026-06-25', hora: '23h', time1: 'TUR', time2: 'EUA', grupo: 'D' },
-  { id: 24, data: '2026-06-25', hora: '23h', time1: 'PAR', time2: 'AUS', grupo: 'D' },
+  { id: 19, data: '2026-06-12', hora: '22h',   time1: 'EUA', time2: 'PAR', grupo: 'D' },
+  { id: 20, data: '2026-06-14', hora: '1h',    time1: 'AUS', time2: 'TUR', grupo: 'D' },
+  { id: 21, data: '2026-06-19', hora: '16h',   time1: 'EUA', time2: 'AUS', grupo: 'D' },
+  { id: 22, data: '2026-06-20', hora: '1h',    time1: 'TUR', time2: 'PAR', grupo: 'D' },
+  { id: 23, data: '2026-06-25', hora: '23h',   time1: 'TUR', time2: 'EUA', grupo: 'D' },
+  { id: 24, data: '2026-06-25', hora: '23h',   time1: 'PAR', time2: 'AUS', grupo: 'D' },
+
   // Grupo E
-  { id: 25, data: '2026-06-14', hora: '14h', time1: 'ALE', time2: 'CUR', grupo: 'E' },
-  { id: 26, data: '2026-06-14', hora: '20h', time1: 'CDM', time2: 'EQU', grupo: 'E' },
-  { id: 27, data: '2026-06-20', hora: '17h', time1: 'ALE', time2: 'CDM', grupo: 'E' },
-  { id: 28, data: '2026-06-20', hora: '2h',  time1: 'EQU', time2: 'CUR', grupo: 'E' },
-  { id: 29, data: '2026-06-25', hora: '17h', time1: 'CUR', time2: 'CDM', grupo: 'E' },
-  { id: 30, data: '2026-06-25', hora: '17h', time1: 'EQU', time2: 'ALE', grupo: 'E' },
+  { id: 25, data: '2026-06-14', hora: '14h',   time1: 'ALE', time2: 'CUR', grupo: 'E' },
+  { id: 26, data: '2026-06-14', hora: '20h',   time1: 'CDM', time2: 'EQU', grupo: 'E' },
+  { id: 27, data: '2026-06-20', hora: '17h',   time1: 'ALE', time2: 'CDM', grupo: 'E' },
+  { id: 28, data: '2026-06-20', hora: '21h',   time1: 'EQU', time2: 'CUR', grupo: 'E' },
+  { id: 29, data: '2026-06-25', hora: '17h',   time1: 'EQU', time2: 'ALE', grupo: 'E' },
+  { id: 30, data: '2026-06-25', hora: '17h',   time1: 'CUR', time2: 'CDM', grupo: 'E' },
+
   // Grupo F
-  { id: 31, data: '2026-06-14', hora: '17h', time1: 'HOL', time2: 'JAP', grupo: 'F' },
-  { id: 32, data: '2026-06-14', hora: '23h', time1: 'SUE', time2: 'TUN', grupo: 'F' },
-  { id: 33, data: '2026-06-20', hora: '23h', time1: 'TUN', time2: 'JAP', grupo: 'F' },
-  { id: 34, data: '2026-06-20', hora: '14h', time1: 'HOL', time2: 'SUE', grupo: 'F' },
-  { id: 35, data: '2026-06-25', hora: '20h', time1: 'TUN', time2: 'HOL', grupo: 'F' },
-  { id: 36, data: '2026-06-25', hora: '20h', time1: 'JAP', time2: 'SUE', grupo: 'F' },
+  { id: 31, data: '2026-06-14', hora: '17h',   time1: 'HOL', time2: 'JAP', grupo: 'F' },
+  { id: 32, data: '2026-06-14', hora: '23h',   time1: 'SUE', time2: 'TUN', grupo: 'F' },
+  { id: 33, data: '2026-06-20', hora: '14h',   time1: 'HOL', time2: 'SUE', grupo: 'F' },
+  { id: 34, data: '2026-06-21', hora: '1h',    time1: 'TUN', time2: 'JAP', grupo: 'F' },
+  { id: 35, data: '2026-06-25', hora: '20h',   time1: 'TUN', time2: 'HOL', grupo: 'F' },
+  { id: 36, data: '2026-06-25', hora: '20h',   time1: 'JAP', time2: 'SUE', grupo: 'F' },
+
   // Grupo G
-  { id: 37, data: '2026-06-15', hora: '16h', time1: 'BEL', time2: 'EGI', grupo: 'G' },
-  { id: 38, data: '2026-06-15', hora: '16h', time1: 'IRA', time2: 'NZE', grupo: 'G' },
-  { id: 39, data: '2026-06-21', hora: '16h', time1: 'BEL', time2: 'IRA', grupo: 'G' },
-  { id: 40, data: '2026-06-21', hora: '22h', time1: 'NZE', time2: 'EGI', grupo: 'G' },
-  { id: 41, data: '2026-06-27', hora: '22h', time1: 'NZE', time2: 'BEL', grupo: 'G' },
-  { id: 42, data: '2026-06-27', hora: '0h',  time1: 'EGI', time2: 'IRA', grupo: 'G' },
+  { id: 37, data: '2026-06-15', hora: '16h',   time1: 'BEL', time2: 'EGI', grupo: 'G' },
+  { id: 38, data: '2026-06-15', hora: '22h',   time1: 'IRA', time2: 'NZE', grupo: 'G' },
+  { id: 39, data: '2026-06-21', hora: '16h',   time1: 'BEL', time2: 'IRA', grupo: 'G' },
+  { id: 40, data: '2026-06-21', hora: '22h',   time1: 'NZE', time2: 'EGI', grupo: 'G' },
+  { id: 41, data: '2026-06-27', hora: '0h',    time1: 'EGI', time2: 'IRA', grupo: 'G' },
+  { id: 42, data: '2026-06-27', hora: '0h',    time1: 'NZE', time2: 'BEL', grupo: 'G' },
+
   // Grupo H
-  { id: 43, data: '2026-06-15', hora: '15h', time1: 'ESP', time2: 'CAB', grupo: 'H' },
-  { id: 44, data: '2026-06-15', hora: '15h', time1: 'ARS', time2: 'URU', grupo: 'H' },
-  { id: 45, data: '2026-06-21', hora: '15h', time1: 'ESP', time2: 'ARS', grupo: 'H' },
-  { id: 46, data: '2026-06-21', hora: '19h', time1: 'URU', time2: 'CAB', grupo: 'H' },
-  { id: 47, data: '2026-06-26', hora: '2h',  time1: 'URU', time2: 'ESP', grupo: 'H' },
-  { id: 48, data: '2026-06-26', hora: '2h',  time1: 'CAB', time2: 'ARS', grupo: 'H' },
+  { id: 43, data: '2026-06-15', hora: '13h',   time1: 'ESP', time2: 'CAB', grupo: 'H' },
+  { id: 44, data: '2026-06-15', hora: '19h',   time1: 'ARS', time2: 'URU', grupo: 'H' },
+  { id: 45, data: '2026-06-21', hora: '13h',   time1: 'ESP', time2: 'ARS', grupo: 'H' },
+  { id: 46, data: '2026-06-21', hora: '19h',   time1: 'URU', time2: 'CAB', grupo: 'H' },
+  { id: 47, data: '2026-06-26', hora: '21h',   time1: 'CAB', time2: 'ARS', grupo: 'H' },
+  { id: 48, data: '2026-06-26', hora: '21h',   time1: 'URU', time2: 'ESP', grupo: 'H' },
+
   // Grupo I
-  { id: 49, data: '2026-06-16', hora: '16h', time1: 'FRA', time2: 'SEN', grupo: 'I' },
-  { id: 50, data: '2026-06-16', hora: '19h', time1: 'IRQ', time2: 'NOR', grupo: 'I' },
-  { id: 51, data: '2026-06-22', hora: '19h', time1: 'FRA', time2: 'IRQ', grupo: 'I' },
-  { id: 52, data: '2026-06-22', hora: '23h', time1: 'NOR', time2: 'SEN', grupo: 'I' },
-  { id: 53, data: '2026-06-26', hora: '16h', time1: 'NOR', time2: 'FRA', grupo: 'I' },
-  { id: 54, data: '2026-06-26', hora: '16h', time1: 'SEN', time2: 'IRQ', grupo: 'I' },
+  { id: 49, data: '2026-06-16', hora: '16h',   time1: 'FRA', time2: 'SEN', grupo: 'I' },
+  { id: 50, data: '2026-06-16', hora: '19h',   time1: 'IRQ', time2: 'NOR', grupo: 'I' },
+  { id: 51, data: '2026-06-22', hora: '18h',   time1: 'FRA', time2: 'IRQ', grupo: 'I' },
+  { id: 52, data: '2026-06-22', hora: '21h',   time1: 'NOR', time2: 'SEN', grupo: 'I' },
+  { id: 53, data: '2026-06-26', hora: '16h',   time1: 'SEN', time2: 'IRQ', grupo: 'I' },
+  { id: 54, data: '2026-06-26', hora: '16h',   time1: 'NOR', time2: 'FRA', grupo: 'I' },
+
   // Grupo J
-  { id: 55, data: '2026-06-16', hora: '16h', time1: 'ARG', time2: 'AGL', grupo: 'J' },
-  { id: 56, data: '2026-06-17', hora: '1h',  time1: 'AUT', time2: 'JOR', grupo: 'J' },
-  { id: 57, data: '2026-06-22', hora: '22h', time1: 'ARG', time2: 'AUT', grupo: 'J' },
-  { id: 58, data: '2026-06-23', hora: '0h',  time1: 'JOR', time2: 'AGL', grupo: 'J' },
-  { id: 59, data: '2026-06-27', hora: '23h', time1: 'JOR', time2: 'ARG', grupo: 'J' },
-  { id: 60, data: '2026-06-27', hora: '23h', time1: 'AGL', time2: 'AUT', grupo: 'J' },
+  { id: 55, data: '2026-06-16', hora: '22h',   time1: 'ARG', time2: 'AGL', grupo: 'J' },
+  { id: 56, data: '2026-06-17', hora: '1h',    time1: 'AUT', time2: 'JOR', grupo: 'J' },
+  { id: 57, data: '2026-06-22', hora: '14h',   time1: 'ARG', time2: 'AUT', grupo: 'J' },
+  { id: 58, data: '2026-06-23', hora: '0h',    time1: 'JOR', time2: 'AGL', grupo: 'J' },
+  { id: 59, data: '2026-06-27', hora: '23h',   time1: 'JOR', time2: 'ARG', grupo: 'J' },
+  { id: 60, data: '2026-06-27', hora: '23h',   time1: 'AGL', time2: 'AUT', grupo: 'J' },
+
   // Grupo K
-  { id: 61, data: '2026-06-17', hora: '14h', time1: 'POR', time2: 'RDC', grupo: 'K' },
-  { id: 62, data: '2026-06-17', hora: '20h', time1: 'UZB', time2: 'COL', grupo: 'K' },
-  { id: 63, data: '2026-06-23', hora: '14h', time1: 'POR', time2: 'UZB', grupo: 'K' },
-  { id: 64, data: '2026-06-23', hora: '23h', time1: 'COL', time2: 'RDC', grupo: 'K' },
-  { id: 65, data: '2026-06-27', hora: '20h30',time1:'COL', time2: 'POR', grupo: 'K' },
-  { id: 66, data: '2026-06-27', hora: '20h30',time1:'RDC', time2: 'UZB', grupo: 'K' },
+  { id: 61, data: '2026-06-17', hora: '14h',   time1: 'POR', time2: 'RDC', grupo: 'K' },
+  { id: 62, data: '2026-06-17', hora: '23h',   time1: 'UZB', time2: 'COL', grupo: 'K' },
+  { id: 63, data: '2026-06-23', hora: '14h',   time1: 'POR', time2: 'UZB', grupo: 'K' },
+  { id: 64, data: '2026-06-23', hora: '23h',   time1: 'COL', time2: 'RDC', grupo: 'K' },
+  { id: 65, data: '2026-06-27', hora: '20h30', time1: 'RDC', time2: 'UZB', grupo: 'K' },
+  { id: 66, data: '2026-06-27', hora: '20h30', time1: 'COL', time2: 'POR', grupo: 'K' },
+
   // Grupo L
-  { id: 67, data: '2026-06-17', hora: '17h', time1: 'ING', time2: 'CRO', grupo: 'L' },
-  { id: 68, data: '2026-06-17', hora: '20h', time1: 'GAN', time2: 'PAN', grupo: 'L' },
-  { id: 69, data: '2026-06-23', hora: '17h', time1: 'ING', time2: 'GAN', grupo: 'L' },
-  { id: 70, data: '2026-06-23', hora: '20h', time1: 'PAN', time2: 'CRO', grupo: 'L' },
-  { id: 71, data: '2026-06-27', hora: '20h', time1: 'PAN', time2: 'ING', grupo: 'L' },
-  { id: 72, data: '2026-06-27', hora: '18h', time1: 'CRO', time2: 'GAN', grupo: 'L' },
+  { id: 67, data: '2026-06-17', hora: '17h',   time1: 'ING', time2: 'CRO', grupo: 'L' },
+  { id: 68, data: '2026-06-17', hora: '20h',   time1: 'GAN', time2: 'PAN', grupo: 'L' },
+  { id: 69, data: '2026-06-23', hora: '17h',   time1: 'ING', time2: 'GAN', grupo: 'L' },
+  { id: 70, data: '2026-06-23', hora: '20h',   time1: 'PAN', time2: 'CRO', grupo: 'L' },
+  { id: 71, data: '2026-06-27', hora: '18h',   time1: 'CRO', time2: 'GAN', grupo: 'L' },
+  { id: 72, data: '2026-06-27', hora: '18h',   time1: 'PAN', time2: 'ING', grupo: 'L' },
 ];
 
 // ────────────────────────────────────────────────────────────
