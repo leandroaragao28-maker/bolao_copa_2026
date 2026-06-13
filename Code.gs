@@ -356,13 +356,13 @@ function getRanking() {
   let totalArrecadado = 0;
 
   for (let i = 1; i < participantes.length; i++) {
-    const [pid, nome, , , status] = participantes[i];
+    const [pid, nome, , , status, dataInscricao] = participantes[i];
     if (status === 'APROVADO') totalArrecadado += 50;
     if (status !== 'APROVADO') continue;
 
     let pontos = 0;
     let jogosComPalpite = 0;
-    const detalhe = [];
+    let cheio = 0, vencedor = 0, empate = 0, parcial = 0;
 
     JOGOS.forEach(jogo => {
       const palp = (mapPalpites[pid] || {})[jogo.id];
@@ -372,15 +372,28 @@ function getRanking() {
         if (real) {
           const pts = calcularPontos(palp.gols1, palp.gols2, real.gols1, real.gols2);
           pontos += pts;
-          detalhe.push({ jogoId: jogo.id, palp, real, pts });
+          if      (pts === 15)  cheio++;
+          else if (pts === 10)  vencedor++;
+          else if (pts === 7.5) empate++;
+          else if (pts === 5)   parcial++;
         }
       }
     });
 
-    ranking.push({ id: pid, nome, pontos, jogosComPalpite });
+    ranking.push({ id: pid, nome, pontos, jogosComPalpite, cheio, vencedor, empate, parcial, dataInscricao });
   }
 
-  ranking.sort((a, b) => b.pontos - a.pontos);
+  ranking.sort((a, b) => {
+    if (b.pontos       !== a.pontos)       return b.pontos       - a.pontos;
+    if (b.cheio        !== a.cheio)        return b.cheio        - a.cheio;
+    if (b.vencedor     !== a.vencedor)     return b.vencedor     - a.vencedor;
+    if (b.empate       !== a.empate)       return b.empate       - a.empate;
+    if (b.parcial      !== a.parcial)      return b.parcial      - a.parcial;
+    if (b.jogosComPalpite !== a.jogosComPalpite) return b.jogosComPalpite - a.jogosComPalpite;
+    // Último critério: quem se inscreveu primeiro fica à frente
+    return new Date(a.dataInscricao) - new Date(b.dataInscricao);
+  });
+
   // Adicionar posição
   ranking.forEach((r, idx) => { r.posicao = idx + 1; });
 
