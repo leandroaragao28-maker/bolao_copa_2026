@@ -206,6 +206,7 @@ function doPost(e) {
     else if (action === 'buscarPorEmail')      resultado = buscarPorEmail(body.email);
     else if (action === 'inicializar')         resultado = inicializarPlanilha();
     else if (action === 'getPalpitesContagem') resultado = getPalpitesContagem(body.senha);
+    else if (action === 'getResultadosPublico') resultado = getResultadosPublico();
     else resultado = { ok: false, msg: 'Ação desconhecida.' };
 
     return ContentService
@@ -607,6 +608,23 @@ function getMeusPalpites(id) {
     }
   }
   return { ok: true, palpites: lista };
+}
+
+// ────────────────────────────────────────────────────────────
+// PÚBLICO — Resultados dos jogos (apenas placares)
+// Info pública; usado na tela de Jogos & Tabela
+// ────────────────────────────────────────────────────────────
+function getResultadosPublico() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const aba = ss.getSheetByName('Resultados');
+  if (!aba) return { ok: true, resultados: {} };
+  const dados = aba.getDataRange().getValues();
+  const lista = {};
+  for (let i = 1; i < dados.length; i++) {
+    if (dados[i][0] === '' || dados[i][0] === null) continue;
+    lista[dados[i][0]] = { gols1: dados[i][1], gols2: dados[i][2] };
+  }
+  return { ok: true, resultados: lista };
 }
 
 // ────────────────────────────────────────────────────────────
