@@ -36,30 +36,20 @@
     <div class="step">2 · Pagamento</div>
   </div>
 
-  <!-- STEP 1: Formulário novo participante -->
+  <!-- STEP 1: Inscrições encerradas -->
   <div id="step1" class="card">
-    <p class="card-titulo">Nova inscrição</p>
-    <div class="banner-info">
-      🏆 Preencha os 72 jogos da fase de grupos · <strong>Premiação: Campeão 60% · Vice 30%</strong> do total arrecadado
+    <p class="card-titulo">Inscrições encerradas</p>
+    <div class="banner-aviso">
+      🔒 As inscrições para o Bolão Copa 2026 foram <strong>encerradas</strong>. Não é mais possível realizar novas inscrições.
     </div>
-    <div class="form-group">
-      <label>Nome completo</label>
-      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" inputmode="text">
-    </div>
-    <div class="form-group">
-      <label>E-mail</label>
-      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" inputmode="email">
-    </div>
-    <div class="form-group">
-      <label>WhatsApp</label>
-      <input type="tel" id="whatsapp" placeholder="(00) 99999-9999" autocomplete="tel" inputmode="tel">
-    </div>
-    <button class="btn btn-primary btn-block" id="btnInscrever" onclick="inscrever()">
-      ⚽ Fazer inscrição
+    <p style="font-size:.86rem;color:var(--cinza-sub);line-height:1.6;margin-bottom:1rem;">
+      Se você já se inscreveu e ainda não confirmou o pagamento, acesse abaixo para ver seu Pix.
+    </p>
+    <button class="btn btn-primary btn-block" onclick="mostrarPagamentoDireto()">
+      💳 Já tenho código — ver meu pagamento
     </button>
     <div style="text-align:center;margin-top:.9rem;">
-      <span style="font-size:.82rem;color:var(--cinza-sub);">Já tem código?</span>
-      <button onclick="mostrarPagamentoDireto()" style="background:none;border:none;color:var(--azul);font-weight:700;font-size:.82rem;cursor:pointer;margin-left:.3rem;">Ver meu pagamento</button>
+      <a href="ranking.html" style="font-size:.82rem;color:var(--azul);font-weight:700;text-decoration:none;">🏆 Ver ranking</a>
     </div>
   </div>
 
